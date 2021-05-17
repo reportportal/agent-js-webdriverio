@@ -1,0 +1,59 @@
+{
+  "name": "@reportportal/agent-js-webdriverio",
+  "version": "5.0.0",
+  "description": "Agent for integration Webdriver.io with ReportPortal.",
+  "main": "build/src/index.js",
+  "scripts": {
+    "build": "npm run clean && tsc",
+    "clean": "rimraf ./build",
+    "lint": "eslint \"src/**/*.ts\"",
+    "format": "npm run lint -- --fix",
+    "test": "jest",
+    "test:coverage": "jest --coverage"
+  },
+  "dependencies": {
+    "@reportportal/client-javascript": "^5.0.4",
+    "@wdio/reporter": "^7.5.7"
+  },
+  "devDependencies": {
+    "@types/jest": "^25.2.1",
+    "@types/node": "^14.14.21",
+    "@typescript-eslint/eslint-plugin": "^2.21.0",
+    "@typescript-eslint/parser": "^2.21.0",
+    "@wdio/types": "7.5.3",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-config-airbnb-typescript": "^7.0.0",
+    "eslint-config-prettier": "^6.10.0",
+    "eslint-plugin-import": "^2.20.0",
+    "eslint-plugin-node": "^11.0.0",
+    "eslint-plugin-prettier": "^3.1.2",
+    "jest": "^25.3.0",
+    "prettier": "^1.19.1",
+    "rimraf": "^3.0.2",
+    "ts-jest": "^25.3.1",
+    "ts-node": "^9.1.1",
+    "typescript": "^3.8.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AmsterGet/agent-js-webdriverio.git"
+  },
+  "author": "ReportPortal.io",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/AmsterGet/agent-js-webdriverio/issues"
+  },
+  "homepage": "https://github.com/AmsterGet/agent-js-webdriverio#readme",
+  "engines": {
+    "node": ">= 8.0.x"
+  },
+  "keywords": [
+    "epam",
+    "reports",
+    "portal",
+    "testcafe",
+    "reporters",
+    "reportportal"
+  ]
+}
