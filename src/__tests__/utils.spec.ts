@@ -15,27 +15,15 @@
  *
  */
 
-module.exports = {
-  roots: ['<rootDir>/src'],
-  transform: { '.(ts|tsx)': 'ts-jest' },
-  testEnvironment: 'node',
-  testRegex: '/__tests__/.*\\.(test|spec)?\\.(ts|js)$',
-  moduleFileExtensions: ['ts', 'js'],
-  collectCoverageFrom: ['src/**/*.ts'],
-  coveragePathIgnorePatterns: ['/__tests__/', '/constants/'],
-  coverageThreshold: {
-    global: {
-      branches: 80,
-      functions: 80,
-      lines: 80,
-      statements: 80,
-    },
-  },
-  globals: {
-    'ts-jest': {
-      diagnostics: {
-        pathRegex: '(/__tests__/.*?\\.(test|spec))\\.(ts|js)$',
-      },
-    },
-  },
-};
+import { promiseErrorHandler } from '../utils';
+
+describe('utils', () => {
+  it('promiseErrorHandler', async () => {
+    const log = jest.spyOn(console, 'log');
+    const promiseWithError = () => Promise.reject('error');
+    await promiseErrorHandler(promiseWithError());
+
+    expect(log).toBeCalledTimes(1);
+    expect(log).toBeCalledWith('error');
+  });
+});

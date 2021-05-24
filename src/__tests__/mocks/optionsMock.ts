@@ -15,27 +15,17 @@
  *
  */
 
-module.exports = {
-  roots: ['<rootDir>/src'],
-  transform: { '.(ts|tsx)': 'ts-jest' },
-  testEnvironment: 'node',
-  testRegex: '/__tests__/.*\\.(test|spec)?\\.(ts|js)$',
-  moduleFileExtensions: ['ts', 'js'],
-  collectCoverageFrom: ['src/**/*.ts'],
-  coveragePathIgnorePatterns: ['/__tests__/', '/constants/'],
-  coverageThreshold: {
-    global: {
-      branches: 80,
-      functions: 80,
-      lines: 80,
-      statements: 80,
-    },
+import path from 'path';
+import { Config } from '../../models';
+
+export const options: { reportPortalClientConfig: Config; logFile: string } = {
+  reportPortalClientConfig: {
+    token: '00000000-0000-0000-0000-000000000000',
+    endpoint: 'https://reportportal.server/api/v1',
+    project: 'ProjectName',
+    launch: 'LaunchName',
+    description: 'Launch description',
+    attributes: [{ key: 'key', value: 'value' }],
   },
-  globals: {
-    'ts-jest': {
-      diagnostics: {
-        pathRegex: '(/__tests__/.*?\\.(test|spec))\\.(ts|js)$',
-      },
-    },
-  },
+  logFile: `${process.cwd()}${path.sep}logs.log`,
 };

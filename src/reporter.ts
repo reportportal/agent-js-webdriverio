@@ -1,37 +1,155 @@
-import Reporter from '@wdio/reporter';
+/*
+ *  Copyright 2021 EPAM Systems
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ */
+
+import WDIOReporter, { SuiteStats, TestStats } from '@wdio/reporter';
 import { Reporters } from '@wdio/types';
+import RPClient from '@reportportal/client-javascript';
+import { Storage } from './storage';
+import { promiseErrorHandler } from './utils';
+import { LEVELS, TYPES } from './constants';
+import { FinishTestItem, LaunchObj, LogRQ, StartTestItem } from './models';
 
 // reference - https://www.npmjs.com/package/@wdio/reporter
-export class RPReporter extends Reporter {
+class Reporter extends WDIOReporter {
+  private client: RPClient;
+  private tempLaunchId: string;
+  private storage: Storage;
+  private syncReporting: boolean;
+
   constructor(options: Partial<Reporters.Options>) {
-    super(options)
+    super(options);
+
+    this.options = options;
+    this.syncReporting = false;
+    this.client = new RPClient(this.options.reportPortalClientConfig);
+    this.storage = new Storage();
   }
 
-  onRunnerStart() {}
+  get isSynchronised(): boolean {
+    return this.syncReporting;
+  }
 
-  onSuiteStart(suite: any) {}
+  set isSynchronised(val) {
+    this.syncReporting = val;
+  }
 
-  onHookStart() {}
+  onRunnerStart() {
+    const { attributes, description, mode } = this.options.reportPortalClientConfig;
+    const launchDataRQ: LaunchObj = {
+      attributes,
+      description,
+      mode,
+    };
+    const { tempId, promise } = this.client.startLaunch(launchDataRQ);
+    promiseErrorHandler(promise);
+    this.tempLaunchId = tempId;
+  }
 
-  onHookEnd() {}
+  onSuiteStart(suiteStats: SuiteStats): void {
+    const suiteItem = this.storage.getCurrentSuite();
+    let parentId = null;
+    if (suiteItem) {
+      parentId = suiteItem.id;
+    }
+    const { title: name } = suiteStats;
+    const suiteDataRQ: StartTestItem = {
+      name,
+      type: parentId ? TYPES.TEST : TYPES.SUITE,
+    };
+    const { tempId, promise } = this.client.startTestItem(suiteDataRQ, this.tempLaunchId, parentId);
+    promiseErrorHandler(promise);
+    this.storage.addSuite({ id: tempId, name });
+  }
 
-  onTestStart() {}
+  // onHookStart() {}
 
-  onTestSkip() {}
+  // onHookEnd() {}
 
-  onTestPass() {}
+  onTestStart(testStats: TestStats): void {
+    const { id: testId } = this.storage.getCurrentSuite();
+    const { title: name } = testStats;
+    const testItemDataRQ = {
+      name,
+      type: TYPES.STEP,
+    };
+    const { tempId, promise } = this.client.startTestItem(
+      testItemDataRQ,
+      this.tempLaunchId,
+      testId,
+    );
+    promiseErrorHandler(promise);
+    this.storage.addTest({ name, id: tempId });
+  }
 
-  onTestRetry() {}
+  onTestPass(testStats: TestStats): void {
+    this.finishTest(testStats);
+  }
 
-  onTestFail() {}
+  onTestSkip(testStats: TestStats): void {
+    this.finishTest(testStats);
+  }
 
-  onTestEnd() {}
+  // onTestRetry(testStats: TestStats): void {}
 
-  onSuiteEnd() {}
+  onTestFail(testStats: TestStats): void {
+    const { id } = this.storage.getCurrentTest();
+    testStats.errors.forEach((error: Error) => {
+      const logRQ: LogRQ = {
+        level: LEVELS.ERROR,
+        message: error.stack,
+      };
+      this.client.sendLog(id, logRQ);
+    });
+    this.finishTest(testStats);
+  }
 
-  onRunnerEnd() {}
+  finishTest(testStats: TestStats): void {
+    const { id } = this.storage.getCurrentTest();
+    const finishTestItemRQ: FinishTestItem = {
+      status: testStats.state,
+    };
+    const { promise } = this.client.finishTestItem(id, finishTestItemRQ);
+    promiseErrorHandler(promise);
+    this.storage.removeTest(id);
+  }
 
-  onBeforeCommand() {}
+  onSuiteEnd(): void {
+    const { id } = this.storage.getCurrentSuite();
+    const { promise } = this.client.finishTestItem(id, {});
+    promiseErrorHandler(promise);
+    this.storage.removeSuite(id);
+  }
 
-  onAfterCommand() {}
+  async onRunnerEnd() {
+    try {
+      await this.client.getPromiseFinishAllItems(this.tempLaunchId);
+      const { promise } = this.client.finishLaunch(this.tempLaunchId, {});
+      promiseErrorHandler(promise);
+      this.tempLaunchId = null;
+    } catch (e) {
+      console.log(e);
+    } finally {
+      this.isSynchronised = true;
+    }
+  }
+
+  // onBeforeCommand() {}
+
+  // onAfterCommand() {}
 }
+
+module.exports = { Reporter };
