@@ -19,7 +19,7 @@ import WDIOReporter, { SuiteStats, TestStats } from '@wdio/reporter';
 import { Reporters } from '@wdio/types';
 import RPClient from '@reportportal/client-javascript';
 import { Storage } from './storage';
-import { getClientConfig, promiseErrorHandler } from './utils';
+import { getAgentInfo, getStartLaunchObj,getClientConfig, promiseErrorHandler } from './utils';
 import { LOG_LEVELS, TYPES } from './constants';
 import { FinishTestItem, LaunchObj, LogRQ, StartTestItem } from './models';
 
@@ -33,10 +33,11 @@ export class Reporter extends WDIOReporter {
   constructor(options: Partial<Reporters.Options>) {
     super(options);
 
+    const agentInfo = getAgentInfo();
     const clientConfig = getClientConfig(options);
     this.options = options;
     this.syncReporting = false;
-    this.client = new RPClient(clientConfig);
+    this.client = new RPClient(clientConfig, agentInfo);
     this.storage = new Storage();
   }
 
@@ -49,12 +50,7 @@ export class Reporter extends WDIOReporter {
   }
 
   onRunnerStart(): void {
-    const { attributes, description, mode } = this.options;
-    const launchDataRQ: LaunchObj = {
-      attributes,
-      description,
-      mode,
-    };
+    const launchDataRQ: LaunchObj = getStartLaunchObj(this.options.reportPortalClientConfig);
     const { tempId, promise } = this.client.startLaunch(launchDataRQ);
     promiseErrorHandler(promise);
     this.tempLaunchId = tempId;
