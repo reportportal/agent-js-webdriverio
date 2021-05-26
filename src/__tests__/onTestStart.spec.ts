@@ -15,30 +15,30 @@
  *
  */
 
+import { Reporter } from '../reporter';
 import { options } from './mocks/optionsMock';
 import { RPClientMock } from './mocks/RPClientMock';
 import { suiteId, suiteName, testName } from './mocks/data';
-
-const { Reporter } = require('../reporter');
+import { getClientConfig } from '../utils';
 
 describe('onTestStart', () => {
-  const reporter: typeof Reporter = new Reporter(options);
-  reporter.client = new RPClientMock(options.reportPortalClientConfig);
-  reporter.tempLaunchId = 'tempLaunchId';
-  reporter.storage.addSuite({ id: suiteId, name: suiteName });
+  const reporter: Reporter = new Reporter(options);
+  reporter['client'] = new RPClientMock(getClientConfig(options));
+  reporter['tempLaunchId'] = 'tempLaunchId';
+  reporter['storage'].addSuite({ id: suiteId, name: suiteName });
 
   it('client.startTestItem should be called with corresponding params', () => {
-    const testStats = {
+    const testStats: any = {
       title: testName,
     };
     reporter.onTestStart(testStats);
 
-    expect(reporter.client.startTestItem).toBeCalledTimes(1);
-    expect(reporter.client.startTestItem).toBeCalledWith(
+    expect(reporter['client'].startTestItem).toBeCalledTimes(1);
+    expect(reporter['client'].startTestItem).toBeCalledWith(
       { name: testName, type: 'STEP' },
-      reporter.tempLaunchId,
+      'tempLaunchId',
       suiteId,
     );
-    expect(reporter.storage.getCurrentTest()).toEqual({ id: 'tempTestItemId', name: testName });
+    expect(reporter['storage'].getCurrentTest()).toEqual({ id: 'tempTestItemId', name: testName });
   });
 });

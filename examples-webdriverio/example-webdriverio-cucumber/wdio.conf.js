@@ -18,17 +18,15 @@
 const { Reporter } = require('@reportportal/agent-js-webdriverio');
 
 const config = {
-  reportPortalClientConfig: {
-    token: '00000000-0000-0000-0000-00000000000',
-    endpoint: 'http://your-instance:8080/api/v1',
-    launch: 'launch_name',
-    project: 'project_name',
-    mode: 'DEFAULT',
-    debug: false,
-    description: 'WDIO CUCUMBER TEST',
-    attributes: [{ key: 'key', value: 'value' }, { value: 'value' }],
-    headers: { foo: 'bar' }, // optional headers for internal http client
-  },
+  token: '00000000-0000-0000-0000-00000000000',
+  endpoint: 'http://your-instance:8080/api/v1',
+  launch: 'launch_name',
+  project: 'project_name',
+  mode: 'DEFAULT',
+  debug: false,
+  description: 'WDIO CUCUMBER TEST',
+  attributes: [{ key: 'key', value: 'value' }, { value: 'value' }],
+  headers: { foo: 'bar' }, // optional headers for internal http client
 };
 
 exports.config = {

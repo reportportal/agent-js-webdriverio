@@ -15,4 +15,4 @@
  *
  */
 
-export { TYPES, LEVELS, FILE_TYPES } from './constants';
+export { TYPES, LOG_LEVELS, FILE_TYPES } from './constants';

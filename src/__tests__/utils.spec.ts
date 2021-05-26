@@ -15,15 +15,56 @@
  *
  */
 
-import { promiseErrorHandler } from '../utils';
+import { getClientConfig, promiseErrorHandler } from '../utils';
+import { options } from './mocks/optionsMock';
 
 describe('utils', () => {
   it('promiseErrorHandler', async () => {
-    const log = jest.spyOn(console, 'log');
-    const promiseWithError = () => Promise.reject('error');
+    const log = jest.spyOn(console, 'error');
+    const promiseWithError = () => Promise.reject('error message');
     await promiseErrorHandler(promiseWithError());
 
     expect(log).toBeCalledTimes(1);
-    expect(log).toBeCalledWith('error');
+    expect(log).toBeCalledWith('error message');
+  });
+
+  describe('getClientConfig', () => {
+    const { token, endpoint, launch, project, attributes, description } = options;
+    const baseRes = {
+      token,
+      endpoint,
+      launch,
+      project,
+      attributes,
+      description,
+    };
+
+    it('getClientConfig with base config', () => {
+      expect(getClientConfig(options)).toEqual(baseRes);
+    });
+
+    it('getClientConfig with extended config', () => {
+      const extendedOptions = {
+        ...options,
+        rerun: true,
+        rerunOf: '00000000-0000-0000-0000-000000000000',
+        skippedIssue: true,
+        mode: 'DEFAULT',
+        debug: true,
+        headers: { foo: 'bar' },
+      };
+      const { token, endpoint, launch, project, attributes, description } = options;
+      const extendedRes = {
+        ...baseRes,
+        rerun: true,
+        rerunOf: '00000000-0000-0000-0000-000000000000',
+        skippedIssue: true,
+        mode: 'DEFAULT',
+        debug: true,
+        headers: { foo: 'bar' },
+      };
+
+      expect(getClientConfig(extendedOptions)).toEqual(extendedRes);
+    });
   });
 });

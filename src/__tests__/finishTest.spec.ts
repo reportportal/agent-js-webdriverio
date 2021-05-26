@@ -15,24 +15,24 @@
  *
  */
 
+import { Reporter } from '../reporter';
 import { options } from './mocks/optionsMock';
 import { RPClientMock } from './mocks/RPClientMock';
 import { suiteId, suiteName, testId, testName } from './mocks/data';
-
-const { Reporter } = require('../reporter');
+import { getClientConfig } from '../utils';
 
 describe('finishing test reporting', () => {
-  let reporter: typeof Reporter;
+  let reporter: Reporter;
   beforeEach(() => {
     reporter = new Reporter(options);
-    reporter.client = new RPClientMock(options.reportPortalClientConfig);
-    reporter.tempLaunchId = 'tempLaunchId';
-    reporter.storage.addSuite({ id: suiteId, name: suiteName });
-    reporter.storage.addTest({ id: testId, name: testName });
+    reporter['client'] = new RPClientMock(getClientConfig(options));
+    reporter['tempLaunchId'] = 'tempLaunchId';
+    reporter['storage'].addSuite({ id: suiteId, name: suiteName });
+    reporter['storage'].addTest({ id: testId, name: testName });
   });
 
   it('reporter.finishTest method: client.finishTestItem should be called with corresponding params', () => {
-    const testStats = {
+    const testStats: any = {
       title: testName,
       state: 'passed',
     };
@@ -41,9 +41,9 @@ describe('finishing test reporting', () => {
     };
     reporter.finishTest(testStats);
 
-    expect(reporter.client.finishTestItem).toBeCalledTimes(1);
-    expect(reporter.client.finishTestItem).toBeCalledWith(testId, finishTestItemRQ);
-    expect(reporter.storage.getCurrentTest()).toBeNull();
+    expect(reporter['client'].finishTestItem).toBeCalledTimes(1);
+    expect(reporter['client'].finishTestItem).toBeCalledWith(testId, finishTestItemRQ);
+    expect(reporter['storage'].getCurrentTest()).toBeNull();
   });
 
   describe('check finishing test with different statuses', () => {
@@ -53,7 +53,7 @@ describe('finishing test reporting', () => {
     });
 
     it('onTestPass: reporter.finishTest should be called with corresponding params', () => {
-      const testStats = {
+      const testStats: any = {
         title: testName,
         state: 'passed',
       };
@@ -66,7 +66,7 @@ describe('finishing test reporting', () => {
 
     it(`onTestFail: client.sendLog should be called with corresponding params.
               reporter.finishTest should be called`, () => {
-      const testStats = {
+      const testStats: any = {
         title: testName,
         state: 'failed',
         errors: [
@@ -83,8 +83,8 @@ describe('finishing test reporting', () => {
 
       reporter.onTestFail(testStats);
 
-      expect(reporter.client.sendLog).toBeCalledTimes(1);
-      expect(reporter.client.sendLog).toBeCalledWith(testId, {
+      expect(reporter['client'].sendLog).toBeCalledTimes(1);
+      expect(reporter['client'].sendLog).toBeCalledWith(testId, {
         level: 'ERROR',
         message: testStats.errors[0].stack,
       });
@@ -93,7 +93,7 @@ describe('finishing test reporting', () => {
     });
 
     it('onTestSkip: reporter.finishTest should be called with corresponding params', () => {
-      const testStats = {
+      const testStats: any = {
         title: testName,
         state: 'skipped',
       };

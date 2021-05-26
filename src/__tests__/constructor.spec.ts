@@ -15,12 +15,11 @@
  *
  */
 
+import { Reporter } from '../reporter';
 import { options } from './mocks/optionsMock';
 
-const { Reporter } = require('../reporter');
-
 describe('reporter constructor', () => {
-  let reporter: typeof Reporter;
+  let reporter: Reporter;
   beforeEach(() => {
     reporter = new Reporter(options);
   });

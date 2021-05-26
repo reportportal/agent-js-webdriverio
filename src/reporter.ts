@@ -19,12 +19,12 @@ import WDIOReporter, { SuiteStats, TestStats } from '@wdio/reporter';
 import { Reporters } from '@wdio/types';
 import RPClient from '@reportportal/client-javascript';
 import { Storage } from './storage';
-import { promiseErrorHandler } from './utils';
-import { LEVELS, TYPES } from './constants';
+import { getClientConfig, promiseErrorHandler } from './utils';
+import { LOG_LEVELS, TYPES } from './constants';
 import { FinishTestItem, LaunchObj, LogRQ, StartTestItem } from './models';
 
 // reference - https://www.npmjs.com/package/@wdio/reporter
-class Reporter extends WDIOReporter {
+export class Reporter extends WDIOReporter {
   private client: RPClient;
   private tempLaunchId: string;
   private storage: Storage;
@@ -33,9 +33,10 @@ class Reporter extends WDIOReporter {
   constructor(options: Partial<Reporters.Options>) {
     super(options);
 
+    const clientConfig = getClientConfig(options);
     this.options = options;
     this.syncReporting = false;
-    this.client = new RPClient(this.options.reportPortalClientConfig);
+    this.client = new RPClient(clientConfig);
     this.storage = new Storage();
   }
 
@@ -43,12 +44,12 @@ class Reporter extends WDIOReporter {
     return this.syncReporting;
   }
 
-  set isSynchronised(val) {
+  set isSynchronised(val: boolean) {
     this.syncReporting = val;
   }
 
-  onRunnerStart() {
-    const { attributes, description, mode } = this.options.reportPortalClientConfig;
+  onRunnerStart(): void {
+    const { attributes, description, mode } = this.options;
     const launchDataRQ: LaunchObj = {
       attributes,
       description,
@@ -61,10 +62,7 @@ class Reporter extends WDIOReporter {
 
   onSuiteStart(suiteStats: SuiteStats): void {
     const suiteItem = this.storage.getCurrentSuite();
-    let parentId = null;
-    if (suiteItem) {
-      parentId = suiteItem.id;
-    }
+    const parentId = suiteItem ? suiteItem.id : null;
     const { title: name } = suiteStats;
     const suiteDataRQ: StartTestItem = {
       name,
@@ -80,7 +78,7 @@ class Reporter extends WDIOReporter {
   // onHookEnd() {}
 
   onTestStart(testStats: TestStats): void {
-    const { id: testId } = this.storage.getCurrentSuite();
+    const { id: parentId } = this.storage.getCurrentSuite();
     const { title: name } = testStats;
     const testItemDataRQ = {
       name,
@@ -89,7 +87,7 @@ class Reporter extends WDIOReporter {
     const { tempId, promise } = this.client.startTestItem(
       testItemDataRQ,
       this.tempLaunchId,
-      testId,
+      parentId,
     );
     promiseErrorHandler(promise);
     this.storage.addTest({ name, id: tempId });
@@ -109,7 +107,7 @@ class Reporter extends WDIOReporter {
     const { id } = this.storage.getCurrentTest();
     testStats.errors.forEach((error: Error) => {
       const logRQ: LogRQ = {
-        level: LEVELS.ERROR,
+        level: LOG_LEVELS.ERROR,
         message: error.stack,
       };
       this.client.sendLog(id, logRQ);
@@ -134,14 +132,14 @@ class Reporter extends WDIOReporter {
     this.storage.removeSuite(id);
   }
 
-  async onRunnerEnd() {
+  async onRunnerEnd(): Promise<void> {
     try {
       await this.client.getPromiseFinishAllItems(this.tempLaunchId);
       const { promise } = this.client.finishLaunch(this.tempLaunchId, {});
       promiseErrorHandler(promise);
       this.tempLaunchId = null;
     } catch (e) {
-      console.log(e);
+      console.error(e);
     } finally {
       this.isSynchronised = true;
     }
@@ -151,5 +149,3 @@ class Reporter extends WDIOReporter {
 
   // onAfterCommand() {}
 }
-
-module.exports = { Reporter };

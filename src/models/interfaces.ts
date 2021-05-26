@@ -15,7 +15,7 @@
  *
  */
 
-import { FILE_TYPES, LEVELS, TYPES } from '../constants';
+import { FILE_TYPES, LOG_LEVELS, TYPES } from '../constants';
 
 export interface Config {
   token: string;
@@ -62,7 +62,7 @@ export interface FinishTestItem {
 }
 
 export interface LogRQ {
-  level?: LEVELS;
+  level?: LOG_LEVELS;
   message?: string;
   time?: number;
   file?: Attachment;
@@ -75,7 +75,7 @@ export interface Attachment {
 }
 
 export interface Attribute {
-  value: string;
+  value?: string;
   key?: string;
   system?: boolean;
 }

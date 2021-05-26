@@ -15,34 +15,36 @@
  *
  */
 
+import { Reporter } from '../reporter';
 import { options } from './mocks/optionsMock';
 import { RPClientMock } from './mocks/RPClientMock';
-
-const { Reporter } = require('../reporter');
+import { getClientConfig } from '../utils';
 
 describe('onRunnerEnd', () => {
-  let reporter: typeof Reporter;
+  let reporter: Reporter;
   beforeEach(() => {
     reporter = new Reporter(options);
-    reporter.client = new RPClientMock(options.reportPortalClientConfig);
-    reporter.tempLaunchId = 'tempLaunchId';
+    reporter['client'] = new RPClientMock(getClientConfig(options));
+    reporter['tempLaunchId'] = 'tempLaunchId';
   });
 
   it('client.finishLaunch should be called with corresponding params', async () => {
     await reporter.onRunnerEnd();
 
-    expect(reporter.client.finishLaunch).toBeCalledTimes(1);
-    expect(reporter.client.finishLaunch).toBeCalledWith('tempLaunchId', {});
-    expect(reporter.tempLaunchId).toBeNull();
+    expect(reporter['client'].finishLaunch).toBeCalledTimes(1);
+    expect(reporter['client'].finishLaunch).toBeCalledWith('tempLaunchId', {});
+    expect(reporter['tempLaunchId']).toBeNull();
     expect(reporter.isSynchronised).toBeTruthy();
   });
 
   it('client.getPromiseFinishAllItems with error', async () => {
-    const log = jest.spyOn(console, 'log');
-    reporter.client.getPromiseFinishAllItems = jest.fn().mockReturnValue(Promise.reject('error'));
+    const log = jest.spyOn(console, 'error');
+    reporter['client'].getPromiseFinishAllItems = jest
+      .fn()
+      .mockReturnValue(Promise.reject('error'));
     await reporter.onRunnerEnd();
 
-    expect(reporter.client.finishLaunch).toBeCalledTimes(0);
+    expect(reporter['client'].finishLaunch).toBeCalledTimes(0);
     expect(reporter.isSynchronised).toBeTruthy();
 
     expect(log).toBeCalledTimes(1);

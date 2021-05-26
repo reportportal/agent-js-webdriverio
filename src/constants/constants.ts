@@ -33,7 +33,7 @@ export enum TYPES {
   AFTER_TEST = 'AFTER_TEST',
 }
 
-export enum LEVELS {
+export enum LOG_LEVELS {
   ERROR = 'ERROR',
   TRACE = 'TRACE',
   DEBUG = 'DEBUG',

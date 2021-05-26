@@ -15,61 +15,64 @@
  *
  */
 
+import { Reporter } from '../reporter';
 import { options } from './mocks/optionsMock';
 import { RPClientMock } from './mocks/RPClientMock';
 import { suiteName } from './mocks/data';
-
-const { Reporter } = require('../reporter');
+import { getClientConfig } from '../utils';
 
 describe('onSuiteStart', () => {
-  let reporter: typeof Reporter;
+  let reporter: Reporter;
   beforeEach(() => {
     reporter = new Reporter(options);
-    reporter.client = new RPClientMock(options.reportPortalClientConfig);
-    reporter.tempLaunchId = 'tempLaunchId';
+    reporter['client'] = new RPClientMock(getClientConfig(options));
+    reporter['tempLaunchId'] = 'tempLaunchId';
   });
 
   it('client.startTestItem should be called with corresponding params', () => {
-    const suiteStats = {
+    const suiteStats: any = {
       title: suiteName,
     };
     reporter.onSuiteStart(suiteStats);
 
-    expect(reporter.client.startTestItem).toBeCalledTimes(1);
-    expect(reporter.client.startTestItem).toBeCalledWith(
+    expect(reporter['client'].startTestItem).toBeCalledTimes(1);
+    expect(reporter['client'].startTestItem).toBeCalledWith(
       { name: suiteName, type: 'SUITE' },
-      reporter.tempLaunchId,
+      'tempLaunchId',
       null,
     );
   });
 
   it('client.startTestItem should create SUITE', () => {
-    const suiteStats = {
+    const suiteStats: any = {
       title: suiteName,
     };
     reporter.onSuiteStart(suiteStats);
 
-    expect(reporter.client.startTestItem).toBeCalledTimes(1);
-    expect(reporter.client.startTestItem).toBeCalledWith(
+    expect(reporter['client'].startTestItem).toBeCalledTimes(1);
+    expect(reporter['client'].startTestItem).toBeCalledWith(
       { name: suiteName, type: 'SUITE' },
-      reporter.tempLaunchId,
+      'tempLaunchId',
       null,
     );
   });
 
   it('client.startTestItem should create TEST', () => {
-    const suiteStats = {
+    const suiteStats: any = {
       title: suiteName,
     };
-    reporter.storage.addSuite({ id: 'suite_parent_id', name: 'suite_parent_name' });
+    reporter['storage'].addSuite({ id: 'suite_parent_id', name: 'suite_parent_name' });
     reporter.onSuiteStart(suiteStats);
 
-    expect(reporter.client.startTestItem).toBeCalledTimes(1);
-    expect(reporter.client.startTestItem).toBeCalledWith(
+    expect(reporter['client'].startTestItem).toBeCalledTimes(1);
+    expect(reporter['client'].startTestItem).toBeCalledWith(
       { name: suiteName, type: 'TEST' },
-      reporter.tempLaunchId,
+      'tempLaunchId',
       'suite_parent_id',
     );
-    expect(reporter.storage.getCurrentSuite()).toEqual({ id: 'tempTestItemId', name: suiteName });
+    expect(reporter['storage'].getCurrentSuite()).toEqual({
+      id: 'tempTestItemId',
+      name: suiteName,
+    });
   });
 });

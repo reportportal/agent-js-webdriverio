@@ -15,8 +15,42 @@
  *
  */
 
+import { Reporters } from '@wdio/types';
+import { Config } from './models';
+
 export const promiseErrorHandler = (promise: Promise<any>): void => {
   promise.catch((err) => {
-    console.log(err);
+    console.error(err);
   });
+};
+
+export const getClientConfig = (options: Partial<Reporters.Options>): Config => {
+  const {
+    token,
+    endpoint,
+    launch,
+    project,
+    rerun,
+    rerunOf,
+    skippedIssue,
+    description,
+    attributes,
+    mode,
+    debug,
+    headers,
+  } = options;
+  return {
+    token,
+    endpoint,
+    launch,
+    project,
+    ...(rerun && { rerun }),
+    ...(rerunOf && { rerunOf }),
+    ...(skippedIssue && { skippedIssue }),
+    ...(description && { description }),
+    ...(attributes && { attributes }),
+    ...(mode && { mode }),
+    ...(debug && { debug }),
+    ...(headers && { headers }),
+  };
 };

@@ -15,18 +15,18 @@
  *
  */
 
+import { Reporter } from '../reporter';
 import { options } from './mocks/optionsMock';
 import { RPClientMock } from './mocks/RPClientMock';
 import { LaunchObj } from '../models';
-
-const { Reporter } = require('../reporter');
+import { getClientConfig } from '../utils';
 
 describe('onRunnerStart', () => {
-  const reporter: typeof Reporter = new Reporter(options);
-  reporter.client = new RPClientMock(options.reportPortalClientConfig);
+  const reporter: Reporter = new Reporter(options);
+  reporter['client'] = new RPClientMock(getClientConfig(options));
 
   it('client.startLaunch should be called with corresponding params', () => {
-    const { attributes, description, mode } = options.reportPortalClientConfig;
+    const { attributes, description, mode } = options;
     const launchDataRQ: LaunchObj = {
       attributes,
       description,
@@ -35,8 +35,8 @@ describe('onRunnerStart', () => {
 
     reporter.onRunnerStart();
 
-    expect(reporter.client.startLaunch).toBeCalledTimes(1);
-    expect(reporter.client.startLaunch).toBeCalledWith(launchDataRQ);
-    expect(reporter.tempLaunchId).toBe('tempLaunchId');
+    expect(reporter['client'].startLaunch).toBeCalledTimes(1);
+    expect(reporter['client'].startLaunch).toBeCalledWith(launchDataRQ);
+    expect(reporter['tempLaunchId']).toBe('tempLaunchId');
   });
 });
