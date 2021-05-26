@@ -15,9 +15,9 @@
  *
  */
 
+import { Reporters } from '@wdio/types';
 import { name as pjsonName, version as pjsonVersion } from '../package.json';
 import { Attribute, Config, LaunchObj } from './models';
-import { Reporters } from '@wdio/types';
 
 export const promiseErrorHandler = (promise: Promise<any>): void => {
   promise.catch((err) => {
@@ -73,7 +73,10 @@ export const getSystemAttributes = (): Attribute[] => {
   ];
 };
 
-export const getStartLaunchObj = (config: Config, launchObj: LaunchObj = {}): LaunchObj => {
+export const getStartLaunchObj = (
+  config: Partial<Reporters.Options>,
+  launchObj: LaunchObj = {},
+): LaunchObj => {
   const systemAttributes = getSystemAttributes();
 
   return {

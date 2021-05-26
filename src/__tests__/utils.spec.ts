@@ -18,7 +18,7 @@
 import pjson from '../../package.json';
 import {
   getAgentInfo,
-  getClientConfig
+  getClientConfig,
   getStartLaunchObj,
   getSystemAttributes,
   promiseErrorHandler,
@@ -100,13 +100,11 @@ describe('utils', () => {
   });
 
   describe('getStartLaunchObj', () => {
-    const launchObj = {};
     const systemAttributes = getSystemAttributes();
 
     it('config with attributes', () => {
-      const { description, attributes, rerun, rerunOf, mode } = options.reportPortalClientConfig;
+      const { description, attributes, rerun, rerunOf, mode } = options;
       const expectedRes = {
-        ...launchObj,
         attributes: [...attributes, ...systemAttributes],
         description,
         rerun,
@@ -114,22 +112,15 @@ describe('utils', () => {
         mode,
       };
 
-      expect(getStartLaunchObj(options.reportPortalClientConfig)).toEqual(expectedRes);
+      expect(getStartLaunchObj(options)).toEqual(expectedRes);
     });
 
     it('config without attributes', () => {
-      const { description, rerun, rerunOf, mode } = options.reportPortalClientConfig;
-      delete options.reportPortalClientConfig.attributes;
-      const expectedRes = {
-        ...launchObj,
-        attributes: systemAttributes,
-        description,
-        rerun,
-        rerunOf,
-        mode,
-      };
+      const newOptions = Object.assign(options, { attributes: undefined });
+      const { description, rerun, rerunOf, mode } = newOptions;
+      const expectedRes = { attributes: systemAttributes, description, rerun, rerunOf, mode };
 
-      expect(getStartLaunchObj(options.reportPortalClientConfig)).toEqual(expectedRes);
+      expect(getStartLaunchObj(options)).toEqual(expectedRes);
     });
   });
 });
