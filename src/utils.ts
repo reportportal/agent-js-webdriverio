@@ -38,6 +38,7 @@ export const getClientConfig = (options: Partial<Reporters.Options>): Config => 
     mode,
     debug,
     headers,
+    restClientConfig,
   } = options;
   return {
     token,
@@ -52,5 +53,6 @@ export const getClientConfig = (options: Partial<Reporters.Options>): Config => 
     ...(mode && { mode }),
     ...(debug && { debug }),
     ...(headers && { headers }),
+    ...(restClientConfig && { restClientConfig }),
   };
 };

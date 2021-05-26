@@ -52,8 +52,10 @@ describe('utils', () => {
         mode: 'DEFAULT',
         debug: true,
         headers: { foo: 'bar' },
+        restClientConfig: {
+          agent: { keepAlive: true },
+        },
       };
-      const { token, endpoint, launch, project, attributes, description } = options;
       const extendedRes = {
         ...baseRes,
         rerun: true,
@@ -62,6 +64,9 @@ describe('utils', () => {
         mode: 'DEFAULT',
         debug: true,
         headers: { foo: 'bar' },
+        restClientConfig: {
+          agent: { keepAlive: true },
+        },
       };
 
       expect(getClientConfig(extendedOptions)).toEqual(extendedRes);

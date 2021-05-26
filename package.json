@@ -14,7 +14,7 @@
     "dev:cucumber": "npm run build && cd examples-webdriverio/example-webdriverio-cucumber && npm run test"
   },
   "dependencies": {
-    "@reportportal/client-javascript": "5.0.3",
+    "@reportportal/client-javascript": "^5.0.5",
     "@wdio/reporter": "^7.6.0"
   },
   "devDependencies": {

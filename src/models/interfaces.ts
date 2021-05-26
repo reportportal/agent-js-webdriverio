@@ -75,7 +75,7 @@ export interface Attachment {
 }
 
 export interface Attribute {
-  value?: string;
+  value: string;
   key?: string;
   system?: boolean;
 }
