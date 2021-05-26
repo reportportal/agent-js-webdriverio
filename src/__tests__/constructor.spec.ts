@@ -15,27 +15,20 @@
  *
  */
 
-module.exports = {
-  roots: ['<rootDir>/src'],
-  transform: { '.(ts|tsx)': 'ts-jest' },
-  testEnvironment: 'node',
-  testRegex: '/__tests__/.*\\.(test|spec)?\\.(ts|js)$',
-  moduleFileExtensions: ['ts', 'js'],
-  collectCoverageFrom: ['src/**/*.ts'],
-  coveragePathIgnorePatterns: ['/__tests__/', '/constants/'],
-  coverageThreshold: {
-    global: {
-      branches: 80,
-      functions: 80,
-      lines: 80,
-      statements: 80,
-    },
-  },
-  globals: {
-    'ts-jest': {
-      diagnostics: {
-        pathRegex: '(/__tests__/.*?\\.(test|spec))\\.(ts|js)$',
-      },
-    },
-  },
-};
+import { Reporter } from '../reporter';
+import { options } from './mocks/optionsMock';
+
+describe('reporter constructor', () => {
+  let reporter: Reporter;
+  beforeEach(() => {
+    reporter = new Reporter(options);
+  });
+
+  it('should store configuration data', () => {
+    expect(reporter.options).toEqual(options);
+  });
+
+  it('isSynchronised should be FALSE', () => {
+    expect(reporter.isSynchronised).toBeFalsy();
+  });
+});

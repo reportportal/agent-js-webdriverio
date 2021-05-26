@@ -7,3 +7,7 @@ To develop new features locally and to test the reporter work please follow the 
 
 1. Install necessary dependencies using `npm install` or `npm i`.
 2. Run `npm run build` command to compile TypeScript to JavaScript.
+
+> For quickly launch examples you can use `npm run dev`, `npm run dev:cucumber` commands.\
+> Make sure you setup `wdio.conf.js` in  `example-webdriverio` or  `example-webdriverio-cucumber` folders.\
+> For more informations check the instruction in README file in `examples-webdriverio` folder.
