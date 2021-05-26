@@ -16,7 +16,8 @@
  */
 
 import { Reporters } from '@wdio/types';
-import { Config } from './models';
+import { name as pjsonName, version as pjsonVersion } from '../package.json';
+import { Attribute, Config, LaunchObj } from './models';
 
 export const promiseErrorHandler = (promise: Promise<any>): void => {
   promise.catch((err) => {
@@ -54,5 +55,36 @@ export const getClientConfig = (options: Partial<Reporters.Options>): Config => 
     ...(debug && { debug }),
     ...(headers && { headers }),
     ...(restClientConfig && { restClientConfig }),
+  };
+};
+
+export const getAgentInfo = (): { version: string; name: string } => ({
+  name: pjsonName,
+  version: pjsonVersion,
+});
+
+export const getSystemAttributes = (): Attribute[] => {
+  return [
+    {
+      key: 'agent',
+      value: `${pjsonName}|${pjsonVersion}`,
+      system: true,
+    },
+  ];
+};
+
+export const getStartLaunchObj = (
+  config: Partial<Reporters.Options>,
+  launchObj: LaunchObj = {},
+): LaunchObj => {
+  const systemAttributes = getSystemAttributes();
+
+  return {
+    description: config.description,
+    attributes: [...(config.attributes || []), ...systemAttributes],
+    rerun: config.rerun,
+    rerunOf: config.rerunOf,
+    mode: config.mode,
+    ...launchObj,
   };
 };

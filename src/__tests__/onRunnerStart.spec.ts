@@ -19,6 +19,7 @@ import { Reporter } from '../reporter';
 import { options } from './mocks/optionsMock';
 import { RPClientMock } from './mocks/RPClientMock';
 import { LaunchObj } from '../models';
+import { getStartLaunchObj } from '../utils';
 import { getClientConfig } from '../utils';
 
 describe('onRunnerStart', () => {
@@ -26,12 +27,7 @@ describe('onRunnerStart', () => {
   reporter['client'] = new RPClientMock(getClientConfig(options));
 
   it('client.startLaunch should be called with corresponding params', () => {
-    const { attributes, description, mode } = options;
-    const launchDataRQ: LaunchObj = {
-      attributes,
-      description,
-      mode,
-    };
+    const launchDataRQ: LaunchObj = getStartLaunchObj(options);
 
     reporter.onRunnerStart();
 
