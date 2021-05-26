@@ -8,7 +8,7 @@
     "resolveJsonModule": true,
     "lib": ["es2016", "es2016.array.include"],
     "module": "commonjs",
-    "target": "es5",
+    "target": "ES2015",
     "baseUrl": ".",
     "paths": {
       "*": ["node_modules/*", "src/types/*"]
@@ -18,5 +18,5 @@
     "rootDir": "."
   },
   "include": ["./src/**/*"],
-  "exclude": ["node_modules", "examples", "src/__tests__"]
+  "exclude": ["node_modules", "examples-webdriverio", "src/__tests__"]
 }
