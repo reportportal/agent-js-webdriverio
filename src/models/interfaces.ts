@@ -39,6 +39,8 @@ export interface LaunchObj {
   description?: string;
   attributes?: Attribute[];
   mode?: 'DEFAULT' | 'DEBUG';
+  rerun?: boolean;
+  rerunOf?: string;
   id?: string;
 }
 

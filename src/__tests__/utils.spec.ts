@@ -15,7 +15,14 @@
  *
  */
 
-import { getClientConfig, promiseErrorHandler } from '../utils';
+import pjson from '../../package.json';
+import {
+  getAgentInfo,
+  getClientConfig,
+  getStartLaunchObj,
+  getSystemAttributes,
+  promiseErrorHandler,
+} from '../utils';
 import { options } from './mocks/optionsMock';
 
 describe('utils', () => {
@@ -70,6 +77,50 @@ describe('utils', () => {
       };
 
       expect(getClientConfig(extendedOptions)).toEqual(extendedRes);
+    });
+  });
+
+  it('getAgentInfo', () => {
+    const agentInfo = getAgentInfo();
+
+    expect(agentInfo.name).toBe(pjson.name);
+    expect(agentInfo.version).toBe(pjson.version);
+  });
+
+  it('getSystemAttributes', () => {
+    const expectedRes = [
+      {
+        key: 'agent',
+        value: `${pjson.name}|${pjson.version}`,
+        system: true,
+      },
+    ];
+
+    expect(getSystemAttributes()).toEqual(expectedRes);
+  });
+
+  describe('getStartLaunchObj', () => {
+    const systemAttributes = getSystemAttributes();
+
+    it('config with attributes', () => {
+      const { description, attributes, rerun, rerunOf, mode } = options;
+      const expectedRes = {
+        attributes: [...attributes, ...systemAttributes],
+        description,
+        rerun,
+        rerunOf,
+        mode,
+      };
+
+      expect(getStartLaunchObj(options)).toEqual(expectedRes);
+    });
+
+    it('config without attributes', () => {
+      const newOptions = Object.assign(options, { attributes: undefined });
+      const { description, rerun, rerunOf, mode } = newOptions;
+      const expectedRes = { attributes: systemAttributes, description, rerun, rerunOf, mode };
+
+      expect(getStartLaunchObj(options)).toEqual(expectedRes);
     });
   });
 });
