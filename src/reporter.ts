@@ -19,7 +19,13 @@ import WDIOReporter, { SuiteStats, TestStats } from '@wdio/reporter';
 import { Reporters } from '@wdio/types';
 import RPClient from '@reportportal/client-javascript';
 import { Storage } from './storage';
-import { getAgentInfo, getStartLaunchObj, getClientConfig, promiseErrorHandler } from './utils';
+import {
+  getAgentInfo,
+  getClientConfig,
+  getCodeRef,
+  getStartLaunchObj,
+  promiseErrorHandler,
+} from './utils';
 import { LOG_LEVELS, TYPES } from './constants';
 import { FinishTestItem, LaunchObj, LogRQ, StartTestItem } from './models';
 
@@ -29,6 +35,7 @@ export class Reporter extends WDIOReporter {
   private tempLaunchId: string;
   private storage: Storage;
   private syncReporting: boolean;
+  private testFilePath: string;
 
   constructor(options: Partial<Reporters.Options>) {
     super(options);
@@ -60,9 +67,13 @@ export class Reporter extends WDIOReporter {
     const suiteItem = this.storage.getCurrentSuite();
     const parentId = suiteItem ? suiteItem.id : null;
     const { title: name } = suiteStats;
+    this.testFilePath = suiteStats.file.startsWith('unknown') ? this.testFilePath : suiteStats.file;
+    const ancestors = this.storage.getAllSuites();
+    const codeRef = getCodeRef(this.testFilePath, name, ancestors);
     const suiteDataRQ: StartTestItem = {
       name,
       type: parentId ? TYPES.TEST : TYPES.SUITE,
+      codeRef,
     };
     const { tempId, promise } = this.client.startTestItem(suiteDataRQ, this.tempLaunchId, parentId);
     promiseErrorHandler(promise);
@@ -76,9 +87,12 @@ export class Reporter extends WDIOReporter {
   onTestStart(testStats: TestStats): void {
     const { id: parentId } = this.storage.getCurrentSuite();
     const { title: name } = testStats;
+    const ancestors = this.storage.getAllSuites();
+    const codeRef = getCodeRef(this.testFilePath, name, ancestors);
     const testItemDataRQ = {
       name,
       type: TYPES.STEP,
+      codeRef,
     };
     const { tempId, promise } = this.client.startTestItem(
       testItemDataRQ,

@@ -15,10 +15,12 @@
  *
  */
 
+import path from 'path';
 import pjson from '../../package.json';
 import {
   getAgentInfo,
   getClientConfig,
+  getCodeRef,
   getStartLaunchObj,
   getSystemAttributes,
   promiseErrorHandler,
@@ -121,6 +123,22 @@ describe('utils', () => {
       const expectedRes = { attributes: systemAttributes, description, rerun, rerunOf, mode };
 
       expect(getStartLaunchObj(options)).toEqual(expectedRes);
+    });
+  });
+
+  describe('getCodeRef', () => {
+    jest.spyOn(process, 'cwd').mockReturnValue(`C:${path.sep}project`);
+    const testPath = `C:${path.sep}project${path.sep}__test__${path.sep}example.js`;
+    const ancestors = [
+      { name: 'suiteTitle_1', id: 'suite_id_1' },
+      { name: 'suiteTitle_2', id: 'suite_id_2' },
+    ];
+    const testTitle = 'testTitle';
+
+    it('should be correct codeRef ', () => {
+      const codeRef = getCodeRef(testPath, testTitle, ancestors);
+      const expectedRes = '__test__/example.js/suiteTitle_1/suiteTitle_2/testTitle';
+      expect(codeRef).toBe(expectedRes);
     });
   });
 });

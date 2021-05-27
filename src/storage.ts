@@ -26,6 +26,10 @@ export class Storage {
     this.suites.push(data);
   }
 
+  public getAllSuites(): Suite[] {
+    return [...this.suites];
+  }
+
   public getCurrentSuite(): Suite {
     return this.suites[this.suites.length - 1] || null;
   }
