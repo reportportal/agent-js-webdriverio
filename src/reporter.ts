@@ -67,7 +67,7 @@ export class Reporter extends WDIOReporter {
     const suiteItem = this.storage.getCurrentSuite();
     const parentId = suiteItem ? suiteItem.id : null;
     const { title: name } = suiteStats;
-    this.testFilePath = suiteStats.file.startsWith('unknown') ? this.testFilePath : suiteStats.file;
+    this.testFilePath = suiteStats.file;
     const ancestors = this.storage.getAllSuites();
     const codeRef = getCodeRef(this.testFilePath, name, ancestors);
     const suiteDataRQ: StartTestItem = {

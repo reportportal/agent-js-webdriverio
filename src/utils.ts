@@ -92,8 +92,6 @@ export const getStartLaunchObj = (
 
 export const getCodeRef = (filePath: string, title: string, ancestors: Suite[]): string => {
   const relativePath = path.relative(process.cwd(), filePath).replace(/\\/g, '/');
-  const ancestorsTitles = ancestors.reduce((item: string[], currItem: Suite) => {
-    return [...item, currItem.name];
-  }, []);
+  const ancestorsTitles = ancestors.map((item) => item.name);
   return [relativePath, ...ancestorsTitles, title].join('/');
 };
