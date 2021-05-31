@@ -15,6 +15,7 @@
  *
  */
 
+import path from 'path';
 import { Reporter } from '../reporter';
 import { options } from './mocks/optionsMock';
 import { RPClientMock } from './mocks/RPClientMock';
@@ -28,30 +29,18 @@ describe('onSuiteStart', () => {
     reporter['client'] = new RPClientMock(getClientConfig(options));
     reporter['tempLaunchId'] = 'tempLaunchId';
   });
+  jest.spyOn(process, 'cwd').mockReturnValue(`C:${path.sep}project`);
 
   it('client.startTestItem should be called with corresponding params', () => {
     const suiteStats: any = {
       title: suiteName,
+      file: `C:${path.sep}project${path.sep}__test__${path.sep}example.js`,
     };
     reporter.onSuiteStart(suiteStats);
 
     expect(reporter['client'].startTestItem).toBeCalledTimes(1);
     expect(reporter['client'].startTestItem).toBeCalledWith(
-      { name: suiteName, type: 'SUITE' },
-      'tempLaunchId',
-      null,
-    );
-  });
-
-  it('client.startTestItem should create SUITE', () => {
-    const suiteStats: any = {
-      title: suiteName,
-    };
-    reporter.onSuiteStart(suiteStats);
-
-    expect(reporter['client'].startTestItem).toBeCalledTimes(1);
-    expect(reporter['client'].startTestItem).toBeCalledWith(
-      { name: suiteName, type: 'SUITE' },
+      { name: suiteName, type: 'SUITE', codeRef: '__test__/example.js/suite_name' },
       'tempLaunchId',
       null,
     );
@@ -60,13 +49,18 @@ describe('onSuiteStart', () => {
   it('client.startTestItem should create TEST', () => {
     const suiteStats: any = {
       title: suiteName,
+      file: `C:${path.sep}project${path.sep}__test__${path.sep}example.js`,
     };
     reporter['storage'].addSuite({ id: 'suite_parent_id', name: 'suite_parent_name' });
     reporter.onSuiteStart(suiteStats);
 
     expect(reporter['client'].startTestItem).toBeCalledTimes(1);
     expect(reporter['client'].startTestItem).toBeCalledWith(
-      { name: suiteName, type: 'TEST' },
+      {
+        name: suiteName,
+        type: 'TEST',
+        codeRef: '__test__/example.js/suite_parent_name/suite_name',
+      },
       'tempLaunchId',
       'suite_parent_id',
     );

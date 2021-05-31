@@ -55,12 +55,14 @@ export interface StartTestItem {
   startTime?: Date | number;
   description?: string;
   attributes?: Attribute[];
+  codeRef?: string;
 }
 
 export interface FinishTestItem {
   endTime?: Date | number;
   status?: string;
   issue?: Issue;
+  codeRef?: string;
 }
 
 export interface LogRQ {
@@ -103,6 +105,7 @@ export interface ExternalSystemIssue {
 export interface Suite {
   id: string;
   name: string;
+  codeRef?: string;
 }
 
 export interface TestItem {

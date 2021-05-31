@@ -15,6 +15,7 @@
  *
  */
 
+import path from 'path';
 import { Reporter } from '../reporter';
 import { options } from './mocks/optionsMock';
 import { RPClientMock } from './mocks/RPClientMock';
@@ -25,7 +26,9 @@ describe('onTestStart', () => {
   const reporter: Reporter = new Reporter(options);
   reporter['client'] = new RPClientMock(getClientConfig(options));
   reporter['tempLaunchId'] = 'tempLaunchId';
+  reporter['testFilePath'] = `C:${path.sep}project${path.sep}__test__${path.sep}example.js`;
   reporter['storage'].addSuite({ id: suiteId, name: suiteName });
+  jest.spyOn(process, 'cwd').mockReturnValue(`C:${path.sep}project`);
 
   it('client.startTestItem should be called with corresponding params', () => {
     const testStats: any = {
@@ -35,7 +38,7 @@ describe('onTestStart', () => {
 
     expect(reporter['client'].startTestItem).toBeCalledTimes(1);
     expect(reporter['client'].startTestItem).toBeCalledWith(
-      { name: testName, type: 'STEP' },
+      { name: testName, type: 'STEP', codeRef: '__test__/example.js/suite_name/test_name' },
       'tempLaunchId',
       suiteId,
     );
