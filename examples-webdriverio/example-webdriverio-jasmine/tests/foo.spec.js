@@ -26,8 +26,3 @@ describe('Suite 1', () => {
     });
   });
 });
-describe('Suite 2', () => {
-  it('Test should be FAILED', () => {
-    expect(true).toBe(false);
-  });
-});

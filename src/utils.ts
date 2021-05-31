@@ -15,9 +15,10 @@
  *
  */
 
+import path from 'path';
 import { Reporters } from '@wdio/types';
 import { name as pjsonName, version as pjsonVersion } from '../package.json';
-import { Attribute, Config, LaunchObj } from './models';
+import { Attribute, Config, LaunchObj, Suite } from './models';
 
 export const promiseErrorHandler = (promise: Promise<any>): void => {
   promise.catch((err) => {
@@ -87,4 +88,10 @@ export const getStartLaunchObj = (
     mode: config.mode,
     ...launchObj,
   };
+};
+
+export const getCodeRef = (filePath: string, title: string, ancestors: Suite[]): string => {
+  const relativePath = path.relative(process.cwd(), filePath).replace(/\\/g, '/');
+  const ancestorsTitles = ancestors.map((item) => item.name);
+  return [relativePath, ...ancestorsTitles, title].join('/');
 };
