@@ -15,4 +15,10 @@
  *
  */
 
-export { CUCUMBER_TYPE, TYPES, LOG_LEVELS, FILE_TYPES } from './constants';
+declare namespace Interfaces {
+  interface Attribute {
+    value: string;
+    key?: string;
+    system?: boolean;
+  }
+}

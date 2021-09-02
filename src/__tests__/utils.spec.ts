@@ -23,6 +23,7 @@ import {
   getCodeRef,
   getStartLaunchObj,
   getSystemAttributes,
+  parseTags,
   promiseErrorHandler,
 } from '../utils';
 import { options } from './mocks/optionsMock';
@@ -139,6 +140,22 @@ describe('utils', () => {
       const codeRef = getCodeRef(testPath, testTitle, ancestors);
       const expectedRes = '__test__/example.js/suiteTitle_1/suiteTitle_2/testTitle';
       expect(codeRef).toBe(expectedRes);
+    });
+  });
+
+  describe('parseTags', () => {
+    const tags = [
+      { name: '@cucumberKey:value', line: 1 },
+      { name: '@value2', line: 19 },
+    ];
+
+    it('should return correct attributes', () => {
+      const expectedRes = [{ key: 'cucumberKey', value: 'value' }, { value: 'value2' }];
+      expect(parseTags(tags)).toEqual(expectedRes);
+    });
+
+    it('should return empty array', () => {
+      expect(parseTags([''])).toEqual([]);
     });
   });
 });

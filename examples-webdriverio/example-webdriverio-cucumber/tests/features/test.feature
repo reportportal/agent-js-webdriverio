@@ -1,3 +1,4 @@
+@attributeKey:attributeValue @attributeValue_2
 Feature: Title check
   I should be able to go to a website
   and check its title

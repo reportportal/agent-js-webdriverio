@@ -18,16 +18,18 @@
 import WDIOReporter, { SuiteStats, TestStats } from '@wdio/reporter';
 import { Reporters } from '@wdio/types';
 import RPClient from '@reportportal/client-javascript';
+import { EVENTS } from '@reportportal/client-javascript/lib/constants/events';
 import { Storage } from './storage';
 import {
   getAgentInfo,
   getClientConfig,
   getCodeRef,
   getStartLaunchObj,
+  parseTags,
   promiseErrorHandler,
 } from './utils';
-import { LOG_LEVELS, TYPES } from './constants';
-import { FinishTestItem, LaunchObj, LogRQ, StartTestItem } from './models';
+import { CUCUMBER_TYPE, LOG_LEVELS, TYPES } from './constants';
+import { Attribute, FinishTestItem, LaunchObj, LogRQ, StartTestItem } from './models';
 
 // reference - https://www.npmjs.com/package/@wdio/reporter
 export class Reporter extends WDIOReporter {
@@ -46,6 +48,15 @@ export class Reporter extends WDIOReporter {
     this.syncReporting = false;
     this.client = new RPClient(clientConfig, agentInfo);
     this.storage = new Storage();
+    this.registerRPListeners();
+  }
+
+  registerRPListeners(): void {
+    process.on(EVENTS.ADD_ATTRIBUTES, this.addAttributes.bind(this));
+  }
+
+  unregisterRPListeners(): void {
+    process.off(EVENTS.ADD_ATTRIBUTES, this.addAttributes.bind(this));
   }
 
   get isSynchronised(): boolean {
@@ -70,11 +81,17 @@ export class Reporter extends WDIOReporter {
     this.testFilePath = suiteStats.file;
     const ancestors = this.storage.getAllSuites();
     const codeRef = getCodeRef(this.testFilePath, name, ancestors);
+    const additionalData = this.storage.getAdditionalSuiteData(name);
     const suiteDataRQ: StartTestItem = {
       name,
       type: parentId ? TYPES.TEST : TYPES.SUITE,
       codeRef,
+      ...additionalData,
     };
+    const isCucumberFeature = suiteStats.type === CUCUMBER_TYPE.FEATURE;
+    if (isCucumberFeature && suiteStats.tags.length > 0) {
+      suiteDataRQ.attributes = parseTags(suiteStats.tags);
+    }
     const { tempId, promise } = this.client.startTestItem(suiteDataRQ, this.tempLaunchId, parentId);
     promiseErrorHandler(promise);
     this.storage.addSuite({ id: tempId, name });
@@ -126,9 +143,10 @@ export class Reporter extends WDIOReporter {
   }
 
   finishTest(testStats: TestStats): void {
-    const { id } = this.storage.getCurrentTest();
+    const { id, attributes } = this.storage.getCurrentTest();
     const finishTestItemRQ: FinishTestItem = {
       status: testStats.state,
+      ...(attributes && { attributes }),
     };
     const { promise } = this.client.finishTestItem(id, finishTestItemRQ);
     promiseErrorHandler(promise);
@@ -145,12 +163,13 @@ export class Reporter extends WDIOReporter {
   async onRunnerEnd(): Promise<void> {
     try {
       await this.client.getPromiseFinishAllItems(this.tempLaunchId);
-      const { promise } = this.client.finishLaunch(this.tempLaunchId, {});
+      const { promise } = await this.client.finishLaunch(this.tempLaunchId, {});
       promiseErrorHandler(promise);
       this.tempLaunchId = null;
     } catch (e) {
       console.error(e);
     } finally {
+      this.unregisterRPListeners();
       this.isSynchronised = true;
     }
   }
@@ -158,4 +177,18 @@ export class Reporter extends WDIOReporter {
   // onBeforeCommand() {}
 
   // onAfterCommand() {}
+
+  addAttributes({ attributes, suite }: { attributes: Attribute[]; suite?: string }): void {
+    if (!attributes || !(attributes instanceof Array)) {
+      console.error('Attributes should be instance of Array');
+      return;
+    }
+    if (attributes && suite) {
+      const data = this.storage.getAdditionalSuiteData(suite);
+      const newData = { attributes: (data.attributes || []).concat(attributes) };
+      this.storage.addAdditionalSuiteData(suite, newData);
+    } else {
+      this.storage.updateCurrentTest({ attributes });
+    }
+  }
 }
