@@ -15,11 +15,11 @@
  *
  */
 
-import { Suite, TestItem } from './models';
+import { AdditionalData, AdditionalSuitesData, Suite, TestItem } from './models';
 
 export class Storage {
   private suites: Suite[] = [];
-
+  private additionalSuitesData: AdditionalSuitesData = {};
   private testItems: TestItem[] = [];
 
   public addSuite(data: Suite): void {
@@ -38,8 +38,21 @@ export class Storage {
     this.suites = this.suites.filter(({ id }) => suiteId !== id);
   }
 
+  public addAdditionalSuiteData(key: string, data: AdditionalData): void {
+    this.additionalSuitesData[key] = { ...(this.additionalSuitesData[key] || {}), ...data };
+  }
+
+  public getAdditionalSuiteData(key: string): AdditionalData {
+    return this.additionalSuitesData[key] || {};
+  }
+
   public addTest(data: TestItem): void {
     this.testItems.push(data);
+  }
+
+  public updateCurrentTest(data: Partial<TestItem>): void {
+    const lastElemIdx = this.testItems.length - 1;
+    this.testItems[lastElemIdx] = { ...this.testItems[lastElemIdx], ...data };
   }
 
   public getCurrentTest(): TestItem {

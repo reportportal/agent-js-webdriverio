@@ -15,4 +15,6 @@
  *
  */
 
-export { CUCUMBER_TYPE, TYPES, LOG_LEVELS, FILE_TYPES } from './constants';
+declare module '@reportportal/client-javascript/lib/constants/events' {
+  export const EVENTS: { [name: string]: string };
+}

@@ -38,9 +38,22 @@ describe('storage', () => {
     expect(storage.getCurrentSuite()).toBeNull();
   });
 
+  it('addAdditionalSuiteData should add suite data by passing key and data', () => {
+    const storageKey = 'key';
+    const expectedRes = { attributes: [{ value: 'value' }] };
+    storage.addAdditionalSuiteData(storageKey, { attributes: [{ value: 'value' }] });
+    expect(storage.getAdditionalSuiteData(storageKey)).toEqual(expectedRes);
+  });
+
   it('addTest', () => {
     storage.addTest(testData);
     expect(storage.getCurrentTest()).toEqual(testData);
+  });
+
+  it('updateTest', () => {
+    const additionalData = { attributes: [{ value: 'value' }] };
+    storage.updateCurrentTest(additionalData);
+    expect(storage.getCurrentTest()).toEqual({ ...testData, ...additionalData });
   });
 
   it('removeTest', () => {

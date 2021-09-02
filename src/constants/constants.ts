@@ -52,3 +52,8 @@ export enum FILE_TYPES {
   PNG = 'image/png',
   JPG = 'image/jpg',
 }
+
+export enum CUCUMBER_TYPE {
+  FEATURE = 'feature',
+  SCENARIO = 'scenario',
+}

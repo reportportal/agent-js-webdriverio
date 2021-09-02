@@ -27,4 +27,6 @@ export {
   StartTestItem,
   Suite,
   TestItem,
+  AdditionalData,
+  AdditionalSuitesData,
 } from './interfaces';
