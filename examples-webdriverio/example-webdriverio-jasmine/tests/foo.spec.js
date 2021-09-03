@@ -13,6 +13,7 @@ describe('Suite 1', () => {
     ],
     'Suite 1',
   );
+  ReportingApi.setDescription('suite_description', 'Suite 1');
   it('Test should be PASSED', () => {
     browser.url('https://webdriver.io');
     const title = browser.getTitle();
@@ -44,6 +45,7 @@ describe('Suite 1', () => {
         value: 'step_attribute',
       },
     ]);
+    ReportingApi.setDescription('step_description');
     browser.url('https://webdriver.io');
     const title = browser.getTitle();
     expect(title).toBe('WebdriverIO');
@@ -61,6 +63,7 @@ describe('Suite 1', () => {
       ],
       'should be type:TEST',
     );
+    ReportingApi.setDescription('test_description', 'should be type:TEST');
     it('test should be FAILED', () => {
       expect(true).toBe(false);
     });

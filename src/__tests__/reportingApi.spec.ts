@@ -21,6 +21,7 @@ import { ReportingApi } from '../reportingApi';
 import { suiteName } from './mocks/data';
 
 const attributes = [{ key: 'key', value: 'value' }];
+const description = 'some text';
 
 describe('ReportingApi', () => {
   describe('addAttributes', () => {
@@ -38,6 +39,24 @@ describe('ReportingApi', () => {
 
       expect(spyOnAddAttributes).toBeCalledTimes(1);
       expect(spyOnAddAttributes).toBeCalledWith(attributes, suiteName);
+    });
+  });
+
+  describe('setDescription', () => {
+    it('should call clientPublicReportingApi.setDescription method with text and undefined as parameter', () => {
+      const spyOnSetDescription = spyOn(ClientPublicReportingAPI, 'setDescription');
+      ReportingApi.setDescription(description);
+
+      expect(spyOnSetDescription).toBeCalledTimes(1);
+      expect(spyOnSetDescription).toBeCalledWith(description, undefined);
+    });
+
+    it('should call clientPublicReportingApi.setDescription method with text and suite as parameter', () => {
+      const spyOnSetDescription = spyOn(ClientPublicReportingAPI, 'setDescription');
+      ReportingApi.setDescription(description, suiteName);
+
+      expect(spyOnSetDescription).toBeCalledTimes(1);
+      expect(spyOnSetDescription).toBeCalledWith(description, suiteName);
     });
   });
 });
