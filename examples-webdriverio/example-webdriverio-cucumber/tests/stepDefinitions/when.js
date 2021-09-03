@@ -11,5 +11,6 @@ Given('I go to the website abc', () => {
       value: 'given_attribute',
     },
   ]);
+  ReportingApi.setDescription('when description');
   browser.url('http://www.google.com');
 });

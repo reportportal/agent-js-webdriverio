@@ -56,4 +56,21 @@ describe('reporter additional methods', () => {
       expect(log).toBeCalledWith('Attributes should be instance of Array');
     });
   });
+
+  describe('setDescription', () => {
+    const description = 'some text';
+
+    it('reporter.setDescription pass description', () => {
+      const expectedRes = { id: testId, name: testName, description };
+      reporter.setDescription({ text: description });
+
+      expect(reporter['storage'].getCurrentTest()).toEqual(expectedRes);
+    });
+
+    it('reporter.setDescription pass description and suite', () => {
+      reporter.setDescription({ text: description, suite: suiteName });
+
+      expect(reporter['storage'].getAdditionalSuiteData(suiteName)).toEqual({ description });
+    });
+  });
 });

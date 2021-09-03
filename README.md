@@ -82,3 +82,33 @@ Given('I do something awesome', () => {
 ```
 > **Note:** Agent is not supported adding attributes to the `scenario`.  
 
+`ReportingApi.setDescription(description: string, suite?: string);`  
+**required**: `description`
+
+Examples:
+```js
+// Jasmine
+describe('suite name', () => {
+  ReportingApi.setDescription('suite description', 'suite name'); // the second parameter must match the name of the suite
+  it('test with attributes', () => {
+    ReportingApi.setDescription('step description');
+    expect(true).eql(true);
+  })
+});
+```
+> **Note:** Pay attention if you want to provide description to the `suite` you should pass describe name as a second parameter.
+
+```gherkin
+// Cucumber
+Feature: Test WDIO with cucumber
+  This description will be adding to the suite
+//...
+```
+```js
+// Cucumber
+Given('I do something awesome', () => {
+  ReportingApi.setDescription('step description');
+  //...
+});
+```
+> **Note:** Agent is not supported adding description to the `scenario`. 

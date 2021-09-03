@@ -53,10 +53,12 @@ export class Reporter extends WDIOReporter {
 
   registerRPListeners(): void {
     process.on(EVENTS.ADD_ATTRIBUTES, this.addAttributes.bind(this));
+    process.on(EVENTS.SET_DESCRIPTION, this.setDescription.bind(this));
   }
 
   unregisterRPListeners(): void {
     process.off(EVENTS.ADD_ATTRIBUTES, this.addAttributes.bind(this));
+    process.off(EVENTS.SET_DESCRIPTION, this.setDescription.bind(this));
   }
 
   get isSynchronised(): boolean {
@@ -91,6 +93,9 @@ export class Reporter extends WDIOReporter {
     const isCucumberFeature = suiteStats.type === CUCUMBER_TYPE.FEATURE;
     if (isCucumberFeature && suiteStats.tags.length > 0) {
       suiteDataRQ.attributes = parseTags(suiteStats.tags);
+    }
+    if (isCucumberFeature && suiteStats.description) {
+      suiteDataRQ.description = suiteStats.description;
     }
     const { tempId, promise } = this.client.startTestItem(suiteDataRQ, this.tempLaunchId, parentId);
     promiseErrorHandler(promise);
@@ -143,10 +148,11 @@ export class Reporter extends WDIOReporter {
   }
 
   finishTest(testStats: TestStats): void {
-    const { id, attributes } = this.storage.getCurrentTest();
+    const { id, attributes, description } = this.storage.getCurrentTest();
     const finishTestItemRQ: FinishTestItem = {
       status: testStats.state,
       ...(attributes && { attributes }),
+      ...(description && { description }),
     };
     const { promise } = this.client.finishTestItem(id, finishTestItemRQ);
     promiseErrorHandler(promise);
@@ -189,6 +195,14 @@ export class Reporter extends WDIOReporter {
       this.storage.addAdditionalSuiteData(suite, newData);
     } else {
       this.storage.updateCurrentTest({ attributes });
+    }
+  }
+
+  setDescription({ text, suite }: { text: string; suite?: string }): void {
+    if (text && suite) {
+      this.storage.addAdditionalSuiteData(suite, { description: text });
+    } else {
+      this.storage.updateCurrentTest({ description: text });
     }
   }
 }

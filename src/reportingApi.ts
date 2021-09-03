@@ -21,4 +21,6 @@ import { Attribute } from './models';
 export const ReportingApi = {
   addAttributes: (attributes: Attribute[], suite?: string): void =>
     ClientPublicReportingAPI.addAttributes(attributes, suite),
+  setDescription: (text: string, suite?: string): void =>
+    ClientPublicReportingAPI.setDescription(text, suite),
 };
