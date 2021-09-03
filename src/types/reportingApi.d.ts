@@ -18,5 +18,6 @@
 declare module '@reportportal/client-javascript/lib/publicReportingAPI' {
   export default class {
     static addAttributes(attributes: Interfaces.Attribute[], suite?: string): void;
+    static setDescription(text: string, suite?: string): void;
   }
 }

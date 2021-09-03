@@ -105,6 +105,7 @@ export interface TestItem {
   id: string;
   name: string;
   attributes?: Attribute[];
+  description?: string;
 }
 
 export interface FinishTestItem {
@@ -117,6 +118,7 @@ export interface FinishTestItem {
 
 export interface AdditionalData {
   attributes?: Attribute[];
+  description?: string;
 }
 
 export interface AdditionalSuitesData {
