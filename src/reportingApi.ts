@@ -15,4 +15,10 @@
  *
  */
 
-export { CUCUMBER_TYPE, TYPES, LOG_LEVELS, FILE_TYPES } from './constants';
+import ClientPublicReportingAPI from '@reportportal/client-javascript/lib/publicReportingAPI';
+import { Attribute } from './models';
+
+export const ReportingApi = {
+  addAttributes: (attributes: Attribute[], suite?: string): void =>
+    ClientPublicReportingAPI.addAttributes(attributes, suite),
+};

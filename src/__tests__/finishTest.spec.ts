@@ -104,4 +104,30 @@ describe('finishing test reporting', () => {
       expect(spyOnFinishTest).toBeCalledWith(testStats);
     });
   });
+
+  describe('check finishing test with additional data', () => {
+    const testStats: any = {
+      title: testName,
+      state: 'passed',
+    };
+
+    it('test with attributes', () => {
+      const attributes = [
+        {
+          key: 'key1',
+          value: 'value1',
+        },
+      ];
+      const finishTestItemRQ = {
+        status: testStats.state,
+        attributes,
+      };
+
+      reporter.addAttributes({ attributes });
+      reporter.finishTest(testStats);
+
+      expect(reporter['client'].finishTestItem).toBeCalledTimes(1);
+      expect(reporter['client'].finishTestItem).toBeCalledWith(testId, finishTestItemRQ);
+    });
+  });
 });

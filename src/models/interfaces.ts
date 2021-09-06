@@ -58,13 +58,6 @@ export interface StartTestItem {
   codeRef?: string;
 }
 
-export interface FinishTestItem {
-  endTime?: Date | number;
-  status?: string;
-  issue?: Issue;
-  codeRef?: string;
-}
-
 export interface LogRQ {
   level?: LOG_LEVELS;
   message?: string;
@@ -111,4 +104,21 @@ export interface Suite {
 export interface TestItem {
   id: string;
   name: string;
+  attributes?: Attribute[];
+}
+
+export interface FinishTestItem {
+  endTime?: Date | number;
+  status?: string;
+  issue?: Issue;
+  codeRef?: string;
+  attributes?: Attribute[];
+}
+
+export interface AdditionalData {
+  attributes?: Attribute[];
+}
+
+export interface AdditionalSuitesData {
+  [name: string]: AdditionalData;
 }
