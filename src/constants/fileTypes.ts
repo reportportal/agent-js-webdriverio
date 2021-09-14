@@ -15,7 +15,14 @@
  *
  */
 
-export { CUCUMBER_TYPE, TYPES } from './testItemTypes';
-export { STATUSES } from './statuses';
-export { LOG_LEVELS } from './logLevels';
-export { FILE_TYPES } from './fileTypes';
+export enum FILE_TYPES {
+  XML = 'application/xml',
+  HTML = 'application/html',
+  JAVASCRIPT = 'application/javascript',
+  JSON = 'application/json',
+  PHP = 'application/php',
+  CSS = 'application/css',
+  TEXT = 'text/plain',
+  PNG = 'image/png',
+  JPG = 'image/jpg',
+}

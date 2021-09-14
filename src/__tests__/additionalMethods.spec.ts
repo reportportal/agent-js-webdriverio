@@ -20,6 +20,7 @@ import { options } from './mocks/optionsMock';
 import { RPClientMock } from './mocks/RPClientMock';
 import { getClientConfig } from '../utils';
 import { suiteId, suiteName, testId, testName } from './mocks/data';
+import { STATUSES } from '../constants';
 
 describe('reporter additional methods', () => {
   let reporter: Reporter;
@@ -71,6 +72,31 @@ describe('reporter additional methods', () => {
       reporter.setDescription({ text: description, suite: suiteName });
 
       expect(reporter['storage'].getAdditionalSuiteData(suiteName)).toEqual({ description });
+    });
+  });
+
+  describe('setLaunchStatus', () => {
+    it('reporter.setLaunchStatus assign status to the launch', () => {
+      reporter.setLaunchStatus(STATUSES.FAILED);
+
+      expect(reporter['customLaunchStatus']).toBe(STATUSES.FAILED);
+    });
+  });
+
+  describe('setStatus', () => {
+    const status = STATUSES.INTERRUPTED;
+
+    it('reporter.setStatus assign status to the test', () => {
+      const expectedRes = { id: testId, name: testName, status };
+      reporter.setStatus({ status });
+
+      expect(reporter['storage'].getCurrentTest()).toEqual(expectedRes);
+    });
+
+    it('reporter.setStatus assign status to the suite', () => {
+      reporter.setStatus({ status, suite: suiteName });
+
+      expect(reporter['storage'].getAdditionalSuiteData(suiteName)).toEqual({ status });
     });
   });
 });

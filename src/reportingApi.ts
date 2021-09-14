@@ -16,6 +16,7 @@
  */
 
 import ClientPublicReportingAPI from '@reportportal/client-javascript/lib/publicReportingAPI';
+import { RP_STATUSES } from '@reportportal/client-javascript/lib/constants/statuses';
 import { Attribute } from './models';
 
 export const ReportingApi = {
@@ -23,4 +24,33 @@ export const ReportingApi = {
     ClientPublicReportingAPI.addAttributes(attributes, suite),
   setDescription: (text: string, suite?: string): void =>
     ClientPublicReportingAPI.setDescription(text, suite),
+  setLaunchStatus: (status: RP_STATUSES): void => ClientPublicReportingAPI.setLaunchStatus(status),
+  setLaunchStatusPassed: (): void => ClientPublicReportingAPI.setLaunchStatus(RP_STATUSES.PASSED),
+  setLaunchStatusFailed: (): void => ClientPublicReportingAPI.setLaunchStatus(RP_STATUSES.FAILED),
+  setLaunchStatusSkipped: (): void => ClientPublicReportingAPI.setLaunchStatus(RP_STATUSES.SKIPPED),
+  setLaunchStatusStopped: (): void => ClientPublicReportingAPI.setLaunchStatus(RP_STATUSES.STOPPED),
+  setLaunchStatusInterrupted: (): void =>
+    ClientPublicReportingAPI.setLaunchStatus(RP_STATUSES.INTERRUPTED),
+  setLaunchStatusCancelled: (): void =>
+    ClientPublicReportingAPI.setLaunchStatus(RP_STATUSES.CANCELLED),
+  setLaunchStatusInfo: (): void => ClientPublicReportingAPI.setLaunchStatus(RP_STATUSES.INFO),
+  setLaunchStatusWarn: (): void => ClientPublicReportingAPI.setLaunchStatus(RP_STATUSES.WARN),
+  setStatus: (status: RP_STATUSES, suite?: string): void =>
+    ClientPublicReportingAPI.setStatus(status, suite),
+  setStatusPassed: (suite?: string): void =>
+    ClientPublicReportingAPI.setStatus(RP_STATUSES.PASSED, suite),
+  setStatusFailed: (suite?: string): void =>
+    ClientPublicReportingAPI.setStatus(RP_STATUSES.FAILED, suite),
+  setStatusSkipped: (suite?: string): void =>
+    ClientPublicReportingAPI.setStatus(RP_STATUSES.SKIPPED, suite),
+  setStatusStopped: (suite?: string): void =>
+    ClientPublicReportingAPI.setStatus(RP_STATUSES.STOPPED, suite),
+  setStatusInterrupted: (suite?: string): void =>
+    ClientPublicReportingAPI.setStatus(RP_STATUSES.INTERRUPTED, suite),
+  setStatusCancelled: (suite?: string): void =>
+    ClientPublicReportingAPI.setStatus(RP_STATUSES.CANCELLED, suite),
+  setStatusInfo: (suite?: string): void =>
+    ClientPublicReportingAPI.setStatus(RP_STATUSES.INFO, suite),
+  setStatusWarn: (suite?: string): void =>
+    ClientPublicReportingAPI.setStatus(RP_STATUSES.WARN, suite),
 };

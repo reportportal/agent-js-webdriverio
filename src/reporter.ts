@@ -28,13 +28,14 @@ import {
   parseTags,
   promiseErrorHandler,
 } from './utils';
-import { CUCUMBER_TYPE, LOG_LEVELS, TYPES } from './constants';
+import { CUCUMBER_TYPE, LOG_LEVELS, STATUSES, TYPES } from './constants';
 import { Attribute, FinishTestItem, LaunchObj, LogRQ, StartTestItem } from './models';
 
 // reference - https://www.npmjs.com/package/@wdio/reporter
 export class Reporter extends WDIOReporter {
   private client: RPClient;
   private tempLaunchId: string;
+  private customLaunchStatus: string;
   private storage: Storage;
   private syncReporting: boolean;
   private testFilePath: string;
@@ -54,11 +55,15 @@ export class Reporter extends WDIOReporter {
   registerRPListeners(): void {
     process.on(EVENTS.ADD_ATTRIBUTES, this.addAttributes.bind(this));
     process.on(EVENTS.SET_DESCRIPTION, this.setDescription.bind(this));
+    process.on(EVENTS.SET_LAUNCH_STATUS, this.setLaunchStatus.bind(this));
+    process.on(EVENTS.SET_STATUS, this.setStatus.bind(this));
   }
 
   unregisterRPListeners(): void {
     process.off(EVENTS.ADD_ATTRIBUTES, this.addAttributes.bind(this));
     process.off(EVENTS.SET_DESCRIPTION, this.setDescription.bind(this));
+    process.off(EVENTS.SET_LAUNCH_STATUS, this.setLaunchStatus.bind(this));
+    process.off(EVENTS.SET_STATUS, this.setStatus.bind(this));
   }
 
   get isSynchronised(): boolean {
@@ -83,12 +88,10 @@ export class Reporter extends WDIOReporter {
     this.testFilePath = suiteStats.file;
     const ancestors = this.storage.getAllSuites();
     const codeRef = getCodeRef(this.testFilePath, name, ancestors);
-    const additionalData = this.storage.getAdditionalSuiteData(name);
     const suiteDataRQ: StartTestItem = {
       name,
       type: parentId ? TYPES.TEST : TYPES.SUITE,
       codeRef,
-      ...additionalData,
     };
     const isCucumberFeature = suiteStats.type === CUCUMBER_TYPE.FEATURE;
     if (isCucumberFeature && suiteStats.tags.length > 0) {
@@ -148,11 +151,12 @@ export class Reporter extends WDIOReporter {
   }
 
   finishTest(testStats: TestStats): void {
-    const { id, attributes, description } = this.storage.getCurrentTest();
+    const { id, attributes, description, status } = this.storage.getCurrentTest();
     const finishTestItemRQ: FinishTestItem = {
       status: testStats.state,
       ...(attributes && { attributes }),
       ...(description && { description }),
+      ...(status && { status }),
     };
     const { promise } = this.client.finishTestItem(id, finishTestItemRQ);
     promiseErrorHandler(promise);
@@ -160,8 +164,9 @@ export class Reporter extends WDIOReporter {
   }
 
   onSuiteEnd(): void {
-    const { id } = this.storage.getCurrentSuite();
-    const { promise } = this.client.finishTestItem(id, {});
+    const { id, name } = this.storage.getCurrentSuite();
+    const additionalData = this.storage.getAdditionalSuiteData(name);
+    const { promise } = this.client.finishTestItem(id, additionalData);
     promiseErrorHandler(promise);
     this.storage.removeSuite(id);
   }
@@ -169,7 +174,9 @@ export class Reporter extends WDIOReporter {
   async onRunnerEnd(): Promise<void> {
     try {
       await this.client.getPromiseFinishAllItems(this.tempLaunchId);
-      const { promise } = await this.client.finishLaunch(this.tempLaunchId, {});
+      const { promise } = await this.client.finishLaunch(this.tempLaunchId, {
+        ...(this.customLaunchStatus && { status: this.customLaunchStatus }),
+      });
       promiseErrorHandler(promise);
       this.tempLaunchId = null;
     } catch (e) {
@@ -203,6 +210,18 @@ export class Reporter extends WDIOReporter {
       this.storage.addAdditionalSuiteData(suite, { description: text });
     } else {
       this.storage.updateCurrentTest({ description: text });
+    }
+  }
+
+  setLaunchStatus(status: STATUSES): void {
+    this.customLaunchStatus = status;
+  }
+
+  setStatus({ status, suite }: { status: STATUSES; suite?: string }): void {
+    if (status && suite) {
+      this.storage.addAdditionalSuiteData(suite, { status });
+    } else {
+      this.storage.updateCurrentTest({ status });
     }
   }
 }
