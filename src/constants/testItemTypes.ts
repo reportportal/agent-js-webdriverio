@@ -18,39 +18,7 @@
 export enum TYPES {
   SUITE = 'SUITE',
   STEP = 'STEP',
-  STORY = 'STORY',
   TEST = 'TEST',
-  SCENARIO = 'SCENARIO',
-  BEFORE_CLASS = 'BEFORE_CLASS',
-  BEFORE_GROUPS = 'BEFORE_GROUPS',
-  BEFORE_METHOD = 'BEFORE_METHOD',
-  BEFORE_SUITE = 'BEFORE_SUITE',
-  BEFORE_TEST = 'BEFORE_TEST',
-  AFTER_CLASS = 'AFTER_CLASS',
-  AFTER_GROUPS = 'AFTER_GROUPS',
-  AFTER_METHOD = 'AFTER_METHOD',
-  AFTER_SUITE = 'AFTER_SUITE',
-  AFTER_TEST = 'AFTER_TEST',
-}
-
-export enum LOG_LEVELS {
-  ERROR = 'ERROR',
-  TRACE = 'TRACE',
-  DEBUG = 'DEBUG',
-  INFO = 'INFO',
-  WARN = 'WARN',
-}
-
-export enum FILE_TYPES {
-  XML = 'application/xml',
-  HTML = 'application/html',
-  JAVASCRIPT = 'application/javascript',
-  JSON = 'application/json',
-  PHP = 'application/php',
-  CSS = 'application/css',
-  TEXT = 'text/plain',
-  PNG = 'image/png',
-  JPG = 'image/jpg',
 }
 
 export enum CUCUMBER_TYPE {
