@@ -22,7 +22,7 @@ import { getClientConfig } from '../utils';
 import { suiteId, suiteName, testId, testName } from './mocks/data';
 import { STATUSES } from '../constants';
 
-describe('reporter additional methods', () => {
+describe('reportingApiHandlers', () => {
   let reporter: Reporter;
   beforeEach(() => {
     reporter = new Reporter(options);

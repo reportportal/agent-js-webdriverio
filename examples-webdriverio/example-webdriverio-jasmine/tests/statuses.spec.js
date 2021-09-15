@@ -5,7 +5,7 @@ describe('Manual status attaching. Suite with STOPPED status', () => {
 
   it('Test with PASSED status', () => {
     ReportingApi.setStatusPassed();
-    expect(true).toBe(true);
+    expect(true).toBe(false);
   });
 
   it('Test with FAILED status', () => {
