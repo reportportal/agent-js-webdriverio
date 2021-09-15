@@ -16,8 +16,12 @@
  */
 
 declare module '@reportportal/client-javascript/lib/publicReportingAPI' {
+  import { RP_STATUSES } from '@reportportal/client-javascript/lib/constants/statuses';
+
   export default class {
     static addAttributes(attributes: Interfaces.Attribute[], suite?: string): void;
     static setDescription(text: string, suite?: string): void;
+    static setLaunchStatus(status: RP_STATUSES): void;
+    static setStatus(status: RP_STATUSES, suite?: string): void;
   }
 }

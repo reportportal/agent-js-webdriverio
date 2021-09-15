@@ -1,5 +1,5 @@
 /*
- *  Copyright 2021 EPAM Systems
+ *  Copyright 2020 EPAM Systems
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,7 +15,13 @@
  *
  */
 
-export { CUCUMBER_TYPE, TYPES } from './testItemTypes';
-export { STATUSES } from './statuses';
-export { LOG_LEVELS } from './logLevels';
-export { FILE_TYPES } from './fileTypes';
+export enum STATUSES {
+  FAILED = 'failed',
+  PASSED = 'passed',
+  SKIPPED = 'skipped',
+  STOPPED = 'stopped',
+  INTERRUPTED = 'interrupted',
+  CANCELLED = 'cancelled',
+  INFO = 'info',
+  WARN = 'warn',
+}

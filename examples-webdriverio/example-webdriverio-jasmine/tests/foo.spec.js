@@ -1,6 +1,7 @@
 const { ReportingApi } = require('@reportportal/agent-js-webdriverio/src/reportingApi');
 
 describe('Suite 1', () => {
+  ReportingApi.setLaunchStatusInterrupted();
   ReportingApi.addAttributes(
     [
       {
@@ -15,6 +16,7 @@ describe('Suite 1', () => {
   );
   ReportingApi.setDescription('suite_description', 'Suite 1');
   it('Test should be PASSED', () => {
+    ReportingApi.setStatusStopped();
     browser.url('https://webdriver.io');
     const title = browser.getTitle();
     expect(title).toBe(

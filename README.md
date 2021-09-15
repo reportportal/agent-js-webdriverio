@@ -82,6 +82,8 @@ Given('I do something awesome', () => {
 ```
 > **Note:** Agent is not supported adding attributes to the `scenario`.  
 
+
+### setDescription
 `ReportingApi.setDescription(description: string, suite?: string);`  
 **required**: `description`
 
@@ -112,3 +114,97 @@ Given('I do something awesome', () => {
 });
 ```
 > **Note:** Agent is not supported adding description to the `scenario`. 
+
+### setStatus
+Assign corresponding status to the current test item or suite.  
+`ReportingApi.setStatus(status: string, suite?: string);`  
+**required**: `status`  
+where `status` must be one of the following: *passed*, *failed*, *stopped*, *skipped*, *interrupted*, *cancelled*, *info*, *warn*  
+```js
+// Jasmine
+describe('should have status FAILED', () => {
+  ReportingApi.setStatus('failed', 'should have status FAILED'); // the second parameter must match the name of the suite
+  it('test with INFO status', () => {
+    ReportingApi.setStatus('info');
+    // ...
+  })
+});
+```
+
+##### setStatusFailed, setStatusPassed, setStatusSkipped, setStatusStopped, setStatusInterrupted, setStatusCancelled, setStatusInfo, setStatusWarn
+Assign corresponding status to the current test item or suite.  
+`ReportingApi.setStatusFailed(suite?: string);`  
+`ReportingApi.setStatusPassed(suite?: string);`  
+`ReportingApi.setStatusSkipped(suite?: string);`  
+`ReportingApi.setStatusStopped(suite?: string);`  
+`ReportingApi.setStatusInterrupted(suite?: string);`  
+`ReportingApi.setStatusCancelled(suite?: string);`  
+`ReportingApi.setStatusInfo(suite?: string);`  
+`ReportingApi.setStatusWarn(suite?: string);`  
+
+Example:
+```js
+// Jasmine
+describe('manual statuses assigning' ,() => {
+  ReportingAPI.setStatusFailed('manual statuses assigning'); // string must match the name of the suite
+  ReportingAPI.setStatusPassed('manual statuses assigning'); // string must match the name of the suite
+  ReportingAPI.setStatusSkipped('manual statuses assigning'); // string must match the name of the suite
+  ReportingAPI.setStatusStopped('manual statuses assigning'); // string must match the name of the suite
+  ReportingAPI.setStatusInterrupted('manual statuses assigning'); // string must match the name of the suite
+  ReportingAPI.setStatusCancelled('manual statuses assigning'); // string must match the name of the suite
+  ReportingAPI.setStatusInfo('manual statuses assigning'); // string must match the name of the suite
+  ReportingAPI.setStatusWarn('manual statuses assigning'); // string must match the name of the suite
+  it('should call ReportingApi to set statuses', () => {
+    ReportingAPI.setStatusFailed();
+    ReportingAPI.setStatusPassed();
+    ReportingAPI.setStatusSkipped();
+    ReportingAPI.setStatusStopped();
+    ReportingAPI.setStatusInterrupted();
+    ReportingAPI.setStatusCancelled();
+    ReportingAPI.setStatusInfo();
+    ReportingAPI.setStatusWarn();
+  });
+  // ... 
+});
+```
+> **Note:** Pay attention if you want to provide custom status to the `suite` you should pass describe name as a parameter.  
+
+### setLaunchStatus
+Assign corresponding status to the current launch.  
+`ReportingApi.setLaunchStatus(status: string);`  
+**required**: `status`  
+where `status` must be one of the following: *passed*, *failed*, *stopped*, *skipped*, *interrupted*, *cancelled*, *info*, *warn*  
+Example:
+```js
+// Jasmine
+it('launch should have status FAILED', () => {
+    ReportingApi.setLaunchStatus('failed');
+  // ...
+});
+```
+
+##### setLaunchStatusFailed, setLaunchStatusPassed, setLaunchStatusSkipped, setLaunchStatusStopped, setLaunchStatusInterrupted, setLaunchStatusCancelled, setLaunchStatusInfo, setLaunchStatusWarn
+Assign corresponding status to the current launch. 
+`ReportingApi.setLaunchStatusFailed();`  
+`ReportingApi.setLaunchStatusPassed();`  
+`ReportingApi.setLaunchStatusSkipped();`  
+`ReportingApi.setLaunchStatusStopped();`  
+`ReportingApi.setLaunchStatusInterrupted();`  
+`ReportingApi.setLaunchStatusCancelled();`  
+`ReportingApi.setLaunchStatusInfo();`  
+`ReportingApi.setLaunchStatusWarn();`  
+
+Example:
+```js
+// Jasmine
+it('should call ReportingApi to set launch statuses', () => {
+    ReportingAPI.setLaunchStatusFailed();
+    ReportingAPI.setLaunchStatusPassed();
+    ReportingAPI.setLaunchStatusSkipped();
+    ReportingAPI.setLaunchStatusStopped();
+    ReportingAPI.setLaunchStatusInterrupted();
+    ReportingAPI.setLaunchStatusCancelled();
+    ReportingAPI.setLaunchStatusInfo();
+    ReportingAPI.setLaunchStatusWarn();
+});
+```

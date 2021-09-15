@@ -15,7 +15,11 @@
  *
  */
 
-export { CUCUMBER_TYPE, TYPES } from './testItemTypes';
-export { STATUSES } from './statuses';
-export { LOG_LEVELS } from './logLevels';
-export { FILE_TYPES } from './fileTypes';
+export enum LOG_LEVELS {
+  TRACE = 'TRACE',
+  DEBUG = 'DEBUG',
+  WARN = 'WARN',
+  INFO = 'INFO',
+  ERROR = 'ERROR',
+  FATAL = 'FATAL',
+}

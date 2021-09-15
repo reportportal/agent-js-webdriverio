@@ -15,7 +15,15 @@
  *
  */
 
-export { CUCUMBER_TYPE, TYPES } from './testItemTypes';
-export { STATUSES } from './statuses';
-export { LOG_LEVELS } from './logLevels';
-export { FILE_TYPES } from './fileTypes';
+declare module '@reportportal/client-javascript/lib/constants/statuses' {
+  export enum RP_STATUSES {
+    FAILED = 'failed',
+    PASSED = 'passed',
+    SKIPPED = 'skipped',
+    STOPPED = 'stopped',
+    INTERRUPTED = 'interrupted',
+    CANCELLED = 'cancelled',
+    INFO = 'info',
+    WARN = 'warn',
+  }
+}
