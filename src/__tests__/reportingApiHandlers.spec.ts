@@ -20,9 +20,9 @@ import { options } from './mocks/optionsMock';
 import { RPClientMock } from './mocks/RPClientMock';
 import { getClientConfig } from '../utils';
 import { suiteId, suiteName, testId, testName } from './mocks/data';
-import { STATUSES } from '../constants';
+import { LOG_LEVELS, STATUSES } from '../constants';
 
-describe('reportingApiHandlers', () => {
+describe('reporterApiHandlers', () => {
   let reporter: Reporter;
   beforeEach(() => {
     reporter = new Reporter(options);
@@ -30,6 +30,9 @@ describe('reportingApiHandlers', () => {
     reporter['tempLaunchId'] = 'tempLaunchId';
     reporter['storage'].addSuite({ id: suiteId, name: suiteName });
     reporter['storage'].addTest({ id: testId, name: testName });
+  });
+  afterEach(() => {
+    process.removeAllListeners();
   });
 
   describe('addAttributes', () => {
@@ -97,6 +100,41 @@ describe('reportingApiHandlers', () => {
       reporter.setStatus({ status, suite: suiteName });
 
       expect(reporter['storage'].getAdditionalSuiteData(suiteName)).toEqual({ status });
+    });
+  });
+
+  describe('logs attaching', () => {
+    const log = {
+      level: LOG_LEVELS.INFO,
+      message: 'message',
+    };
+
+    it('reporter.sendLaunchLog attach log to the launch', () => {
+      reporter.sendLaunchLog(log);
+
+      expect(reporter['client'].sendLog).toBeCalledWith(
+        'tempLaunchId',
+        { level: 'INFO', message: 'message' },
+        undefined,
+      );
+    });
+
+    it(`reporter.sendTestItemLog pass log and suite as parameters.
+    should update storage additional suite data`, () => {
+      reporter.sendTestItemLog({ log, suite: suiteName });
+
+      expect(reporter['storage'].getAdditionalSuiteData(suiteName)).toEqual({ logs: [log] });
+    });
+
+    it(`reporter.sendTestItemLog pass log as parameters.
+    attach log to test. should call client.sendLog`, () => {
+      reporter.sendTestItemLog({ log });
+
+      expect(reporter['client'].sendLog).toBeCalledWith(
+        testId,
+        { level: 'INFO', message: 'message' },
+        undefined,
+      );
     });
   });
 });

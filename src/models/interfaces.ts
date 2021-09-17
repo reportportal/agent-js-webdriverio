@@ -121,6 +121,7 @@ export interface AdditionalData {
   attributes?: Attribute[];
   description?: string;
   status?: string;
+  logs?: LogRQ[];
 }
 
 export interface AdditionalSuitesData {

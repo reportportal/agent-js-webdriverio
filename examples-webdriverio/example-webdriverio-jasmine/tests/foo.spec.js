@@ -33,6 +33,7 @@ describe('Suite 1', () => {
   it('Test should be FAILED', () => {
     browser.url('https://webdriver.io');
     const title = browser.getTitle();
+    browser.saveScreenshot('./screenshot.png');
     expect(title).toBe(
       'WebdriverIO ·  Next-gen browser and mobile automation test framework for Node.js | WebdriverIO',
     );

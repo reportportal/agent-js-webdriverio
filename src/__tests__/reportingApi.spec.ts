@@ -19,7 +19,7 @@
 import ClientPublicReportingAPI from '@reportportal/client-javascript/lib/publicReportingAPI';
 import { ReportingApi } from '../reportingApi';
 import { suiteName } from './mocks/data';
-import { STATUSES } from '../constants';
+import { LOG_LEVELS, STATUSES } from '../constants';
 
 const attributes = [{ key: 'key', value: 'value' }];
 const description = 'some text';
@@ -120,6 +120,90 @@ describe('ReportingApi', () => {
       ReportingApi.setStatus(STATUSES.CANCELLED, suiteName);
 
       expect(spySetStatus).toBeCalledWith(STATUSES.CANCELLED, suiteName);
+    });
+  });
+
+  describe('ReportingApi.launchLog', () => {
+    const reportingApiLaunchLogMethods = [
+      { method: 'launchTrace', level: 'TRACE' },
+      { method: 'launchDebug', level: 'DEBUG' },
+      { method: 'launchInfo', level: 'INFO' },
+      { method: 'launchWarn', level: 'WARN' },
+      { method: 'launchError', level: 'ERROR' },
+      { method: 'launchFatal', level: 'FATAL' },
+    ];
+
+    it('should call clientPublicReportingApi.addLaunchLog method with default parameters', () => {
+      spyOn(ClientPublicReportingAPI, 'addLaunchLog').and.returnValue(() => {});
+
+      ReportingApi.launchLog(LOG_LEVELS.INFO, 'message');
+
+      expect(ClientPublicReportingAPI.addLaunchLog).toBeCalledWith({
+        level: 'INFO',
+        file: undefined,
+        message: 'message',
+      });
+    });
+
+    reportingApiLaunchLogMethods.forEach((item) => {
+      it(`should call clientPublicReportingApi.addLaunchLog method with ${item.level}
+         level parameter if we run ${item.method} method`, () => {
+        spyOn(ClientPublicReportingAPI, 'addLaunchLog').and.returnValue(() => {});
+        // @ts-ignore
+        ReportingApi[item.method]('message');
+
+        expect(ClientPublicReportingAPI.addLaunchLog).toBeCalledWith({
+          level: item.level,
+          file: undefined,
+          message: 'message',
+        });
+      });
+    });
+  });
+
+  describe('ReportingApi.log', () => {
+    const reportingApiLogMethods = [
+      { method: 'trace', level: 'TRACE' },
+      { method: 'debug', level: 'DEBUG' },
+      { method: 'info', level: 'INFO' },
+      { method: 'warn', level: 'WARN' },
+      { method: 'error', level: 'ERROR' },
+      { method: 'fatal', level: 'FATAL' },
+    ];
+    it('should call clientPublicReportingApi.addLog method with log and suite as parameters', () => {
+      spyOn(ClientPublicReportingAPI, 'addLog').and.returnValue(() => {});
+
+      ReportingApi.log(LOG_LEVELS.INFO, 'message', null, 'suite');
+
+      expect(ClientPublicReportingAPI.addLog).toBeCalledWith(
+        { level: 'INFO', file: null, message: 'message' },
+        'suite',
+      );
+    });
+
+    it('should call clientPublicReportingApi.addLog with default parameters if there are no custom ones', () => {
+      spyOn(ClientPublicReportingAPI, 'addLog').and.returnValue(() => {});
+
+      ReportingApi.log(LOG_LEVELS.INFO, 'message');
+
+      expect(ClientPublicReportingAPI.addLog).toBeCalledWith(
+        { level: 'INFO', file: undefined, message: 'message' },
+        undefined,
+      );
+    });
+
+    reportingApiLogMethods.forEach((item) => {
+      it(`should call clientPublicReportingApi.addLog method with ${item.level}
+         level parameter if we run ${item.method} method`, () => {
+        spyOn(ClientPublicReportingAPI, 'addLog').and.returnValue(() => {});
+        // @ts-ignore
+        ReportingApi[item.method]('message', null, 'suite');
+
+        expect(ClientPublicReportingAPI.addLog).toBeCalledWith(
+          { level: item.level, file: null, message: 'message' },
+          'suite',
+        );
+      });
     });
   });
 });

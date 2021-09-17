@@ -27,6 +27,7 @@ const config = {
   description: 'WDIO CUCUMBER TEST',
   attributes: [{ key: 'key', value: 'value' }, { value: 'value' }],
   headers: { foo: 'bar' }, // optional headers for internal http client
+  attachPicturesToLogs: false, // automatically add screenshots
 };
 
 exports.config = {
