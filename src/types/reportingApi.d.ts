@@ -23,5 +23,7 @@ declare module '@reportportal/client-javascript/lib/publicReportingAPI' {
     static setDescription(text: string, suite?: string): void;
     static setLaunchStatus(status: RP_STATUSES): void;
     static setStatus(status: RP_STATUSES, suite?: string): void;
+    static addLog(log: Interfaces.LogRQ, suite?: string): void;
+    static addLaunchLog(log: Interfaces.LogRQ, suite?: string): void;
   }
 }

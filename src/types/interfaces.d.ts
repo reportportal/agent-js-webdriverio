@@ -21,4 +21,15 @@ declare namespace Interfaces {
     key?: string;
     system?: boolean;
   }
+  interface Attachment {
+    name: string;
+    type: string;
+    content: string | Buffer;
+  }
+  interface LogRQ {
+    level?: string;
+    message?: string;
+    time?: number;
+    file?: Attachment;
+  }
 }
