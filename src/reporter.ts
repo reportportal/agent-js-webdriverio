@@ -15,7 +15,7 @@
  *
  */
 
-import WDIOReporter, { SuiteStats, TestStats } from '@wdio/reporter';
+import WDIOReporter, { AfterCommandArgs, SuiteStats, TestStats } from '@wdio/reporter';
 import { Reporters } from '@wdio/types';
 import RPClient from '@reportportal/client-javascript';
 import { EVENTS } from '@reportportal/client-javascript/lib/constants/events';
@@ -28,7 +28,7 @@ import {
   parseTags,
   promiseErrorHandler,
 } from './utils';
-import { CUCUMBER_TYPE, LOG_LEVELS, STATUSES, TYPES } from './constants';
+import { CUCUMBER_TYPE, FILE_TYPES, LOG_LEVELS, STATUSES, TYPES } from './constants';
 import { Attribute, FinishTestItem, LaunchObj, LogRQ, StartTestItem } from './models';
 
 // reference - https://www.npmjs.com/package/@wdio/reporter
@@ -57,6 +57,8 @@ export class Reporter extends WDIOReporter {
     process.on(EVENTS.SET_DESCRIPTION, this.setDescription.bind(this));
     process.on(EVENTS.SET_LAUNCH_STATUS, this.setLaunchStatus.bind(this));
     process.on(EVENTS.SET_STATUS, this.setStatus.bind(this));
+    process.on(EVENTS.ADD_LOG, this.sendTestItemLog.bind(this));
+    process.on(EVENTS.ADD_LAUNCH_LOG, this.sendLaunchLog.bind(this));
   }
 
   unregisterRPListeners(): void {
@@ -64,6 +66,8 @@ export class Reporter extends WDIOReporter {
     process.off(EVENTS.SET_DESCRIPTION, this.setDescription.bind(this));
     process.off(EVENTS.SET_LAUNCH_STATUS, this.setLaunchStatus.bind(this));
     process.off(EVENTS.SET_STATUS, this.setStatus.bind(this));
+    process.off(EVENTS.ADD_LOG, this.sendTestItemLog.bind(this));
+    process.off(EVENTS.ADD_LAUNCH_LOG, this.sendLaunchLog.bind(this));
   }
 
   get isSynchronised(): boolean {
@@ -166,6 +170,9 @@ export class Reporter extends WDIOReporter {
   onSuiteEnd(): void {
     const { id, name } = this.storage.getCurrentSuite();
     const additionalData = this.storage.getAdditionalSuiteData(name);
+    if (additionalData.logs?.length > 0) {
+      additionalData.logs.forEach((log) => this.sendLog(id, log));
+    }
     const { promise } = this.client.finishTestItem(id, additionalData);
     promiseErrorHandler(promise);
     this.storage.removeSuite(id);
@@ -179,6 +186,7 @@ export class Reporter extends WDIOReporter {
       });
       promiseErrorHandler(promise);
       this.tempLaunchId = null;
+      this.customLaunchStatus = null;
     } catch (e) {
       console.error(e);
     } finally {
@@ -189,7 +197,21 @@ export class Reporter extends WDIOReporter {
 
   // onBeforeCommand() {}
 
-  // onAfterCommand() {}
+  onAfterCommand(command: AfterCommandArgs): void {
+    const hasScreenshot = /screenshot$/.test(command.endpoint) && !!command.result.value;
+    const testItem = this.storage.getCurrentTest();
+    if (hasScreenshot && this.options.attachPicturesToLogs && testItem) {
+      const logRQ = {
+        level: LOG_LEVELS.INFO,
+        file: {
+          name: 'screenshot',
+          type: FILE_TYPES.PNG,
+          content: command.result.value,
+        },
+      };
+      this.sendLog(testItem.id, logRQ);
+    }
+  }
 
   addAttributes({ attributes, suite }: { attributes: Attribute[]; suite?: string }): void {
     if (!attributes || !(attributes instanceof Array)) {
@@ -223,5 +245,33 @@ export class Reporter extends WDIOReporter {
     } else {
       this.storage.updateCurrentTest({ status });
     }
+  }
+
+  sendTestItemLog({ log, suite }: { log: LogRQ; suite?: string }): void {
+    if (log && suite) {
+      const data = this.storage.getAdditionalSuiteData(suite);
+      const newData = { logs: (data.logs || []).concat(log) };
+      this.storage.addAdditionalSuiteData(suite, newData);
+    } else {
+      const testItem = this.storage.getCurrentTest();
+      if (testItem) {
+        this.sendLog(testItem.id, log);
+      }
+    }
+  }
+
+  sendLaunchLog(log: LogRQ): void {
+    this.sendLog(this.tempLaunchId, log);
+  }
+
+  sendLog(tempId: string, { level, message = '', file }: LogRQ): void {
+    this.client.sendLog(
+      tempId,
+      {
+        message,
+        level,
+      },
+      file,
+    );
   }
 }

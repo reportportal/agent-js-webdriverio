@@ -24,6 +24,10 @@ import { getClientConfig } from '../utils';
 
 describe('onSuiteStart', () => {
   let reporter: Reporter;
+  const suiteStats: any = {
+    title: suiteName,
+    file: `C:${path.sep}project${path.sep}__test__${path.sep}example.js`,
+  };
   beforeEach(() => {
     reporter = new Reporter(options);
     reporter['client'] = new RPClientMock(getClientConfig(options));
@@ -32,10 +36,6 @@ describe('onSuiteStart', () => {
   jest.spyOn(process, 'cwd').mockReturnValue(`C:${path.sep}project`);
 
   it('client.startTestItem should be called with corresponding params', () => {
-    const suiteStats: any = {
-      title: suiteName,
-      file: `C:${path.sep}project${path.sep}__test__${path.sep}example.js`,
-    };
     reporter.onSuiteStart(suiteStats);
 
     expect(reporter['client'].startTestItem).toBeCalledTimes(1);
@@ -47,10 +47,6 @@ describe('onSuiteStart', () => {
   });
 
   it('client.startTestItem should create TEST', () => {
-    const suiteStats: any = {
-      title: suiteName,
-      file: `C:${path.sep}project${path.sep}__test__${path.sep}example.js`,
-    };
     reporter['storage'].addSuite({ id: 'suite_parent_id', name: 'suite_parent_name' });
     reporter.onSuiteStart(suiteStats);
 
