@@ -143,13 +143,25 @@ export class Reporter extends WDIOReporter {
   // onTestRetry(testStats: TestStats): void {}
 
   onTestFail(testStats: TestStats): void {
-    const { id } = this.storage.getCurrentTest();
-    testStats.errors.forEach((error: Error) => {
+    const testItem = this.storage.getCurrentTest();
+    testStats.errors.forEach((error: Error, idx) => {
       const logRQ: LogRQ = {
         level: LOG_LEVELS.ERROR,
         message: error.stack,
       };
-      this.client.sendLog(id, logRQ);
+      this.client.sendLog(testItem.id, logRQ);
+      if (idx === testStats.errors.length - 1) {
+        const lastError = `\`\`\`error\n${
+          testStats.errors[testStats.errors.length - 1].stack
+        }\n\`\`\``;
+        if (testItem.description) {
+          this.storage.updateCurrentTest({
+            description: `${testItem.description}\n${lastError}`,
+          });
+        } else {
+          this.storage.updateCurrentTest({ description: lastError });
+        }
+      }
     });
     this.finishTest(testStats);
   }
