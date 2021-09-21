@@ -20,6 +20,7 @@ import { options } from './mocks/optionsMock';
 import { RPClientMock } from './mocks/RPClientMock';
 import { suiteId, suiteName, testId, testName } from './mocks/data';
 import { getClientConfig } from '../utils';
+import { STATUSES } from '../constants';
 
 describe('finishing test reporting', () => {
   let reporter: Reporter;
@@ -64,8 +65,7 @@ describe('finishing test reporting', () => {
       expect(spyOnFinishTest).toBeCalledWith(testStats);
     });
 
-    it(`onTestFail: client.sendLog should be called with corresponding params.
-              reporter.finishTest should be called`, () => {
+    describe('onTestFail method', () => {
       const testStats: any = {
         title: testName,
         state: 'failed',
@@ -80,16 +80,46 @@ describe('finishing test reporting', () => {
           },
         ],
       };
-
-      reporter.onTestFail(testStats);
-
-      expect(reporter['client'].sendLog).toBeCalledTimes(1);
-      expect(reporter['client'].sendLog).toBeCalledWith(testId, {
-        level: 'ERROR',
-        message: testStats.errors[0].stack,
+      let spyOnUpdateCurrentTest: jest.SpyInstance;
+      beforeEach(() => {
+        spyOnUpdateCurrentTest = jest.spyOn(reporter['storage'], 'updateCurrentTest');
       });
-      expect(spyOnFinishTest).toBeCalledTimes(1);
-      expect(spyOnFinishTest).toBeCalledWith(testStats);
+
+      it(`client.sendLog should be called with corresponding params.
+        storage.updateCurrentTest method should be called with corresponding params.
+        reporter.finishTest should be called. test in storage have description`, () => {
+        reporter['storage'].updateCurrentTest({ description: 'some text' });
+
+        reporter.onTestFail(testStats);
+
+        expect(reporter['client'].sendLog).toBeCalledTimes(1);
+        expect(reporter['client'].sendLog).toBeCalledWith(testId, {
+          level: 'ERROR',
+          message: testStats.errors[0].stack,
+        });
+        expect(spyOnUpdateCurrentTest).toBeCalledWith({
+          description: `some text\n\`\`\`error\nerror message\n\`\`\``,
+        });
+        expect(spyOnFinishTest).toBeCalledTimes(1);
+        expect(spyOnFinishTest).toBeCalledWith(testStats);
+      });
+
+      it(`client.sendLog should be called with corresponding params.
+        storage.updateCurrentTest method should be called with corresponding params.
+        reporter.finishTest should be called. test in storage have no description`, () => {
+        reporter.onTestFail(testStats);
+
+        expect(reporter['client'].sendLog).toBeCalledTimes(1);
+        expect(reporter['client'].sendLog).toBeCalledWith(testId, {
+          level: 'ERROR',
+          message: testStats.errors[0].stack,
+        });
+        expect(spyOnUpdateCurrentTest).toBeCalledWith({
+          description: `\`\`\`error\nerror message\n\`\`\``,
+        });
+        expect(spyOnFinishTest).toBeCalledTimes(1);
+        expect(spyOnFinishTest).toBeCalledWith(testStats);
+      });
     });
 
     it('onTestSkip: reporter.finishTest should be called with corresponding params', () => {
@@ -111,19 +141,23 @@ describe('finishing test reporting', () => {
       state: 'passed',
     };
 
-    it('test with attributes', () => {
+    it('test with attributes, description, custom status', () => {
       const attributes = [
         {
           key: 'key1',
           value: 'value1',
         },
       ];
+      const description = 'test_description';
       const finishTestItemRQ = {
-        status: testStats.state,
+        status: STATUSES.INFO,
         attributes,
+        description,
       };
 
       reporter.addAttributes({ attributes });
+      reporter.setDescription({ text: description });
+      reporter.setStatus({ status: STATUSES.INFO });
       reporter.finishTest(testStats);
 
       expect(reporter['client'].finishTestItem).toBeCalledTimes(1);
