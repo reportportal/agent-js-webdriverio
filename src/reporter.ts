@@ -154,13 +154,9 @@ export class Reporter extends WDIOReporter {
         const lastError = `\`\`\`error\n${
           testStats.errors[testStats.errors.length - 1].stack
         }\n\`\`\``;
-        if (testItem.description) {
-          this.storage.updateCurrentTest({
-            description: `${testItem.description}\n${lastError}`,
-          });
-        } else {
-          this.storage.updateCurrentTest({ description: lastError });
-        }
+        this.storage.updateCurrentTest({
+          description: testItem.description ? `${testItem.description}\n${lastError}` : lastError,
+        });
       }
     });
     this.finishTest(testStats);
