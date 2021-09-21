@@ -21,6 +21,7 @@ import { options } from './mocks/optionsMock';
 import { RPClientMock } from './mocks/RPClientMock';
 import { suiteName } from './mocks/data';
 import { getClientConfig } from '../utils';
+import { LOG_LEVELS } from '../constants';
 
 describe('onSuiteStart', () => {
   let reporter: Reporter;
@@ -64,5 +65,34 @@ describe('onSuiteStart', () => {
       id: 'tempTestItemId',
       name: suiteName,
     });
+  });
+
+  it('suite with logs. should call client.sendLog method', () => {
+    reporter['storage'].addAdditionalSuiteData(suiteName, {
+      logs: [
+        { level: LOG_LEVELS.INFO, message: 'message' },
+        { level: LOG_LEVELS.INFO, message: 'message_2' },
+      ],
+    });
+
+    reporter.onSuiteStart(suiteStats);
+
+    expect(reporter['client'].sendLog).toBeCalledTimes(2);
+    expect(reporter['client'].sendLog).toBeCalledWith(
+      'tempTestItemId',
+      {
+        level: 'INFO',
+        message: 'message',
+      },
+      undefined,
+    );
+    expect(reporter['client'].sendLog).toBeCalledWith(
+      'tempTestItemId',
+      {
+        level: 'INFO',
+        message: 'message_2',
+      },
+      undefined,
+    );
   });
 });

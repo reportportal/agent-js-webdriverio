@@ -106,6 +106,10 @@ export class Reporter extends WDIOReporter {
     }
     const { tempId, promise } = this.client.startTestItem(suiteDataRQ, this.tempLaunchId, parentId);
     promiseErrorHandler(promise);
+    const additionalData = this.storage.getAdditionalSuiteData(name);
+    if (additionalData.logs?.length > 0) {
+      additionalData.logs.forEach((log) => this.sendLog(tempId, log));
+    }
     this.storage.addSuite({ id: tempId, name });
   }
 
@@ -169,11 +173,13 @@ export class Reporter extends WDIOReporter {
 
   onSuiteEnd(): void {
     const { id, name } = this.storage.getCurrentSuite();
-    const additionalData = this.storage.getAdditionalSuiteData(name);
-    if (additionalData.logs?.length > 0) {
-      additionalData.logs.forEach((log) => this.sendLog(id, log));
-    }
-    const { promise } = this.client.finishTestItem(id, additionalData);
+    const { status, attributes, description } = this.storage.getAdditionalSuiteData(name);
+    const finishTestItemData = {
+      ...(status && { status }),
+      ...(attributes && { attributes }),
+      ...(description && { description }),
+    };
+    const { promise } = this.client.finishTestItem(id, finishTestItemData);
     promiseErrorHandler(promise);
     this.storage.removeSuite(id);
   }
