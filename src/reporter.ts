@@ -151,9 +151,7 @@ export class Reporter extends WDIOReporter {
       };
       this.client.sendLog(testItem.id, logRQ);
       if (idx === testStats.errors.length - 1) {
-        const lastError = `\`\`\`error\n${
-          testStats.errors[testStats.errors.length - 1].stack
-        }\n\`\`\``;
+        const lastError = `\`\`\`error\n${error.stack}\n\`\`\``;
         this.storage.updateCurrentTest({
           description: testItem.description ? `${testItem.description}\n${lastError}` : lastError,
         });
