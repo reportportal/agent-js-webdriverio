@@ -23,13 +23,10 @@ import { getClientConfig } from '../utils';
 import { LOG_LEVELS } from '../constants';
 
 describe('onSuiteEnd', () => {
-  let reporter: Reporter;
-  beforeEach(() => {
-    reporter = new Reporter(options);
-    reporter['client'] = new RPClientMock(getClientConfig(options));
-    reporter['tempLaunchId'] = 'tempLaunchId';
-    reporter['storage'].addSuite({ id: suiteId, name: suiteName });
-  });
+  const reporter = new Reporter(options);
+  reporter['client'] = new RPClientMock(getClientConfig(options));
+  reporter['tempLaunchId'] = 'tempLaunchId';
+  reporter['storage'].addSuite({ id: suiteId, name: suiteName });
 
   it('client.finishTestItem should be called with corresponding params', () => {
     reporter.onSuiteEnd();
@@ -37,34 +34,5 @@ describe('onSuiteEnd', () => {
     expect(reporter['client'].finishTestItem).toBeCalledTimes(1);
     expect(reporter['client'].finishTestItem).toBeCalledWith(suiteId, {});
     expect(reporter['storage'].getCurrentSuite()).toEqual(null);
-  });
-
-  it('suite with logs. should call client.sendLog method', () => {
-    reporter['storage'].addAdditionalSuiteData(suiteName, {
-      logs: [
-        { level: LOG_LEVELS.INFO, message: 'message' },
-        { level: LOG_LEVELS.INFO, message: 'message_2' },
-      ],
-    });
-
-    reporter.onSuiteEnd();
-
-    expect(reporter['client'].sendLog).toBeCalledTimes(2);
-    expect(reporter['client'].sendLog).toBeCalledWith(
-      suiteId,
-      {
-        level: 'INFO',
-        message: 'message',
-      },
-      undefined,
-    );
-    expect(reporter['client'].sendLog).toBeCalledWith(
-      suiteId,
-      {
-        level: 'INFO',
-        message: 'message_2',
-      },
-      undefined,
-    );
   });
 });
