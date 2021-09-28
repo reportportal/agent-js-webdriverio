@@ -20,7 +20,6 @@ import { options } from './mocks/optionsMock';
 import { RPClientMock } from './mocks/RPClientMock';
 import { suiteId, suiteName } from './mocks/data';
 import { getClientConfig } from '../utils';
-import { LOG_LEVELS } from '../constants';
 
 describe('onSuiteEnd', () => {
   const reporter = new Reporter(options);

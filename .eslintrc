@@ -8,7 +8,7 @@
     "plugin:@typescript-eslint/recommended",
     "plugin:prettier/recommended"
   ],
-  "plugins": ["prettier"],
+  "plugins": ["prettier", "import"],
   "globals": {
     "Atomics": "readonly",
     "SharedArrayBuffer": "readonly"
@@ -17,7 +17,7 @@
   "parserOptions": {
     "ecmaVersion": 2018,
     "sourceType": "module",
-    "project":  "./tsconfig.json"
+    "project": "./tsconfig.json"
   },
   "rules": {
     "@typescript-eslint/no-plusplus": 0,
@@ -28,6 +28,8 @@
     "import/no-extraneous-dependencies": 0,
     "func-names": 0,
     "import/prefer-default-export": 0,
-    "@typescript-eslint/naming-convention": 0
+    "@typescript-eslint/naming-convention": 0,
+    "@typescript-eslint/dot-notation": 0,
+    "@typescript-eslint/ban-ts-comment": 0
   }
 }

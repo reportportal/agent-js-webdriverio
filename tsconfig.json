@@ -15,8 +15,7 @@
     },
     "typeRoots": ["node_modules/@types", "./src/types"],
     "outDir": "./build",
-    "rootDir": "."
   },
   "include": ["./src/**/*"],
-  "exclude": ["node_modules", "examples-webdriverio", "src/__tests__"]
+  "exclude": ["node_modules"]
 }
