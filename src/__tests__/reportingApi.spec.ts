@@ -26,37 +26,33 @@ const description = 'some text';
 
 describe('ReportingApi', () => {
   describe('ReportingApi.addAttributes', () => {
+    const spyOnAddAttributes = jest.spyOn(ClientPublicReportingAPI, 'addAttributes');
+
     it('should call clientPublicReportingApi.addAttributes method with text and undefined as parameter', () => {
-      const spyOnAddAttributes = spyOn(ClientPublicReportingAPI, 'addAttributes');
       ReportingApi.addAttributes(attributes);
 
-      expect(spyOnAddAttributes).toBeCalledTimes(1);
       expect(spyOnAddAttributes).toBeCalledWith(attributes, undefined);
     });
 
     it('should call clientPublicReportingApi.addAttributes method with text and suite as parameter', () => {
-      const spyOnAddAttributes = spyOn(ClientPublicReportingAPI, 'addAttributes');
       ReportingApi.addAttributes(attributes, suiteName);
 
-      expect(spyOnAddAttributes).toBeCalledTimes(1);
       expect(spyOnAddAttributes).toBeCalledWith(attributes, suiteName);
     });
   });
 
   describe('ReportingApi.setDescription', () => {
+    const spyOnSetDescription = jest.spyOn(ClientPublicReportingAPI, 'setDescription');
+
     it('should call clientPublicReportingApi.setDescription method with text and undefined as parameter', () => {
-      const spyOnSetDescription = spyOn(ClientPublicReportingAPI, 'setDescription');
       ReportingApi.setDescription(description);
 
-      expect(spyOnSetDescription).toBeCalledTimes(1);
       expect(spyOnSetDescription).toBeCalledWith(description, undefined);
     });
 
     it('should call clientPublicReportingApi.setDescription method with text and suite as parameter', () => {
-      const spyOnSetDescription = spyOn(ClientPublicReportingAPI, 'setDescription');
       ReportingApi.setDescription(description, suiteName);
 
-      expect(spyOnSetDescription).toBeCalledTimes(1);
       expect(spyOnSetDescription).toBeCalledWith(description, suiteName);
     });
   });
@@ -134,7 +130,7 @@ describe('ReportingApi', () => {
     ];
 
     it('should call clientPublicReportingApi.addLaunchLog method with default parameters', () => {
-      spyOn(ClientPublicReportingAPI, 'addLaunchLog').and.returnValue(() => {});
+      jest.spyOn(ClientPublicReportingAPI, 'addLaunchLog').mockImplementation(() => {});
 
       ReportingApi.launchLog(LOG_LEVELS.INFO, 'message');
 
@@ -148,7 +144,7 @@ describe('ReportingApi', () => {
     reportingApiLaunchLogMethods.forEach((item) => {
       it(`should call clientPublicReportingApi.addLaunchLog method with ${item.level}
          level parameter if we run ${item.method} method`, () => {
-        spyOn(ClientPublicReportingAPI, 'addLaunchLog').and.returnValue(() => {});
+        jest.spyOn(ClientPublicReportingAPI, 'addLaunchLog').mockImplementation(() => {});
         // @ts-ignore
         ReportingApi[item.method]('message');
 
@@ -171,7 +167,7 @@ describe('ReportingApi', () => {
       { method: 'fatal', level: 'FATAL' },
     ];
     it('should call clientPublicReportingApi.addLog method with log and suite as parameters', () => {
-      spyOn(ClientPublicReportingAPI, 'addLog').and.returnValue(() => {});
+      jest.spyOn(ClientPublicReportingAPI, 'addLog').mockImplementation(() => {});
 
       ReportingApi.log(LOG_LEVELS.INFO, 'message', null, 'suite');
 
@@ -182,7 +178,7 @@ describe('ReportingApi', () => {
     });
 
     it('should call clientPublicReportingApi.addLog with default parameters if there are no custom ones', () => {
-      spyOn(ClientPublicReportingAPI, 'addLog').and.returnValue(() => {});
+      jest.spyOn(ClientPublicReportingAPI, 'addLog').mockImplementation(() => {});
 
       ReportingApi.log(LOG_LEVELS.INFO, 'message');
 
@@ -195,7 +191,7 @@ describe('ReportingApi', () => {
     reportingApiLogMethods.forEach((item) => {
       it(`should call clientPublicReportingApi.addLog method with ${item.level}
          level parameter if we run ${item.method} method`, () => {
-        spyOn(ClientPublicReportingAPI, 'addLog').and.returnValue(() => {});
+        jest.spyOn(ClientPublicReportingAPI, 'addLog').mockImplementation(() => {});
         // @ts-ignore
         ReportingApi[item.method]('message', null, 'suite');
 
