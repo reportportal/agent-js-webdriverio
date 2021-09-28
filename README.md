@@ -1,23 +1,63 @@
 # @reportportal/agent-js-webdriverio
 Agent for integration Webdriver.io with ReportPortal.
 
-## Development guide.
+* More about [WebDriverIO](https://webdriver.io/)
+* More about [ReportPortal](http://reportportal.io/)
 
-To develop new features locally and to test the reporter work please follow the next steps:
+## Installation
 
-1. Install necessary dependencies using `npm install` or `npm i`.
-2. Run `npm run build` command to compile TypeScript to JavaScript.
+Install the agent in your project:
+```cmd
+npm install --save-dev @reportportal/agent-js-webdriverio
+```
 
-> For quickly launch examples you can use `npm run dev`, `npm run dev:cucumber` commands.  
-> Make sure you set up `wdio.conf.js` in  `example-webdriverio` or  `example-webdriverio-cucumber` folders.  
-> For more information check the instruction in README file in `examples-webdriverio` folder.
+## Configuration
 
+Create `wdio.conf.js` [Testrunner Configuration](https://webdriver.io/docs/configurationfile) file:
+```js
+const { Reporter } = require('@reportportal/agent-js-webdriverio');
+
+const config = {
+  token: '00000000-0000-0000-0000-00000000000',
+  endpoint: 'http://your.reportportal.server:8080/api/v1',
+  project: 'YourReportPortalProjectName',
+  launch: 'YourLauncherName',
+  mode: 'DEFAULT',
+  debug: false,
+  description: "Static launch description",
+  attributes: [{ key: 'key', value: 'value' }, { value: 'value' }],
+  attachPicturesToLogs: false,
+  rerun: false,
+  rerunOf: 'launchUuid of already existed launch',
+};
+
+exports.config = {
+  // ...
+  reporters: [[Reporter, config]],
+  // ...
+};
+```
+| Parameter             | Description                                                                                                       |
+| --------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| token                 | User's Report Portal token from which you want to send requests. It can be found on the profile page of this user.|
+| endpoint              | URL of your server. For example 'https://server:8080/api/v1'.                                                     |
+| launch                | Name of launch at creation.                                                                                       |
+| project               | The name of the project in which the launches will be created.                                                    |
+| rerun                 | *Default: false.* Enable [rerun](https://github.com/reportportal/documentation/blob/master/src/md/src/DevGuides/rerun.md)|
+| rerunOf               | UUID of launch you want to rerun. If not specified, report portal will update the latest launch with the same name|
+| mode                  | Launch mode. Allowable values *DEFAULT* (by default) or *DEBUG*.|
+| attachPicturesToLogs  | Automatically add screenshots|
+| debug                 | This flag allows seeing the logs of the client-javascript. Useful for debugging.|
+
+## Reporting
+
+This reporter provides Reporting API to use it directly in tests to send some additional data to the report.
 
 ## Using `ReportingApi`:
 
 To start using the `ReportingApi` in tests, just import it from `'@reportportal/agent-js-webdriverio'`:
 ```js
-const { ReportingApi } = require('@reportportal/agent-js-webdriverio/src/reportingApi');
+const { ReportingApi } = require('@reportportal/agent-js-webdriverio');
 ```
 ### addAttributes
 
@@ -120,6 +160,8 @@ Assign corresponding status to the current test item or suite.
 `ReportingApi.setStatus(status: string, suite?: string);`  
 **required**: `status`  
 where `status` must be one of the following: *passed*, *failed*, *stopped*, *skipped*, *interrupted*, *cancelled*, *info*, *warn*  
+
+Examples:
 ```js
 // Jasmine
 describe('should have status FAILED', () => {
@@ -128,6 +170,15 @@ describe('should have status FAILED', () => {
     ReportingApi.setStatus('info');
     // ...
   })
+});
+```
+> **Note:** Pay attention if you want to provide custom status to the `suite` you should pass describe name as a parameter.
+
+```js
+// Cucumber
+Given('I do something awesome', () => {
+  ReportingApi.setStatus('info');
+  //...
 });
 ```
 
@@ -142,44 +193,46 @@ Assign corresponding status to the current test item or suite.
 `ReportingApi.setStatusInfo(suite?: string);`  
 `ReportingApi.setStatusWarn(suite?: string);`  
 
-Example:
+Examples:
 ```js
 // Jasmine
-describe('manual statuses assigning' ,() => {
-  ReportingApi.setStatusFailed('manual statuses assigning'); // string must match the name of the suite
-  ReportingApi.setStatusPassed('manual statuses assigning'); // string must match the name of the suite
-  ReportingApi.setStatusSkipped('manual statuses assigning'); // string must match the name of the suite
-  ReportingApi.setStatusStopped('manual statuses assigning'); // string must match the name of the suite
-  ReportingApi.setStatusInterrupted('manual statuses assigning'); // string must match the name of the suite
-  ReportingApi.setStatusCancelled('manual statuses assigning'); // string must match the name of the suite
+describe('manual statuses assigning', () => {
   ReportingApi.setStatusInfo('manual statuses assigning'); // string must match the name of the suite
-  ReportingApi.setStatusWarn('manual statuses assigning'); // string must match the name of the suite
   it('should call ReportingApi to set statuses', () => {
-    ReportingApi.setStatusFailed();
-    ReportingApi.setStatusPassed();
-    ReportingApi.setStatusSkipped();
-    ReportingApi.setStatusStopped();
-    ReportingApi.setStatusInterrupted();
-    ReportingApi.setStatusCancelled();
     ReportingApi.setStatusInfo();
-    ReportingApi.setStatusWarn();
   });
   // ... 
 });
 ```
 > **Note:** Pay attention if you want to provide custom status to the `suite` you should pass describe name as a parameter.  
 
+```js
+// Cucumber
+Given('I do something awesome', () => {
+  ReportingApi.setStatusInfo();
+  //...
+});
+```
+
 ### setLaunchStatus
 Assign corresponding status to the current launch.  
 `ReportingApi.setLaunchStatus(status: string);`  
 **required**: `status`  
 where `status` must be one of the following: *passed*, *failed*, *stopped*, *skipped*, *interrupted*, *cancelled*, *info*, *warn*  
-Example:
+
+Examples:
 ```js
 // Jasmine
 it('launch should have status FAILED', () => {
     ReportingApi.setLaunchStatus('failed');
   // ...
+});
+```
+```js
+// Cucumber
+Given('I do something awesome', () => {
+  ReportingApi.setLaunchStatus('failed');
+  //...
 });
 ```
 
@@ -194,18 +247,18 @@ Assign corresponding status to the current launch.
 `ReportingApi.setLaunchStatusInfo();`  
 `ReportingApi.setLaunchStatusWarn();`
 
-Example:
+Examples:
 ```js
 // Jasmine
 it('should call ReportingApi to set launch statuses', () => {
-    ReportingApi.setLaunchStatusFailed();
-    ReportingApi.setLaunchStatusPassed();
-    ReportingApi.setLaunchStatusSkipped();
-    ReportingApi.setLaunchStatusStopped();
-    ReportingApi.setLaunchStatusInterrupted();
-    ReportingApi.setLaunchStatusCancelled();
     ReportingApi.setLaunchStatusInfo();
-    ReportingApi.setLaunchStatusWarn();
+});
+```
+```js
+// Cucumber
+Given('I do something awesome', () => {
+  ReportingApi.setLaunchStatusInfo();
+  //...
 });
 ```
 
@@ -214,7 +267,8 @@ Send logs to report portal for the current test.
 `ReportingApi.log(level: LOG_LEVELS, message: string, file?: Attachmentm, suite?: string);`  
 **required**: `level`, `message`  
 where `level` can be one of the following: *TRACE*, *DEBUG*, *WARN*, *INFO*, *ERROR*, *FATAL*  
-Example:
+
+Examples:
 ```js
 // Jasmine
 it('should contain logs with attachments', () => {
@@ -239,7 +293,8 @@ Send logs with corresponding level to report portal for the current suite/test. 
 `ReportingApi.trace(message: string, file?: Attachment, suite?: string);`  
 `ReportingApi.fatal(message: string, file?: Attachment, suite?: string);`  
 **required**: `message`  
-Example:
+
+Examples:
 ```js
 // Jasmine
 describe('should containe suite log', () => {
@@ -262,7 +317,8 @@ Send logs to report portal for the current launch. Should be called inside the a
 `ReportingApi.launchLog(level: LOG_LEVELS, message: string, file?: Attachment);`  
 **required**: `level`, `message`  
 where `level` can be one of the following: *TRACE*, *DEBUG*, *WARN*, *INFO*, *ERROR*, *FATAL*  
-Example:
+
+Examples:
 ```js
 // Jasmine
 it('should contain logs with attachments', async (page) => {
@@ -286,7 +342,8 @@ Send logs with corresponding level to report portal for the current launch. Shou
 `ReportingApi.launchTrace(message: string, file?: Attachment);`  
 `ReportingApi.launchFatal(message: string, file?: Attachment);`  
 **required**: `message`  
-Example:
+
+Examples:
 ```js
 // Jasmine
 it('launch should contain logs with with different levels', () => {
@@ -300,3 +357,21 @@ it('launch should contain logs with with different levels', () => {
 });
 ```
 > **Note:** Pay attention if you want to provide log to the `launch` you should call ReportingApi methods inside test/it blocks.
+
+#### Integration with Sauce Labs
+
+To integrate with Sauce Labs just add attributes for the test case:
+
+```js
+[{
+ "key": "SLID",
+ "value": "# of the job in Sauce Labs"
+}, {
+ "key": "SLDC",
+ "value": "EU (your job region in Sauce Labs)"
+}]
+```
+
+## Copyright Notice
+Licensed under the [Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0)
+license (see the LICENSE file).
