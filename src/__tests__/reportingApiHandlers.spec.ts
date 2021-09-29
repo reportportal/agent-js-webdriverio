@@ -20,7 +20,7 @@ import { options } from './mocks/optionsMock';
 import { RPClientMock } from './mocks/RPClientMock';
 import { getClientConfig } from '../utils';
 import { suiteId, suiteName, testId, testName } from './mocks/data';
-import { LOG_LEVELS, STATUSES } from '../constants';
+import { LOG_LEVELS, RP_STATUSES } from '../constants';
 
 describe('reporterApiHandlers', () => {
   let reporter: Reporter;
@@ -80,14 +80,14 @@ describe('reporterApiHandlers', () => {
 
   describe('setLaunchStatus', () => {
     it('reporter.setLaunchStatus assign status to the launch', () => {
-      reporter.setLaunchStatus(STATUSES.FAILED);
+      reporter.setLaunchStatus(RP_STATUSES.FAILED);
 
-      expect(reporter['customLaunchStatus']).toBe(STATUSES.FAILED);
+      expect(reporter['customLaunchStatus']).toBe(RP_STATUSES.FAILED);
     });
   });
 
   describe('setStatus', () => {
-    const status = STATUSES.INTERRUPTED;
+    const status = RP_STATUSES.INTERRUPTED;
 
     it('reporter.setStatus assign status to the test', () => {
       const expectedRes = { id: testId, name: testName, status };

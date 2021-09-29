@@ -25,8 +25,7 @@ export const ReportingApi = {
     ClientPublicReportingAPI.addAttributes(attributes, suite),
   setDescription: (text: string, suite?: string): void =>
     ClientPublicReportingAPI.setDescription(text, suite),
-  setLaunchStatus: (status: RP_STATUSES | string): void =>
-    ClientPublicReportingAPI.setLaunchStatus(status),
+  setLaunchStatus: (status: RP_STATUSES): void => ClientPublicReportingAPI.setLaunchStatus(status),
   setLaunchStatusPassed: (): void => ClientPublicReportingAPI.setLaunchStatus(RP_STATUSES.PASSED),
   setLaunchStatusFailed: (): void => ClientPublicReportingAPI.setLaunchStatus(RP_STATUSES.FAILED),
   setLaunchStatusSkipped: (): void => ClientPublicReportingAPI.setLaunchStatus(RP_STATUSES.SKIPPED),
@@ -37,7 +36,7 @@ export const ReportingApi = {
     ClientPublicReportingAPI.setLaunchStatus(RP_STATUSES.CANCELLED),
   setLaunchStatusInfo: (): void => ClientPublicReportingAPI.setLaunchStatus(RP_STATUSES.INFO),
   setLaunchStatusWarn: (): void => ClientPublicReportingAPI.setLaunchStatus(RP_STATUSES.WARN),
-  setStatus: (status: RP_STATUSES | string, suite?: string): void =>
+  setStatus: (status: RP_STATUSES, suite?: string): void =>
     ClientPublicReportingAPI.setStatus(status, suite),
   setStatusPassed: (suite?: string): void =>
     ClientPublicReportingAPI.setStatus(RP_STATUSES.PASSED, suite),
