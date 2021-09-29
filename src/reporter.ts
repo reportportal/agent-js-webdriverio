@@ -28,7 +28,7 @@ import {
   parseTags,
   promiseErrorHandler,
 } from './utils';
-import { CUCUMBER_TYPE, FILE_TYPES, LOG_LEVELS, STATUSES, TYPES } from './constants';
+import { CUCUMBER_TYPE, FILE_TYPES, LOG_LEVELS, RP_STATUSES, TYPES } from './constants';
 import { Attribute, FinishTestItem, LaunchObj, LogRQ, StartTestItem } from './models';
 
 // reference - https://www.npmjs.com/package/@wdio/reporter
@@ -247,11 +247,11 @@ export class Reporter extends WDIOReporter {
     }
   }
 
-  setLaunchStatus(status: STATUSES): void {
+  setLaunchStatus(status: RP_STATUSES): void {
     this.customLaunchStatus = status;
   }
 
-  setStatus({ status, suite }: { status: STATUSES; suite?: string }): void {
+  setStatus({ status, suite }: { status: RP_STATUSES; suite?: string }): void {
     if (status && suite) {
       this.storage.addAdditionalSuiteData(suite, { status });
     } else {

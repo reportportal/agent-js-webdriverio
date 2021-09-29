@@ -19,7 +19,7 @@
 import ClientPublicReportingAPI from '@reportportal/client-javascript/lib/publicReportingAPI';
 import { ReportingApi } from '../reportingApi';
 import { suiteName } from './mocks/data';
-import { LOG_LEVELS, STATUSES } from '../constants';
+import { LOG_LEVELS, RP_STATUSES } from '../constants';
 
 const attributes = [{ key: 'key', value: 'value' }];
 const description = 'some text';
@@ -81,10 +81,10 @@ describe('ReportingApi', () => {
       });
     });
 
-    it(`setLaunchStatus: should call setLaunchStatus method with "${STATUSES.CANCELLED}" status`, () => {
-      ReportingApi.setLaunchStatus(STATUSES.CANCELLED);
+    it(`setLaunchStatus: should call setLaunchStatus method with "${RP_STATUSES.CANCELLED}" status`, () => {
+      ReportingApi.setLaunchStatus(RP_STATUSES.CANCELLED);
 
-      expect(spySetStatus).toBeCalledWith(STATUSES.CANCELLED);
+      expect(spySetStatus).toBeCalledWith(RP_STATUSES.CANCELLED);
     });
   });
 
@@ -112,10 +112,10 @@ describe('ReportingApi', () => {
       });
     });
 
-    it(`setStatus: should call setLaunchStatus method with "${STATUSES.CANCELLED}" status and suite`, () => {
-      ReportingApi.setStatus(STATUSES.CANCELLED, suiteName);
+    it(`setStatus: should call setLaunchStatus method with "${RP_STATUSES.CANCELLED}" status and suite`, () => {
+      ReportingApi.setStatus(RP_STATUSES.CANCELLED, suiteName);
 
-      expect(spySetStatus).toBeCalledWith(STATUSES.CANCELLED, suiteName);
+      expect(spySetStatus).toBeCalledWith(RP_STATUSES.CANCELLED, suiteName);
     });
   });
 

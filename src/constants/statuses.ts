@@ -15,7 +15,7 @@
  *
  */
 
-export enum STATUSES {
+export enum RP_STATUSES {
   FAILED = 'failed',
   PASSED = 'passed',
   SKIPPED = 'skipped',

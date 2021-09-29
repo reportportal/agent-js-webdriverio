@@ -20,7 +20,7 @@ import { options } from './mocks/optionsMock';
 import { RPClientMock } from './mocks/RPClientMock';
 import { suiteId, suiteName, testId, testName } from './mocks/data';
 import { getClientConfig } from '../utils';
-import { STATUSES } from '../constants';
+import { RP_STATUSES } from '../constants';
 
 describe('finishing test reporting', () => {
   let reporter: Reporter;
@@ -150,14 +150,14 @@ describe('finishing test reporting', () => {
       ];
       const description = 'test_description';
       const finishTestItemRQ = {
-        status: STATUSES.INFO,
+        status: RP_STATUSES.INFO,
         attributes,
         description,
       };
 
       reporter.addAttributes({ attributes });
       reporter.setDescription({ text: description });
-      reporter.setStatus({ status: STATUSES.INFO });
+      reporter.setStatus({ status: RP_STATUSES.INFO });
       reporter.finishTest(testStats);
 
       expect(reporter['client'].finishTestItem).toBeCalledTimes(1);
