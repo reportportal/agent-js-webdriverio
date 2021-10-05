@@ -18,6 +18,7 @@
 import path from 'path';
 import { Reporters } from '@wdio/types';
 import { Tag } from '@wdio/reporter/build/types';
+// @ts-ignore
 import { name as pjsonName, version as pjsonVersion } from '../package.json';
 import { Attribute, Config, LaunchObj, Suite } from './models';
 

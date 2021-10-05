@@ -16,7 +16,8 @@
  */
 
 import path from 'path';
-import pjson from '../../package.json';
+// @ts-ignore
+import { name as pjsonName, version as pjsonVersion } from '../../package.json';
 import {
   getAgentInfo,
   getClientConfig,
@@ -86,15 +87,15 @@ describe('utils', () => {
   it('getAgentInfo', () => {
     const agentInfo = getAgentInfo();
 
-    expect(agentInfo.name).toBe(pjson.name);
-    expect(agentInfo.version).toBe(pjson.version);
+    expect(agentInfo.name).toBe(pjsonName);
+    expect(agentInfo.version).toBe(pjsonVersion);
   });
 
   it('getSystemAttributes', () => {
     const expectedRes = [
       {
         key: 'agent',
-        value: `${pjson.name}|${pjson.version}`,
+        value: `${pjsonName}|${pjsonVersion}`,
         system: true,
       },
     ];

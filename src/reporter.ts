@@ -113,10 +113,6 @@ export class Reporter extends WDIOReporter {
     this.storage.addSuite({ id: tempId, name });
   }
 
-  // onHookStart() {}
-
-  // onHookEnd() {}
-
   onTestStart(testStats: TestStats): void {
     const { id: parentId } = this.storage.getCurrentSuite();
     const { title: name } = testStats;
@@ -143,8 +139,6 @@ export class Reporter extends WDIOReporter {
   onTestSkip(testStats: TestStats): void {
     this.finishTest(testStats);
   }
-
-  // onTestRetry(testStats: TestStats): void {}
 
   onTestFail(testStats: TestStats): void {
     const testItem = this.storage.getCurrentTest();
@@ -206,8 +200,6 @@ export class Reporter extends WDIOReporter {
       this.isSynchronised = true;
     }
   }
-
-  // onBeforeCommand() {}
 
   onAfterCommand(command: AfterCommandArgs): void {
     const hasScreenshot = /screenshot$/.test(command.endpoint) && !!command.result.value;

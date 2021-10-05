@@ -1,4 +1,5 @@
 # @reportportal/agent-js-webdriverio
+
 Agent for integration Webdriver.io with ReportPortal.
 
 * More about [WebDriverIO](https://webdriver.io/)
@@ -122,7 +123,6 @@ Given('I do something awesome', () => {
 ```
 > **Note:** Agent is not supported adding attributes to the `scenario`.  
 
-
 ### setDescription
 `ReportingApi.setDescription(description: string, suite?: string);`  
 **required**: `description`
@@ -143,7 +143,7 @@ describe('suite name', () => {
 ```gherkin
 // Cucumber
 Feature: Test WDIO with cucumber
-  This description will be adding to the suite
+  This description will be added to the suite
 //...
 ```
 ```js
