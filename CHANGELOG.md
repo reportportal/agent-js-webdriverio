@@ -1,3 +1,5 @@
+### Fixed
+- Compiled source code provided
 
 ## [5.0.0] - 2021-10-05
 ### Added
