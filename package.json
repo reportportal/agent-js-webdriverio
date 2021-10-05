@@ -1,6 +1,6 @@
 {
   "name": "@reportportal/agent-js-webdriverio",
-  "version": "4.0.0",
+  "version": "5.0.0",
   "description": "Agent for integration Webdriver.io with ReportPortal.",
   "main": "build/index.js",
   "scripts": {
