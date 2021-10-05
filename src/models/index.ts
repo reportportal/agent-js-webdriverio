@@ -15,5 +15,18 @@
  *
  */
 
-export { Reporter } from './reporter';
-export { ReportingApi } from './reportingApi';
+export {
+  Attachment,
+  Attribute,
+  BaseObj,
+  Config,
+  FinishTestItem,
+  LaunchFinishObj,
+  LaunchObj,
+  LogRQ,
+  StartTestItem,
+  Suite,
+  TestItem,
+  AdditionalData,
+  AdditionalSuitesData,
+} from './interfaces';

@@ -1,5 +1,5 @@
 /*
- *  Copyright 2021 EPAM Systems
+ *  Copyright 2020 EPAM Systems
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,5 +15,13 @@
  *
  */
 
-export { Reporter } from './reporter';
-export { ReportingApi } from './reportingApi';
+export enum RP_STATUSES {
+  FAILED = 'failed',
+  PASSED = 'passed',
+  SKIPPED = 'skipped',
+  STOPPED = 'stopped',
+  INTERRUPTED = 'interrupted',
+  CANCELLED = 'cancelled',
+  INFO = 'info',
+  WARN = 'warn',
+}

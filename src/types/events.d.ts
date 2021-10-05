@@ -15,5 +15,6 @@
  *
  */
 
-export { Reporter } from './reporter';
-export { ReportingApi } from './reportingApi';
+declare module '@reportportal/client-javascript/lib/constants/events' {
+  export const EVENTS: { [name: string]: string };
+}

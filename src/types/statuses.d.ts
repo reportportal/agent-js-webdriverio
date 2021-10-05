@@ -15,5 +15,15 @@
  *
  */
 
-export { Reporter } from './reporter';
-export { ReportingApi } from './reportingApi';
+declare module '@reportportal/client-javascript/lib/constants/statuses' {
+  export enum RP_STATUSES {
+    FAILED = 'failed',
+    PASSED = 'passed',
+    SKIPPED = 'skipped',
+    STOPPED = 'stopped',
+    INTERRUPTED = 'interrupted',
+    CANCELLED = 'cancelled',
+    INFO = 'info',
+    WARN = 'warn',
+  }
+}

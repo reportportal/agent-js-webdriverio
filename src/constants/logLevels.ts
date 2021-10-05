@@ -15,5 +15,11 @@
  *
  */
 
-export { Reporter } from './reporter';
-export { ReportingApi } from './reportingApi';
+export enum LOG_LEVELS {
+  TRACE = 'TRACE',
+  DEBUG = 'DEBUG',
+  WARN = 'WARN',
+  INFO = 'INFO',
+  ERROR = 'ERROR',
+  FATAL = 'FATAL',
+}

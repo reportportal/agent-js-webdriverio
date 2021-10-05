@@ -15,5 +15,7 @@
  *
  */
 
-export { Reporter } from './reporter';
-export { ReportingApi } from './reportingApi';
+export const testId = 'test_id';
+export const testName = 'test_name';
+export const suiteId = 'suite_id';
+export const suiteName = 'suite_name';

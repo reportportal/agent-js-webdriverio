@@ -15,5 +15,15 @@
  *
  */
 
-export { Reporter } from './reporter';
-export { ReportingApi } from './reportingApi';
+import path from 'path';
+import { Config } from '../../models';
+
+export const options: Config & { logFile: string } = {
+  token: '00000000-0000-0000-0000-000000000000',
+  endpoint: 'https://reportportal.server/api/v1',
+  project: 'ProjectName',
+  launch: 'LaunchName',
+  description: 'Launch description',
+  attributes: [{ key: 'key', value: 'value' }],
+  logFile: `${process.cwd()}${path.sep}logs.log`,
+};

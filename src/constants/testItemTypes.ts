@@ -15,5 +15,13 @@
  *
  */
 
-export { Reporter } from './reporter';
-export { ReportingApi } from './reportingApi';
+export enum TYPES {
+  SUITE = 'SUITE',
+  STEP = 'STEP',
+  TEST = 'TEST',
+}
+
+export enum CUCUMBER_TYPE {
+  FEATURE = 'feature',
+  SCENARIO = 'scenario',
+}

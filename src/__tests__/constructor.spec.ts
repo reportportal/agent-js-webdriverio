@@ -15,5 +15,20 @@
  *
  */
 
-export { Reporter } from './reporter';
-export { ReportingApi } from './reportingApi';
+import { Reporter } from '../reporter';
+import { options } from './mocks/optionsMock';
+
+describe('reporter constructor', () => {
+  let reporter: Reporter;
+  beforeEach(() => {
+    reporter = new Reporter(options);
+  });
+
+  it('should store configuration data', () => {
+    expect(reporter.options).toEqual(options);
+  });
+
+  it('isSynchronised should be FALSE', () => {
+    expect(reporter.isSynchronised).toBeFalsy();
+  });
+});
