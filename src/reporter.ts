@@ -31,7 +31,6 @@ import {
 import { CUCUMBER_TYPE, FILE_TYPES, LOG_LEVELS, RP_STATUSES, TYPES } from './constants';
 import { Attribute, FinishTestItem, LaunchObj, LogRQ, StartTestItem } from './models';
 
-// reference - https://www.npmjs.com/package/@wdio/reporter
 export class Reporter extends WDIOReporter {
   private client: RPClient;
   private tempLaunchId: string;
