@@ -39,6 +39,9 @@
     "type": "git",
     "url": "git+https://github.com/reportportal/agent-js-webdriverio.git"
   },
+  "files": [
+    "/build"
+  ],
   "author": "ReportPortal.io",
   "license": "Apache-2.0",
   "bugs": {

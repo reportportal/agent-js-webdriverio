@@ -1,3 +1,5 @@
+### Changed
+- Package size reduced
 
 ## [5.0.1] - 2021-10-05
 ### Fixed
