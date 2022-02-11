@@ -153,7 +153,32 @@ Given('I do something awesome', () => {
   //...
 });
 ```
-> **Note:** Agent is not supported adding description to the `scenario`. 
+> **Note:** Agent is not supported adding description to the `scenario`.
+
+### setTestCaseId
+`ReportingApi.setTestCaseId(testCaseId: string, suite?: string);`  
+**required**: `testCaseId`
+
+Examples:
+```js
+// Jasmine
+describe('suite name', () => {
+  ReportingApi.setTestCaseId('suiteTestCaseId', 'suite name'); // the second parameter must match the name of the suite
+  it('some test', () => {
+    ReportingApi.setTestCaseId('testCaseId');
+    // ...
+  })
+});
+```
+> **Note:** Pay attention if you want to provide testCaseId to the `suite` you should pass describe name as a parameter.
+
+```js
+// Cucumber
+Given('I do something awesome', () => {
+  ReportingApi.setTestCaseId('testCaseId');
+  //...
+});
+```
 
 ### setStatus
 Assign corresponding status to the current test item or suite.  

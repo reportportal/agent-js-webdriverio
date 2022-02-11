@@ -78,6 +78,23 @@ describe('reporterApiHandlers', () => {
     });
   });
 
+  describe('setTestCaseId', () => {
+    const testCaseId = 'testCaseId';
+
+    it('reporter.setTestCaseId pass testCaseId', () => {
+      const expectedRes = { id: testId, name: testName, testCaseId };
+      reporter.setTestCaseId({ testCaseId });
+
+      expect(reporter['storage'].getCurrentTest()).toEqual(expectedRes);
+    });
+
+    it('reporter.setTestCaseId pass testCaseId and suite', () => {
+      reporter.setTestCaseId({ testCaseId, suite: suiteName });
+
+      expect(reporter['storage'].getAdditionalSuiteData(suiteName)).toEqual({ testCaseId });
+    });
+  });
+
   describe('setLaunchStatus', () => {
     it('reporter.setLaunchStatus assign status to the launch', () => {
       reporter.setLaunchStatus(RP_STATUSES.FAILED);

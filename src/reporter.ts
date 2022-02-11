@@ -58,6 +58,7 @@ export class Reporter extends WDIOReporter {
     process.on(EVENTS.SET_STATUS, this.setStatus.bind(this));
     process.on(EVENTS.ADD_LOG, this.sendTestItemLog.bind(this));
     process.on(EVENTS.ADD_LAUNCH_LOG, this.sendLaunchLog.bind(this));
+    process.on(EVENTS.SET_TEST_CASE_ID, this.setTestCaseId.bind(this));
   }
 
   unregisterRPListeners(): void {
@@ -67,6 +68,7 @@ export class Reporter extends WDIOReporter {
     process.off(EVENTS.SET_STATUS, this.setStatus.bind(this));
     process.off(EVENTS.ADD_LOG, this.sendTestItemLog.bind(this));
     process.off(EVENTS.ADD_LAUNCH_LOG, this.sendLaunchLog.bind(this));
+    process.off(EVENTS.SET_TEST_CASE_ID, this.setTestCaseId.bind(this));
   }
 
   get isSynchronised(): boolean {
@@ -158,12 +160,13 @@ export class Reporter extends WDIOReporter {
   }
 
   finishTest(testStats: TestStats): void {
-    const { id, attributes, description, status } = this.storage.getCurrentTest();
+    const { id, attributes, description, status, testCaseId } = this.storage.getCurrentTest();
     const finishTestItemRQ: FinishTestItem = {
       status: testStats.state,
       ...(attributes && { attributes }),
       ...(description && { description }),
       ...(status && { status }),
+      ...(testCaseId && { testCaseId }),
     };
     const { promise } = this.client.finishTestItem(id, finishTestItemRQ);
     promiseErrorHandler(promise);
@@ -172,11 +175,13 @@ export class Reporter extends WDIOReporter {
 
   onSuiteEnd(): void {
     const { id, name } = this.storage.getCurrentSuite();
-    const { status, attributes, description } = this.storage.getAdditionalSuiteData(name);
+    const { status, attributes, description, testCaseId } =
+      this.storage.getAdditionalSuiteData(name);
     const finishTestItemData = {
       ...(status && { status }),
       ...(attributes && { attributes }),
       ...(description && { description }),
+      ...(testCaseId && { testCaseId }),
     };
     const { promise } = this.client.finishTestItem(id, finishTestItemData);
     promiseErrorHandler(promise);
@@ -247,6 +252,14 @@ export class Reporter extends WDIOReporter {
       this.storage.addAdditionalSuiteData(suite, { status });
     } else {
       this.storage.updateCurrentTest({ status });
+    }
+  }
+
+  setTestCaseId({ testCaseId, suite }: { testCaseId: string; suite?: string }): void {
+    if (testCaseId && suite) {
+      this.storage.addAdditionalSuiteData(suite, { testCaseId });
+    } else {
+      this.storage.updateCurrentTest({ testCaseId });
     }
   }
 
