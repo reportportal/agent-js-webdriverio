@@ -107,6 +107,7 @@ export interface TestItem {
   attributes?: Attribute[];
   description?: string;
   status?: string;
+  testCaseId?: string;
 }
 
 export interface FinishTestItem {
@@ -122,6 +123,7 @@ export interface AdditionalData {
   description?: string;
   status?: string;
   logs?: LogRQ[];
+  testCaseId?: string;
 }
 
 export interface AdditionalSuitesData {
