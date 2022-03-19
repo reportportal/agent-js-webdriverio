@@ -55,32 +55,28 @@ describe('utils', () => {
     });
 
     it('getClientConfig with extended config', () => {
+      const additionalOptions = {
+        rerun: true,
+        rerunOf: '00000000-0000-0000-0000-000000000000',
+        skippedIssue: true,
+        mode: 'DEFAULT',
+        debug: true,
+        headers: { foo: 'bar' },
+        restClientConfig: {
+          agent: { keepAlive: true },
+        },
+        cucumberNestedSteps: true,
+      };
       const extendedOptions = {
         ...options,
-        rerun: true,
-        rerunOf: '00000000-0000-0000-0000-000000000000',
-        skippedIssue: true,
-        mode: 'DEFAULT',
-        debug: true,
-        headers: { foo: 'bar' },
-        restClientConfig: {
-          agent: { keepAlive: true },
-        },
+        ...additionalOptions,
       };
-      const extendedRes = {
+      const expectedRes = {
         ...baseRes,
-        rerun: true,
-        rerunOf: '00000000-0000-0000-0000-000000000000',
-        skippedIssue: true,
-        mode: 'DEFAULT',
-        debug: true,
-        headers: { foo: 'bar' },
-        restClientConfig: {
-          agent: { keepAlive: true },
-        },
+        ...additionalOptions,
       };
 
-      expect(getClientConfig(extendedOptions)).toEqual(extendedRes);
+      expect(getClientConfig(extendedOptions)).toEqual(expectedRes);
     });
   });
 

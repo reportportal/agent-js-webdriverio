@@ -43,6 +43,7 @@ export const getClientConfig = (options: Partial<Reporters.Options>): Config => 
     debug,
     headers,
     restClientConfig,
+    cucumberNestedSteps,
   } = options;
   return {
     token,
@@ -58,6 +59,7 @@ export const getClientConfig = (options: Partial<Reporters.Options>): Config => 
     ...(debug && { debug }),
     ...(headers && { headers }),
     ...(restClientConfig && { restClientConfig }),
+    ...(cucumberNestedSteps && { cucumberNestedSteps }),
   };
 };
 
