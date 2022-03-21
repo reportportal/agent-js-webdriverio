@@ -30,6 +30,7 @@ const config = {
   attachPicturesToLogs: false,
   rerun: false,
   rerunOf: 'launchUuid of already existed launch',
+  skippedIssue: true,
 };
 
 exports.config = {
@@ -49,6 +50,7 @@ exports.config = {
 | mode                  | Launch mode. Allowable values *DEFAULT* (by default) or *DEBUG*.|
 | attachPicturesToLogs  | Automatically add screenshots|
 | debug                 | This flag allows seeing the logs of the client-javascript. Useful for debugging.|
+| skippedIssue| *Default: true.* ReportPortal provides feature to mark skipped tests as not 'To Investigate' items on WS side.<br> Parameter could be equal boolean values:<br> *TRUE* - skipped tests considered as issues and will be marked as 'To Investigate' on Report Portal.<br> *FALSE* - skipped tests will not be marked as 'To Investigate' on application.|
 
 ## Reporting
 
