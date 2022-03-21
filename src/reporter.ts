@@ -196,11 +196,7 @@ export class Reporter extends WDIOReporter {
     let status = customStatus;
     if (this.options.cucumberNestedSteps && suiteStats.type === CUCUMBER_TYPE.SCENARIO) {
       const isAllStepsPassed = suiteStats.tests.every((test) => test.state === RP_STATUSES.PASSED);
-      status = customStatus
-        ? customStatus
-        : isAllStepsPassed
-        ? RP_STATUSES.PASSED
-        : RP_STATUSES.FAILED;
+      status = customStatus || (isAllStepsPassed ? RP_STATUSES.PASSED : RP_STATUSES.FAILED);
     }
     const finishTestItemData = {
       ...(status && { status }),
