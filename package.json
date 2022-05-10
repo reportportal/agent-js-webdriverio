@@ -3,6 +3,7 @@
   "version": "5.0.1",
   "description": "Agent for integration Webdriver.io with ReportPortal.",
   "main": "build/index.js",
+  "types": "build/index.d.ts",
   "scripts": {
     "build": "npm run clean && tsc",
     "clean": "rimraf ./build",
