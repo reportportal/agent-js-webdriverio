@@ -1,3 +1,11 @@
+### Added
+- [testCaseId](https://reportportal.io/docs/Test-case-ID%3Ewhat-is-it-test-case-id) reporting via [`ReportingApi.setTestCaseId`]('./README.md#setTestCaseId')
+- Support nested steps for Cucumber reporting via `cucumberNestedSteps` flag
+- `skippedIssue` parameter to not mark skipped tests as 'To Investigate' by default
+
+### Updated
+- `@reportportal/client-javascript` bumped to version `5.0.6`
+
 ### Changed
 - Package size reduced
 
