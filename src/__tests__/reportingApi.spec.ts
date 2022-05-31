@@ -23,6 +23,7 @@ import { LOG_LEVELS, RP_STATUSES } from '../constants';
 
 const attributes = [{ key: 'key', value: 'value' }];
 const description = 'some text';
+const testCaseId = 'testCaseId';
 
 describe('ReportingApi', () => {
   describe('ReportingApi.addAttributes', () => {
@@ -54,6 +55,22 @@ describe('ReportingApi', () => {
       ReportingApi.setDescription(description, suiteName);
 
       expect(spyOnSetDescription).toBeCalledWith(description, suiteName);
+    });
+  });
+
+  describe('ReportingApi.setTestCaseId', () => {
+    const spyOnSetTestCaseId = jest.spyOn(ClientPublicReportingAPI, 'setTestCaseId');
+
+    it('should call clientPublicReportingApi.setTestCaseId method with testCaseId and undefined as parameter', () => {
+      ReportingApi.setTestCaseId(testCaseId);
+
+      expect(spyOnSetTestCaseId).toBeCalledWith(testCaseId, undefined);
+    });
+
+    it('should call clientPublicReportingApi.setTestCaseId method with testCaseId and suite as parameter', () => {
+      ReportingApi.setTestCaseId(testCaseId, suiteName);
+
+      expect(spyOnSetTestCaseId).toBeCalledWith(testCaseId, suiteName);
     });
   });
 

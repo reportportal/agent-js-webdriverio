@@ -25,6 +25,8 @@ export const ReportingApi = {
     ClientPublicReportingAPI.addAttributes(attributes, suite),
   setDescription: (text: string, suite?: string): void =>
     ClientPublicReportingAPI.setDescription(text, suite),
+  setTestCaseId: (testCaseId: string, suite?: string): void =>
+    ClientPublicReportingAPI.setTestCaseId(testCaseId, suite),
   setLaunchStatus: (status: RP_STATUSES): void => ClientPublicReportingAPI.setLaunchStatus(status),
   setLaunchStatusPassed: (): void => ClientPublicReportingAPI.setLaunchStatus(RP_STATUSES.PASSED),
   setLaunchStatusFailed: (): void => ClientPublicReportingAPI.setLaunchStatus(RP_STATUSES.FAILED),

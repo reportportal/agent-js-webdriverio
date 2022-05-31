@@ -20,18 +20,81 @@ import { options } from './mocks/optionsMock';
 import { RPClientMock } from './mocks/RPClientMock';
 import { suiteId, suiteName } from './mocks/data';
 import { getClientConfig } from '../utils';
+import { CUCUMBER_TYPE, RP_STATUSES } from '../constants';
 
 describe('onSuiteEnd', () => {
   const reporter = new Reporter(options);
-  reporter['client'] = new RPClientMock(getClientConfig(options));
-  reporter['tempLaunchId'] = 'tempLaunchId';
-  reporter['storage'].addSuite({ id: suiteId, name: suiteName });
 
-  it('client.finishTestItem should be called with corresponding params', () => {
-    reporter.onSuiteEnd();
+  beforeEach(() => {
+    reporter['client'] = new RPClientMock(getClientConfig(options));
+    reporter['storage'].addSuite({ id: suiteId, name: suiteName });
+  });
 
-    expect(reporter['client'].finishTestItem).toBeCalledTimes(1);
-    expect(reporter['client'].finishTestItem).toBeCalledWith(suiteId, {});
-    expect(reporter['storage'].getCurrentSuite()).toEqual(null);
+  describe('client.finishTestItem should be called with corresponding params', () => {
+    const suiteStats: any = { tests: [{ state: RP_STATUSES.PASSED }] };
+
+    it('test with basic config', () => {
+      reporter.onSuiteEnd(suiteStats);
+
+      expect(reporter['client'].finishTestItem).toBeCalledTimes(1);
+      expect(reporter['client'].finishTestItem).toBeCalledWith(suiteId, {});
+      expect(reporter['storage'].getCurrentSuite()).toEqual(null);
+    });
+
+    it('config with cucumberNestedSteps=true, no custom status', () => {
+      reporter['options'].cucumberNestedSteps = true;
+
+      reporter.onSuiteEnd({ ...suiteStats, type: CUCUMBER_TYPE.SCENARIO });
+
+      expect(reporter['client'].finishTestItem).toBeCalledTimes(1);
+      expect(reporter['client'].finishTestItem).toBeCalledWith(suiteId, {
+        status: RP_STATUSES.PASSED,
+      });
+      expect(reporter['storage'].getCurrentSuite()).toEqual(null);
+    });
+
+    it('config with cucumberNestedSteps=true, no custom status, all steps=passed', () => {
+      reporter['options'].cucumberNestedSteps = true;
+
+      reporter.onSuiteEnd({
+        ...suiteStats,
+        type: CUCUMBER_TYPE.SCENARIO,
+      });
+
+      expect(reporter['client'].finishTestItem).toBeCalledTimes(1);
+      expect(reporter['client'].finishTestItem).toBeCalledWith(suiteId, {
+        status: RP_STATUSES.PASSED,
+      });
+      expect(reporter['storage'].getCurrentSuite()).toEqual(null);
+    });
+
+    it('config with cucumberNestedSteps=true, no custom status, some tests=failed', () => {
+      reporter['options'].cucumberNestedSteps = true;
+
+      reporter.onSuiteEnd({
+        ...suiteStats,
+        type: CUCUMBER_TYPE.SCENARIO,
+        tests: [...suiteStats.tests, { state: RP_STATUSES.FAILED }],
+      });
+
+      expect(reporter['client'].finishTestItem).toBeCalledTimes(1);
+      expect(reporter['client'].finishTestItem).toBeCalledWith(suiteId, {
+        status: RP_STATUSES.FAILED,
+      });
+      expect(reporter['storage'].getCurrentSuite()).toEqual(null);
+    });
+
+    it('config with cucumberNestedSteps=true, with custom status', () => {
+      reporter['options'].cucumberNestedSteps = true;
+      reporter['storage'].addAdditionalSuiteData(suiteName, { status: RP_STATUSES.INFO });
+
+      reporter.onSuiteEnd(suiteStats);
+
+      expect(reporter['client'].finishTestItem).toBeCalledTimes(1);
+      expect(reporter['client'].finishTestItem).toBeCalledWith(suiteId, {
+        status: RP_STATUSES.INFO,
+      });
+      expect(reporter['storage'].getCurrentSuite()).toEqual(null);
+    });
   });
 });

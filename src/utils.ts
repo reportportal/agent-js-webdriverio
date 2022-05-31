@@ -43,6 +43,7 @@ export const getClientConfig = (options: Partial<Reporters.Options>): Config => 
     debug,
     headers,
     restClientConfig,
+    cucumberNestedSteps,
   } = options;
   return {
     token,
@@ -58,6 +59,7 @@ export const getClientConfig = (options: Partial<Reporters.Options>): Config => 
     ...(debug && { debug }),
     ...(headers && { headers }),
     ...(restClientConfig && { restClientConfig }),
+    ...(cucumberNestedSteps && { cucumberNestedSteps }),
   };
 };
 
@@ -66,28 +68,41 @@ export const getAgentInfo = (): { version: string; name: string } => ({
   version: pjsonVersion,
 });
 
-export const getSystemAttributes = (): Attribute[] => {
-  return [
+export const getSystemAttributes = (config: Partial<Reporters.Options>): Attribute[] => {
+  const { skippedIssue } = config;
+  const systemAttributes = [
     {
       key: 'agent',
       value: `${pjsonName}|${pjsonVersion}`,
       system: true,
     },
   ];
+
+  if (skippedIssue === false) {
+    const skippedIssueAttribute = {
+      key: 'skippedIssue',
+      value: 'false',
+      system: true,
+    };
+    systemAttributes.push(skippedIssueAttribute);
+  }
+
+  return systemAttributes;
 };
 
 export const getStartLaunchObj = (
   config: Partial<Reporters.Options>,
   launchObj: LaunchObj = {},
 ): LaunchObj => {
-  const systemAttributes = getSystemAttributes();
+  const systemAttributes = getSystemAttributes(config);
+  const { description, attributes, rerun, rerunOf, mode } = config;
 
   return {
-    description: config.description,
-    attributes: [...(config.attributes || []), ...systemAttributes],
-    rerun: config.rerun,
-    rerunOf: config.rerunOf,
-    mode: config.mode,
+    description,
+    attributes: [...(attributes || []), ...systemAttributes],
+    rerun,
+    rerunOf,
+    mode,
     ...launchObj,
   };
 };

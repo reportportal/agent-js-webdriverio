@@ -29,7 +29,9 @@ const config = {
   attributes: [{ key: 'key', value: 'value' }, { value: 'value' }],
   attachPicturesToLogs: false,
   rerun: false,
-  rerunOf: 'launchUuid of already existed launch',
+  rerunOf: 'launchUuid of already existed launch', 
+  cucumberNestedSteps: false,
+  skippedIssue: true,
 };
 
 exports.config = {
@@ -38,17 +40,35 @@ exports.config = {
   // ...
 };
 ```
-| Parameter             | Description                                                                                                       |
-| --------------------- | ----------------------------------------------------------------------------------------------------------------- |
-| token                 | User's Report Portal token from which you want to send requests. It can be found on the profile page of this user.|
-| endpoint              | URL of your server. For example 'https://server:8080/api/v1'.                                                     |
-| launch                | Name of launch at creation.                                                                                       |
-| project               | The name of the project in which the launches will be created.                                                    |
-| rerun                 | *Default: false.* Enable [rerun](https://github.com/reportportal/documentation/blob/master/src/md/src/DevGuides/rerun.md)|
-| rerunOf               | UUID of launch you want to rerun. If not specified, report portal will update the latest launch with the same name|
-| mode                  | Launch mode. Allowable values *DEFAULT* (by default) or *DEBUG*.|
-| attachPicturesToLogs  | Automatically add screenshots|
-| debug                 | This flag allows seeing the logs of the client-javascript. Useful for debugging.|
+| Parameter            | Description                                                                                                              |
+|----------------------|--------------------------------------------------------------------------------------------------------------------------|
+| token                | User's Report Portal token from which you want to send requests. It can be found on the profile page of this user.       |
+| endpoint             | URL of your server. For example 'https://server:8080/api/v1'.                                                            |
+| launch               | Name of launch at creation.                                                                                              |
+| project              | The name of the project in which the launches will be created.                                                           |
+| rerun                | *Default: false.* Enable [rerun](https://github.com/reportportal/documentation/blob/master/src/md/src/DevGuides/rerun.md)|
+| rerunOf              | UUID of launch you want to rerun. If not specified, report portal will update the latest launch with the same name       |
+| mode                 | Launch mode. Allowable values *DEFAULT* (by default) or *DEBUG*.                                                         |
+| attachPicturesToLogs | Automatically add screenshots                                                                                            |
+| debug                | This flag allows seeing the logs of the client-javascript. Useful for debugging.                                         |
+| cucumberNestedSteps  | [Report your steps as logs](https://github.com/reportportal/agent-js-webdriverio#step-reporting-configuration)           |
+| skippedIssue| *Default: true.* ReportPortal provides feature to mark skipped tests as not 'To Investigate' items on WS side.<br> Parameter could be equal boolean values:<br> *TRUE* - skipped tests considered as issues and will be marked as 'To Investigate' on Report Portal.<br> *FALSE* - skipped tests will not be marked as 'To Investigate' on application.|
+
+## Step reporting configuration
+
+By default, this agent reports the following structure:
+
+- feature - SUITE
+- scenario - TEST
+- step - STEP
+
+You may change this behavior to report steps to the log level by enabling scenario-based reporting:
+
+- feature - TEST
+- scenario - STEP
+- step - log item
+
+To report your steps as logs, you need to pass an additional parameter to the agent config: `"cucumberNestedSteps": true`
 
 ## Reporting
 
@@ -153,7 +173,32 @@ Given('I do something awesome', () => {
   //...
 });
 ```
-> **Note:** Agent is not supported adding description to the `scenario`. 
+> **Note:** Agent is not supported adding description to the `scenario`.
+
+### setTestCaseId
+`ReportingApi.setTestCaseId(testCaseId: string, suite?: string);`  
+**required**: `testCaseId`
+
+Examples:
+```js
+// Jasmine
+describe('suite name', () => {
+  ReportingApi.setTestCaseId('suiteTestCaseId', 'suite name'); // the second parameter must match the name of the suite
+  it('some test', () => {
+    ReportingApi.setTestCaseId('testCaseId');
+    // ...
+  })
+});
+```
+> **Note:** Pay attention if you want to provide testCaseId to the `suite` you should pass describe name as a parameter.
+
+```js
+// Cucumber
+Given('I do something awesome', () => {
+  ReportingApi.setTestCaseId('testCaseId');
+  //...
+});
+```
 
 ### setStatus
 Assign corresponding status to the current test item or suite.  

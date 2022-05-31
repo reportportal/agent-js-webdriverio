@@ -55,32 +55,28 @@ describe('utils', () => {
     });
 
     it('getClientConfig with extended config', () => {
+      const additionalOptions = {
+        rerun: true,
+        rerunOf: '00000000-0000-0000-0000-000000000000',
+        skippedIssue: true,
+        mode: 'DEFAULT',
+        debug: true,
+        headers: { foo: 'bar' },
+        restClientConfig: {
+          agent: { keepAlive: true },
+        },
+        cucumberNestedSteps: true,
+      };
       const extendedOptions = {
         ...options,
-        rerun: true,
-        rerunOf: '00000000-0000-0000-0000-000000000000',
-        skippedIssue: true,
-        mode: 'DEFAULT',
-        debug: true,
-        headers: { foo: 'bar' },
-        restClientConfig: {
-          agent: { keepAlive: true },
-        },
+        ...additionalOptions,
       };
-      const extendedRes = {
+      const expectedRes = {
         ...baseRes,
-        rerun: true,
-        rerunOf: '00000000-0000-0000-0000-000000000000',
-        skippedIssue: true,
-        mode: 'DEFAULT',
-        debug: true,
-        headers: { foo: 'bar' },
-        restClientConfig: {
-          agent: { keepAlive: true },
-        },
+        ...additionalOptions,
       };
 
-      expect(getClientConfig(extendedOptions)).toEqual(extendedRes);
+      expect(getClientConfig(extendedOptions)).toEqual(expectedRes);
     });
   });
 
@@ -91,20 +87,39 @@ describe('utils', () => {
     expect(agentInfo.version).toBe(pjsonVersion);
   });
 
-  it('getSystemAttributes', () => {
-    const expectedRes = [
-      {
-        key: 'agent',
-        value: `${pjsonName}|${pjsonVersion}`,
-        system: true,
-      },
-    ];
+  describe('getSystemAttributes', () => {
+    it('basic configuration', () => {
+      const expectedRes = [
+        {
+          key: 'agent',
+          value: `${pjsonName}|${pjsonVersion}`,
+          system: true,
+        },
+      ];
 
-    expect(getSystemAttributes()).toEqual(expectedRes);
+      expect(getSystemAttributes(options)).toEqual(expectedRes);
+    });
+
+    it('configuration with skippedIssue=false', () => {
+      const expectedRes = [
+        {
+          key: 'agent',
+          value: `${pjsonName}|${pjsonVersion}`,
+          system: true,
+        },
+        {
+          key: 'skippedIssue',
+          value: 'false',
+          system: true,
+        },
+      ];
+
+      expect(getSystemAttributes({ ...options, skippedIssue: false })).toEqual(expectedRes);
+    });
   });
 
   describe('getStartLaunchObj', () => {
-    const systemAttributes = getSystemAttributes();
+    const systemAttributes = getSystemAttributes(options);
 
     it('config with attributes', () => {
       const { description, attributes, rerun, rerunOf, mode } = options;

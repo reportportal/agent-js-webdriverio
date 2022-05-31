@@ -58,6 +58,7 @@ export class Reporter extends WDIOReporter {
     process.on(EVENTS.SET_STATUS, this.setStatus.bind(this));
     process.on(EVENTS.ADD_LOG, this.sendTestItemLog.bind(this));
     process.on(EVENTS.ADD_LAUNCH_LOG, this.sendLaunchLog.bind(this));
+    process.on(EVENTS.SET_TEST_CASE_ID, this.setTestCaseId.bind(this));
   }
 
   unregisterRPListeners(): void {
@@ -67,6 +68,7 @@ export class Reporter extends WDIOReporter {
     process.off(EVENTS.SET_STATUS, this.setStatus.bind(this));
     process.off(EVENTS.ADD_LOG, this.sendTestItemLog.bind(this));
     process.off(EVENTS.ADD_LAUNCH_LOG, this.sendLaunchLog.bind(this));
+    process.off(EVENTS.SET_TEST_CASE_ID, this.setTestCaseId.bind(this));
   }
 
   get isSynchronised(): boolean {
@@ -103,6 +105,9 @@ export class Reporter extends WDIOReporter {
     if (isCucumberFeature && suiteStats.description) {
       suiteDataRQ.description = suiteStats.description;
     }
+    if (this.options.cucumberNestedSteps) {
+      suiteDataRQ.type = isCucumberFeature ? TYPES.TEST : TYPES.STEP;
+    }
     const { tempId, promise } = this.client.startTestItem(suiteDataRQ, this.tempLaunchId, parentId);
     promiseErrorHandler(promise);
     const additionalData = this.storage.getAdditionalSuiteData(name);
@@ -121,6 +126,7 @@ export class Reporter extends WDIOReporter {
       name,
       type: TYPES.STEP,
       codeRef,
+      ...(this.options.cucumberNestedSteps && { hasStats: false }),
     };
     const { tempId, promise } = this.client.startTestItem(
       testItemDataRQ,
@@ -158,25 +164,45 @@ export class Reporter extends WDIOReporter {
   }
 
   finishTest(testStats: TestStats): void {
-    const { id, attributes, description, status } = this.storage.getCurrentTest();
+    const {
+      id,
+      attributes,
+      description,
+      status: customStatus,
+      testCaseId,
+    } = this.storage.getCurrentTest();
+    const { state: status } = testStats;
+    const withoutIssue = status === RP_STATUSES.SKIPPED && this.options.skippedIssue === false;
     const finishTestItemRQ: FinishTestItem = {
-      status: testStats.state,
+      status: customStatus || status,
       ...(attributes && { attributes }),
       ...(description && { description }),
-      ...(status && { status }),
+      ...(testCaseId && { testCaseId }),
+      ...(withoutIssue && { issue: { issueType: 'NOT_ISSUE' } }),
     };
     const { promise } = this.client.finishTestItem(id, finishTestItemRQ);
     promiseErrorHandler(promise);
     this.storage.removeTest(id);
   }
 
-  onSuiteEnd(): void {
+  onSuiteEnd(suiteStats: SuiteStats): void {
     const { id, name } = this.storage.getCurrentSuite();
-    const { status, attributes, description } = this.storage.getAdditionalSuiteData(name);
+    const {
+      status: customStatus,
+      attributes,
+      description,
+      testCaseId,
+    } = this.storage.getAdditionalSuiteData(name);
+    let status = customStatus;
+    if (this.options.cucumberNestedSteps && suiteStats.type === CUCUMBER_TYPE.SCENARIO) {
+      const isAllStepsPassed = suiteStats.tests.every((test) => test.state === RP_STATUSES.PASSED);
+      status = customStatus || (isAllStepsPassed ? RP_STATUSES.PASSED : RP_STATUSES.FAILED);
+    }
     const finishTestItemData = {
       ...(status && { status }),
       ...(attributes && { attributes }),
       ...(description && { description }),
+      ...(testCaseId && { testCaseId }),
     };
     const { promise } = this.client.finishTestItem(id, finishTestItemData);
     promiseErrorHandler(promise);
@@ -247,6 +273,14 @@ export class Reporter extends WDIOReporter {
       this.storage.addAdditionalSuiteData(suite, { status });
     } else {
       this.storage.updateCurrentTest({ status });
+    }
+  }
+
+  setTestCaseId({ testCaseId, suite }: { testCaseId: string; suite?: string }): void {
+    if (testCaseId && suite) {
+      this.storage.addAdditionalSuiteData(suite, { testCaseId });
+    } else {
+      this.storage.updateCurrentTest({ testCaseId });
     }
   }
 
