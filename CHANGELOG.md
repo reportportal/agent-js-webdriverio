@@ -1,3 +1,5 @@
+
+## [5.0.2] - 2022-05-31
 ### Added
 - [testCaseId](https://reportportal.io/docs/Test-case-ID%3Ewhat-is-it-test-case-id) reporting via [`ReportingApi.setTestCaseId`](README.md#setTestCaseId)
 - Support nested steps for Cucumber reporting via `cucumberNestedSteps` flag
