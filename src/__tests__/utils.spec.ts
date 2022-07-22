@@ -24,6 +24,7 @@ import {
   getCodeRef,
   getStartLaunchObj,
   getSystemAttributes,
+  limit,
   parseTags,
   promiseErrorHandler,
 } from '../utils';
@@ -172,6 +173,23 @@ describe('utils', () => {
 
     it('should return empty array', () => {
       expect(parseTags([''])).toEqual([]);
+    });
+  });
+  describe('limit', () => {
+    it('should not changed value if argument is null', () => {
+      expect(limit(null)).toBeNull();
+    });
+
+    it('should not changed value if argument is undefined', () => {
+      expect(limit(undefined)).toBeUndefined();
+    });
+
+    it('should not changed value if argument is 0', () => {
+      expect(limit(0)).toBe(0);
+    });
+
+    it('should not changed value if argument is ""', () => {
+      expect(limit('')).toBe('');
     });
   });
 });
