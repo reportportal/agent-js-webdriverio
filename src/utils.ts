@@ -21,6 +21,8 @@ import { Tag } from '@wdio/reporter/build/types';
 // @ts-ignore
 import { name as pjsonName, version as pjsonVersion } from '../package.json';
 import { Attribute, Config, LaunchObj, Suite } from './models';
+// @ts-ignore
+import stringify from 'json-stringify-safe';
 
 export const promiseErrorHandler = (promise: Promise<any>): void => {
   promise.catch((err) => {
@@ -44,6 +46,8 @@ export const getClientConfig = (options: Partial<Reporters.Options>): Config => 
     headers,
     restClientConfig,
     cucumberNestedSteps,
+    reportSeleniumCommands,
+    seleniumCommandsLogLevel,
   } = options;
   return {
     token,
@@ -60,6 +64,8 @@ export const getClientConfig = (options: Partial<Reporters.Options>): Config => 
     ...(headers && { headers }),
     ...(restClientConfig && { restClientConfig }),
     ...(cucumberNestedSteps && { cucumberNestedSteps }),
+    ...(reportSeleniumCommands && { reportSeleniumCommands }),
+    ...(seleniumCommandsLogLevel && { seleniumCommandsLogLevel }),
   };
 };
 
@@ -126,4 +132,59 @@ export const parseTags = (tags: string[] | Tag[]): Attribute[] => {
       }
     })
     .filter(Boolean);
+};
+
+export const limit = (val: any): any => {
+  if (!val) {
+    return val;
+  }
+
+  const OBJ_LENGTH = 10;
+  const ARR_LENGTH = 10;
+  const STRING_LIMIT = 1000;
+  const STRING_TRUNCATE = 200;
+
+  let value = JSON.parse(stringify(val));
+
+  switch (Object.prototype.toString.call(value)) {
+    case '[object String]':
+      if (value.length > STRING_LIMIT) {
+        return `${value.substr(0, STRING_TRUNCATE)} ... (${
+          value.length - STRING_TRUNCATE
+        } more bytes)`;
+      }
+
+      return value;
+
+    case '[object Array]': {
+      const { length } = value;
+      if (length > ARR_LENGTH) {
+        value = value.slice(0, ARR_LENGTH);
+        value.push(`(${length - ARR_LENGTH} more items)`);
+      }
+
+      return value.map(limit);
+    }
+    case '[object Object]': {
+      const keys = Object.keys(value);
+      const removed = [];
+      for (let i = 0, l = keys.length; i < l; i += 1) {
+        if (i < OBJ_LENGTH) {
+          value[keys[i]] = limit(value[keys[i]]);
+        } else {
+          delete value[keys[i]];
+          removed.push(keys[i]);
+        }
+      }
+
+      if (removed.length) {
+        value._ = `${keys.length - OBJ_LENGTH} more keys: ${JSON.stringify(removed)}`;
+      }
+
+      return value;
+    }
+    default: {
+      return value;
+    }
+  }
 };

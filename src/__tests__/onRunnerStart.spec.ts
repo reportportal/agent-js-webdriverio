@@ -21,15 +21,17 @@ import { RPClientMock } from './mocks/RPClientMock';
 import { LaunchObj } from '../models';
 import { getStartLaunchObj } from '../utils';
 import { getClientConfig } from '../utils';
+import { RunnerStats } from '@wdio/reporter';
 
 describe('onRunnerStart', () => {
   const reporter: Reporter = new Reporter(options);
+  const runner: Partial<RunnerStats> = { isMultiremote: false };
   reporter['client'] = new RPClientMock(getClientConfig(options));
 
   it('client.startLaunch should be called with corresponding params', () => {
     const launchDataRQ: LaunchObj = getStartLaunchObj(options);
 
-    reporter.onRunnerStart();
+    reporter.onRunnerStart(runner);
 
     expect(reporter['client'].startLaunch).toBeCalledTimes(1);
     expect(reporter['client'].startLaunch).toBeCalledWith(launchDataRQ);
