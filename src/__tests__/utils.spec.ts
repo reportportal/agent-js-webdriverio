@@ -186,9 +186,10 @@ describe('utils', () => {
       eMail: 'absdefg@yourMail.com',
       address: 'Some address',
       password: '*****',
+      role: 'Some role',
     };
 
-    const baseValues = new Array(9).fill('some value');
+    const baseValues = new Array(10).fill('some value');
 
     it('should not changed value if argument is null', () => {
       expect(limit(null)).toBeNull();
@@ -210,29 +211,28 @@ describe('utils', () => {
       expect(limit('Value witch length less then 1000')).toBe('Value witch length less then 1000');
     });
 
-    it('should works correctly with object that has less then 10 properties', () => {
+    it('should works correctly with object that has 10 or less properties', () => {
       expect(limit(baseUser)).toEqual(baseUser);
     });
 
-    it('should works correctly with object that has 10 properties or more', () => {
+    it('should works correctly with object that has more than 10', () => {
       const user = {
         ...baseUser,
-        role: 'Some role',
         hobbies: 'Some hobbies',
       };
 
-      const expectedObject = { ...baseUser, role: 'Some role', _: `1 more keys: [\"hobbies\"]` };
+      const expectedObject = { ...baseUser, _: `1 more keys: [\"hobbies\"]` };
 
       expect(limit(user)).toEqual(expectedObject);
     });
 
-    it('should works correctly with arrays witch length less then 10', () => {
+    it('should works correctly with arrays witch length 10 or less', () => {
       expect(limit(baseValues)).toEqual(baseValues);
     });
 
-    it('should works correctly with arrays witch length 10 or more', () => {
-      const valuesArray = [...baseValues, 'some value', 'some value'];
-      const expectedArray = [...baseValues, 'some value', '(1 more items)'];
+    it('should works correctly with arrays witch length more than 10', () => {
+      const valuesArray = [...baseValues, 'some value'];
+      const expectedArray = [...baseValues, '(1 more items)'];
 
       expect(limit(valuesArray)).toEqual(expectedArray);
     });
