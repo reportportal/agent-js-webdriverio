@@ -176,6 +176,20 @@ describe('utils', () => {
     });
   });
   describe('limit', () => {
+    const baseUser = {
+      name: 'UserName',
+      surname: 'UserSurname',
+      fullName: 'UserName UserSurname',
+      age: 21,
+      id: 2,
+      tel: '12345',
+      eMail: 'absdefg@yourMail.com',
+      address: 'Some address',
+      password: '*****',
+    };
+
+    const baseValues = new Array(9).fill('some value');
+
     it('should not changed value if argument is null', () => {
       expect(limit(null)).toBeNull();
     });
@@ -195,76 +209,32 @@ describe('utils', () => {
     it('should works correctly if string`s length less than 1000', () => {
       expect(limit('Value witch length less then 1000')).toBe('Value witch length less then 1000');
     });
-    it('should works correctly with object that has less then 10 properties', () => {
-      const user = {
-        name: 'User',
-        age: 20,
-        id: 1,
-      };
 
-      expect(limit(user)).toEqual({ age: 20, id: 1, name: 'User' });
+    it('should works correctly with object that has less then 10 properties', () => {
+      expect(limit(baseUser)).toEqual(baseUser);
     });
 
     it('should works correctly with object that has 10 properties or more', () => {
       const user = {
-        name: 'UserName',
-        surname: 'UserSurname',
-        fullName: 'UserName UserSurname',
-        age: 21,
-        id: 2,
-        tel: '12345',
-        eMail: 'absdefg@yourMail.com',
-        address: 'Some address',
-        password: '*****',
+        ...baseUser,
         role: 'Some role',
         hobbies: 'Some hobbies',
       };
 
-      expect(limit(user)).toEqual({
-        name: 'UserName',
-        surname: 'UserSurname',
-        fullName: 'UserName UserSurname',
-        age: 21,
-        id: 2,
-        tel: '12345',
-        eMail: 'absdefg@yourMail.com',
-        address: 'Some address',
-        password: '*****',
-        role: 'Some role',
-        _: `1 more keys: [\"hobbies\"]`,
-      });
+      const expectedObject = { ...baseUser, role: 'Some role', _: `1 more keys: [\"hobbies\"]` };
+
+      expect(limit(user)).toEqual(expectedObject);
     });
 
     it('should works correctly with arrays witch length less then 10', () => {
-      const array = new Array(9).fill('some value');
-      expect(limit(array)).toEqual([
-        'some value',
-        'some value',
-        'some value',
-        'some value',
-        'some value',
-        'some value',
-        'some value',
-        'some value',
-        'some value',
-      ]);
+      expect(limit(baseValues)).toEqual(baseValues);
     });
 
     it('should works correctly with arrays witch length 10 or more', () => {
-      const array = new Array(11).fill('some value');
-      expect(limit(array)).toEqual([
-        'some value',
-        'some value',
-        'some value',
-        'some value',
-        'some value',
-        'some value',
-        'some value',
-        'some value',
-        'some value',
-        'some value',
-        '(1 more items)',
-      ]);
+      const valuesArray = [...baseValues, 'some value', 'some value'];
+      const expectedArray = [...baseValues, 'some value', '(1 more items)'];
+
+      expect(limit(valuesArray)).toEqual(expectedArray);
     });
   });
 });
