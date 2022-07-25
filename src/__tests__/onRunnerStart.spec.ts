@@ -25,13 +25,13 @@ import { RunnerStats } from '@wdio/reporter';
 
 describe('onRunnerStart', () => {
   const reporter: Reporter = new Reporter(options);
-  const runner: Partial<RunnerStats> = { isMultiremote: false };
+  const runnerStats: Partial<RunnerStats> = { isMultiremote: false };
   reporter['client'] = new RPClientMock(getClientConfig(options));
 
   it('client.startLaunch should be called with corresponding params', () => {
     const launchDataRQ: LaunchObj = getStartLaunchObj(options);
 
-    reporter.onRunnerStart(runner);
+    reporter.onRunnerStart(runnerStats);
 
     expect(reporter['client'].startLaunch).toBeCalledTimes(1);
     expect(reporter['client'].startLaunch).toBeCalledWith(launchDataRQ);

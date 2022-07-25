@@ -32,8 +32,8 @@ const config = {
   rerunOf: 'launchUuid of already existed launch', 
   cucumberNestedSteps: false,
   skippedIssue: true,
-  reportSeleniumCommands:false,
-  seleniumCommandsLogLevel:'debug',
+  reportSeleniumCommands: false,
+  seleniumCommandsLogLevel: 'debug',
 };
 
 exports.config = {
@@ -56,7 +56,7 @@ exports.config = {
 | cucumberNestedSteps  | [Report your steps as logs](https://github.com/reportportal/agent-js-webdriverio#step-reporting-configuration)           |
 | skippedIssue| *Default: true.* ReportPortal provides feature to mark skipped tests as not 'To Investigate' items on WS side.<br> Parameter could be equal boolean values:<br> *TRUE* - skipped tests considered as issues and will be marked as 'To Investigate' on Report Portal.<br> *FALSE* - skipped tests will not be marked as 'To Investigate' on application.|
 | reportSeleniumCommands   | *Default: false.* Add selenium  logs to each test case. |
-seleniumCommandsLogLevel | If set *reportSeleniumCommands* to *true*, you need to provide log level witch can be one of: *'debug', 'info', 'warn', 'error', 'fatal'*. |  
+seleniumCommandsLogLevel | If set *reportSeleniumCommands* to *true*, you need to provide log level witch can be one of: *'trace', 'debug', 'info', 'warn', 'error', 'fatal'*. |  
 
 ## Step reporting configuration
 

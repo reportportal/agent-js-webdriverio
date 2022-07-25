@@ -87,10 +87,10 @@ export class Reporter extends WDIOReporter {
     this.syncReporting = val;
   }
 
-  onRunnerStart({ isMultiremote }: Partial<RunnerStats>): void {
+  onRunnerStart(runnerStats: Partial<RunnerStats>): void {
     const launchDataRQ: LaunchObj = getStartLaunchObj(this.options);
     const { tempId, promise } = this.client.startLaunch(launchDataRQ);
-    this.isMultiremote = isMultiremote;
+    this.isMultiremote = runnerStats.isMultiremote;
     promiseErrorHandler(promise);
     this.tempLaunchId = tempId;
   }

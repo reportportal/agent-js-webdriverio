@@ -26,10 +26,6 @@ describe('onBeforeCommand', () => {
   reporter['client'] = new RPClientMock(getClientConfig(options));
   reporter['storage'].addTest({ id: testId, name: testName });
 
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
   it('reportSeleniumLogs command. client.send should be called with corresponding params if command.body is not empty', () => {
     reporter['options'].reportSeleniumCommands = true;
     reporter['options'].seleniumCommandsLogLevel = 'debug';
@@ -98,10 +94,11 @@ describe('onBeforeCommand', () => {
       sessionId: 'd315f4dddf5199a74eac978476bad9d0',
       cid: '0-0',
     };
+    const reporterSpyOn = jest.spyOn(reporter['client'], 'sendLog');
+
+    reporterSpyOn.mockClear();
 
     reporter.onBeforeCommand(command);
-
-    const reporterSpyOn = jest.spyOn(reporter['client'], 'sendLog');
 
     expect(reporterSpyOn).not.toBeCalled();
   });

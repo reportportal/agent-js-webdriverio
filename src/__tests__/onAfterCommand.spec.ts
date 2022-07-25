@@ -26,10 +26,6 @@ describe('onAfterCommand', () => {
   reporter['client'] = new RPClientMock(getClientConfig(options));
   reporter['storage'].addTest({ id: testId, name: testName });
 
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
   it('screenshot command. client.send should be called with corresponding params', () => {
     reporter['options'].attachPicturesToLogs = true;
     const command = {
@@ -93,9 +89,11 @@ describe('onAfterCommand', () => {
       cid: '0-0',
     };
 
-    reporter.onAfterCommand(command);
-
     const reporterSpyOn = jest.spyOn(reporter['client'], 'sendLog');
+
+    reporterSpyOn.mockClear();
+
+    reporter.onAfterCommand(command);
 
     expect(reporterSpyOn).not.toBeCalled();
   });

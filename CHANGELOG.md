@@ -1,4 +1,3 @@
-## [5.0.3] - 2022-07-25
 ### Added
 - Support reportSeleniumCommands and seleniumCommandsLogLevel for Cucumber and Jasmine reporting via `reportSeleniumCommands`, `seleniumCommandsLogLevel` flags.
 
