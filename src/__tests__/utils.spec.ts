@@ -24,6 +24,7 @@ import {
   getCodeRef,
   getStartLaunchObj,
   getSystemAttributes,
+  limit,
   parseTags,
   promiseErrorHandler,
 } from '../utils';
@@ -172,6 +173,68 @@ describe('utils', () => {
 
     it('should return empty array', () => {
       expect(parseTags([''])).toEqual([]);
+    });
+  });
+  describe('limit', () => {
+    const baseUser = {
+      name: 'UserName',
+      surname: 'UserSurname',
+      fullName: 'UserName UserSurname',
+      age: 21,
+      id: 2,
+      tel: '12345',
+      eMail: 'absdefg@yourMail.com',
+      address: 'Some address',
+      password: '*****',
+      role: 'Some role',
+    };
+
+    const baseValues = new Array(10).fill('some value');
+
+    it('should not changed value if argument is null', () => {
+      expect(limit(null)).toBeNull();
+    });
+
+    it('should not changed value if argument is undefined', () => {
+      expect(limit(undefined)).toBeUndefined();
+    });
+
+    it('should not changed value if argument is 0', () => {
+      expect(limit(0)).toBe(0);
+    });
+
+    it('should not changed value if argument is ""', () => {
+      expect(limit('')).toBe('');
+    });
+
+    it('should works correctly if string`s length less than 1000', () => {
+      expect(limit('Value witch length less then 1000')).toBe('Value witch length less then 1000');
+    });
+
+    it('should works correctly with object that has 10 or less properties', () => {
+      expect(limit(baseUser)).toEqual(baseUser);
+    });
+
+    it('should works correctly with object that has more than 10', () => {
+      const user = {
+        ...baseUser,
+        hobbies: 'Some hobbies',
+      };
+
+      const expectedObject = { ...baseUser, _: `1 more keys: [\"hobbies\"]` };
+
+      expect(limit(user)).toEqual(expectedObject);
+    });
+
+    it('should works correctly with arrays witch length 10 or less', () => {
+      expect(limit(baseValues)).toEqual(baseValues);
+    });
+
+    it('should works correctly with arrays witch length more than 10', () => {
+      const valuesArray = [...baseValues, 'some value'];
+      const expectedArray = [...baseValues, '(1 more items)'];
+
+      expect(limit(valuesArray)).toEqual(expectedArray);
     });
   });
 });

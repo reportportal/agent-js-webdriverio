@@ -31,6 +31,8 @@ export interface Config {
   isLaunchMergeRequired?: boolean;
   rerun?: boolean;
   rerunOf?: string;
+  seleniumCommandsLogLevel?: LOG_LEVELS;
+  reportSeleniumCommands?: boolean;
 }
 
 export interface LaunchObj {
