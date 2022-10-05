@@ -1,3 +1,5 @@
+
+## [5.0.3] - 2022-10-05
 ### Added
 - Support reportSeleniumCommands and seleniumCommandsLogLevel for Cucumber and Jasmine reporting via `reportSeleniumCommands`, `seleniumCommandsLogLevel` flags
 - _isLaunchMergeRequired_ config option support. Provided guide on merging launches manually [provided](README.md#manual-merge-launches)
