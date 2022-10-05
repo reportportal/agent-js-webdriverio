@@ -21,7 +21,7 @@ import { Reporters } from '@wdio/types';
 import { Tag } from '@wdio/reporter/build/types';
 // @ts-ignore
 import { name as pjsonName, version as pjsonVersion } from '../package.json';
-import { Attribute, Config, LaunchObj, Suite } from './models';
+import { Attribute, ClientConfig, LaunchObj, Suite } from './models';
 
 export const promiseErrorHandler = (promise: Promise<any>): void => {
   promise.catch((err) => {
@@ -29,7 +29,7 @@ export const promiseErrorHandler = (promise: Promise<any>): void => {
   });
 };
 
-export const getClientConfig = (options: Partial<Reporters.Options>): Config => {
+export const getClientConfig = (options: Partial<Reporters.Options>): ClientConfig => {
   const {
     token,
     endpoint,
@@ -44,9 +44,7 @@ export const getClientConfig = (options: Partial<Reporters.Options>): Config => 
     debug,
     headers,
     restClientConfig,
-    cucumberNestedSteps,
-    reportSeleniumCommands,
-    seleniumCommandsLogLevel,
+    isLaunchMergeRequired,
   } = options;
   return {
     token,
@@ -62,9 +60,7 @@ export const getClientConfig = (options: Partial<Reporters.Options>): Config => 
     ...(debug && { debug }),
     ...(headers && { headers }),
     ...(restClientConfig && { restClientConfig }),
-    ...(cucumberNestedSteps && { cucumberNestedSteps }),
-    ...(reportSeleniumCommands && { reportSeleniumCommands }),
-    ...(seleniumCommandsLogLevel && { seleniumCommandsLogLevel }),
+    ...(isLaunchMergeRequired && { isLaunchMergeRequired }),
   };
 };
 
