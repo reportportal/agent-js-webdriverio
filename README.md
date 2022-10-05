@@ -60,7 +60,7 @@ exports.config = {
 | reportSeleniumCommands   | *Default: false.* Add selenium  logs to each test case.                                                                                                                                                                                                                                                                                                 |
 | seleniumCommandsLogLevel | If set *reportSeleniumCommands* to *true*, you need to provide log level witch can be one of: *'trace', 'debug', 'info', 'warn', 'error', 'fatal'*.                                                                                                                                                                                                     |  
 
-## Step reporting configuration
+## Step reporting configuration (for Cucumber setup)
 
 By default, this agent reports the following structure:
 
