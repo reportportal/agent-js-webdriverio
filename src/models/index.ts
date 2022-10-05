@@ -20,6 +20,7 @@ export {
   Attribute,
   BaseObj,
   Config,
+  ClientConfig,
   FinishTestItem,
   LaunchFinishObj,
   LaunchObj,

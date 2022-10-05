@@ -15,7 +15,13 @@
  *
  */
 
-import WDIOReporter, { AfterCommandArgs, SuiteStats, TestStats } from '@wdio/reporter';
+import WDIOReporter, {
+  AfterCommandArgs,
+  BeforeCommandArgs,
+  RunnerStats,
+  SuiteStats,
+  TestStats,
+} from '@wdio/reporter';
 import { Reporters } from '@wdio/types';
 import RPClient from '@reportportal/client-javascript';
 import { EVENTS } from '@reportportal/client-javascript/lib/constants/events';
@@ -25,6 +31,7 @@ import {
   getClientConfig,
   getCodeRef,
   getStartLaunchObj,
+  limit,
   parseTags,
   promiseErrorHandler,
 } from './utils';
@@ -38,6 +45,7 @@ export class Reporter extends WDIOReporter {
   private storage: Storage;
   private syncReporting: boolean;
   private testFilePath: string;
+  private isMultiremote: boolean;
 
   constructor(options: Partial<Reporters.Options>) {
     super(options);
@@ -79,9 +87,10 @@ export class Reporter extends WDIOReporter {
     this.syncReporting = val;
   }
 
-  onRunnerStart(): void {
+  onRunnerStart(runnerStats: Partial<RunnerStats>): void {
     const launchDataRQ: LaunchObj = getStartLaunchObj(this.options);
     const { tempId, promise } = this.client.startLaunch(launchDataRQ);
+    this.isMultiremote = runnerStats.isMultiremote;
     promiseErrorHandler(promise);
     this.tempLaunchId = tempId;
   }
@@ -226,9 +235,40 @@ export class Reporter extends WDIOReporter {
     }
   }
 
+  onBeforeCommand(command: BeforeCommandArgs): void {
+    if (!this.options.reportSeleniumCommands || this.isMultiremote) {
+      return;
+    }
+
+    const method = `${command.method} ${command.endpoint}`;
+
+    if (command.body && Object.keys(command.body).length !== 0) {
+      const data = JSON.stringify(limit(command.body));
+
+      this.sendTestItemLog({
+        log: { level: this.options.seleniumCommandsLogLevel, message: `${method} ${data}` },
+      });
+    } else {
+      this.sendTestItemLog({
+        log: { level: this.options.seleniumCommandsLogLevel, message: `${method}` },
+      });
+    }
+  }
+
   onAfterCommand(command: AfterCommandArgs): void {
     const hasScreenshot = /screenshot$/.test(command.endpoint) && !!command.result.value;
     const testItem = this.storage.getCurrentTest();
+    const { seleniumCommandsLogLevel, reportSeleniumCommands } = this.options;
+
+    if (reportSeleniumCommands) {
+      const method = `${command.method} ${command.endpoint}`;
+      const data = JSON.stringify(limit(command.result));
+
+      this.sendTestItemLog({
+        log: { message: `${method} ${data}`, level: seleniumCommandsLogLevel },
+      });
+    }
+
     if (hasScreenshot && this.options.attachPicturesToLogs && testItem) {
       const logRQ = {
         level: LOG_LEVELS.INFO,
