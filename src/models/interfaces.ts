@@ -17,7 +17,7 @@
 
 import { FILE_TYPES, LOG_LEVELS, TYPES } from '../constants';
 
-export interface Config {
+export interface ClientConfig {
   token: string;
   endpoint: string;
   launch: string;
@@ -27,8 +27,11 @@ export interface Config {
   headers?: BaseObj;
   mode?: 'DEFAULT' | 'DEBUG';
   debug?: boolean;
-  skippedIssue?: boolean;
   isLaunchMergeRequired?: boolean;
+}
+
+export interface Config extends ClientConfig {
+  skippedIssue?: boolean;
   rerun?: boolean;
   rerunOf?: string;
   seleniumCommandsLogLevel?: LOG_LEVELS;

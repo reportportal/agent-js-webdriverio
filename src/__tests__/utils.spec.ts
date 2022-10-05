@@ -66,7 +66,6 @@ describe('utils', () => {
         restClientConfig: {
           agent: { keepAlive: true },
         },
-        cucumberNestedSteps: true,
       };
       const extendedOptions = {
         ...options,
