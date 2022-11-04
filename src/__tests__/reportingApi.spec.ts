@@ -24,6 +24,7 @@ import { LOG_LEVELS, RP_STATUSES } from '../constants';
 const attributes = [{ key: 'key', value: 'value' }];
 const description = 'some text';
 const testCaseId = 'testCaseId';
+const parameters = [{ key: 'key', value: 'value' }];
 
 describe('ReportingApi', () => {
   describe('ReportingApi.addAttributes', () => {
@@ -217,6 +218,16 @@ describe('ReportingApi', () => {
           'suite',
         );
       });
+    });
+  });
+
+  describe('ReportingApi.addParameters', () => {
+    const spyOnAddParameters = jest.spyOn(ClientPublicReportingAPI, 'addParameters');
+
+    it('should call clientPublicReportingApi.addParameters method with text and undefined as parameter', () => {
+      ReportingApi.addParameters(parameters);
+
+      expect(spyOnAddParameters).toBeCalledWith(parameters);
     });
   });
 });

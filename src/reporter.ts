@@ -75,6 +75,7 @@ export class Reporter extends WDIOReporter {
     process.on(EVENTS.ADD_LOG, this.sendTestItemLog.bind(this));
     process.on(EVENTS.ADD_LAUNCH_LOG, this.sendLaunchLog.bind(this));
     process.on(EVENTS.SET_TEST_CASE_ID, this.setTestCaseId.bind(this));
+    process.on(EVENTS.ADD_PARAMETERS, this.addParameters.bind(this));
   }
 
   unregisterRPListeners(): void {
@@ -85,6 +86,7 @@ export class Reporter extends WDIOReporter {
     process.off(EVENTS.ADD_LOG, this.sendTestItemLog.bind(this));
     process.off(EVENTS.ADD_LAUNCH_LOG, this.sendLaunchLog.bind(this));
     process.off(EVENTS.SET_TEST_CASE_ID, this.setTestCaseId.bind(this));
+    process.off(EVENTS.ADD_PARAMETERS, this.addParameters.bind(this));
   }
 
   get isSynchronised(): boolean {
@@ -362,5 +364,13 @@ export class Reporter extends WDIOReporter {
       },
       file,
     );
+  }
+
+  addParameters({ parameters }: { parameters: Parameter[] }): void {
+    if (!parameters || !(parameters instanceof Array)) {
+      console.error('Parameters should be instance of Array');
+      return;
+    }
+    this.storage.updateCurrentTest({ parameters });
   }
 }

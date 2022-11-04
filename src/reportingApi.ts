@@ -17,12 +17,14 @@
 
 import ClientPublicReportingAPI from '@reportportal/client-javascript/lib/publicReportingAPI';
 import { RP_STATUSES } from '@reportportal/client-javascript/lib/constants/statuses';
-import { Attachment, Attribute } from './models';
+import { Attachment, Attribute, Parameter } from './models';
 import { LOG_LEVELS } from './constants';
 
 export const ReportingApi = {
   addAttributes: (attributes: Attribute[], suite?: string): void =>
     ClientPublicReportingAPI.addAttributes(attributes, suite),
+  addParameters: (parameters: Parameter[]): void =>
+    ClientPublicReportingAPI.addParameters(parameters),
   setDescription: (text: string, suite?: string): void =>
     ClientPublicReportingAPI.setDescription(text, suite),
   setTestCaseId: (testCaseId: string, suite?: string): void =>

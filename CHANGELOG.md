@@ -1,5 +1,6 @@
 ### Added
 - Browser parameter to steps
+- Reporting API method `addParameters`
 
 ## [5.0.3] - 2022-10-05
 ### Added
