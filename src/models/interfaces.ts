@@ -114,7 +114,6 @@ export interface TestItem {
   status?: string;
   testCaseId?: string;
   parameters?: Parameter[];
-
 }
 
 export interface FinishTestItem {
