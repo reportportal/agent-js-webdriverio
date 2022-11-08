@@ -23,6 +23,8 @@ import { Tag } from '@wdio/reporter/build/types';
 import { name as pjsonName, version as pjsonVersion } from '../package.json';
 import { Attribute, ClientConfig, LaunchObj, Suite } from './models';
 
+const BROWSER_PARAM = 'browser';
+
 export const promiseErrorHandler = (promise: Promise<any>): void => {
   promise.catch((err) => {
     console.error(err);
@@ -182,4 +184,8 @@ export const limit = (val: any): any => {
       return value;
     }
   }
+};
+
+export const getBrowserParam = (browser: string) => {
+  return { key: BROWSER_PARAM, value: browser };
 };
