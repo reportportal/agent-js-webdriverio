@@ -34,10 +34,11 @@ import {
   limit,
   parseTags,
   promiseErrorHandler,
-  getBrowserParam,
 } from './utils';
 import { CUCUMBER_TYPE, FILE_TYPES, LOG_LEVELS, RP_STATUSES, TYPES } from './constants';
 import { Attribute, FinishTestItem, LaunchObj, LogRQ, StartTestItem } from './models';
+
+const BROWSER_PARAM = 'browser';
 
 export class Reporter extends WDIOReporter {
   private client: RPClient;
@@ -134,12 +135,13 @@ export class Reporter extends WDIOReporter {
     const { title: name } = testStats;
     const ancestors = this.storage.getAllSuites();
     const codeRef = getCodeRef(this.testFilePath, name, ancestors);
+    const browser = this.sanitizedCapabilities;
     const testItemDataRQ = {
       name,
       type: TYPES.STEP,
       codeRef,
       ...(this.options.cucumberNestedSteps && { hasStats: false }),
-      parameters: [this.sanitizedCapabilities && getBrowserParam(this.sanitizedCapabilities)],
+      parameters: browser && [{ key: BROWSER_PARAM, value: browser }],
     };
     const { tempId, promise } = this.client.startTestItem(
       testItemDataRQ,

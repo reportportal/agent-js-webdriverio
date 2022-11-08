@@ -28,6 +28,7 @@ describe('onTestStart', () => {
   reporter['tempLaunchId'] = 'tempLaunchId';
   reporter['testFilePath'] = `C:${path.sep}project${path.sep}__test__${path.sep}example.js`;
   reporter['storage'].addSuite({ id: suiteId, name: suiteName });
+  reporter['sanitizedCapabilities'] = 'chrome';
   jest.spyOn(process, 'cwd').mockReturnValue(`C:${path.sep}project`);
 
   it('client.startTestItem should be called with corresponding params', () => {
@@ -42,7 +43,7 @@ describe('onTestStart', () => {
         name: testName,
         type: 'STEP',
         codeRef: '__test__/example.js/suite_name/test_name',
-        parameters: [undefined],
+        parameters: [{ key: 'browser', value: 'chrome' }],
       },
       'tempLaunchId',
       suiteId,
