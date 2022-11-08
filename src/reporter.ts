@@ -35,10 +35,15 @@ import {
   parseTags,
   promiseErrorHandler,
 } from './utils';
-import { CUCUMBER_TYPE, FILE_TYPES, LOG_LEVELS, RP_STATUSES, TYPES } from './constants';
+import {
+  CUCUMBER_TYPE,
+  FILE_TYPES,
+  LOG_LEVELS,
+  RP_STATUSES,
+  TYPES,
+  BROWSER_PARAM,
+} from './constants';
 import { Attribute, FinishTestItem, LaunchObj, LogRQ, StartTestItem } from './models';
-
-const BROWSER_PARAM = 'browser';
 
 export class Reporter extends WDIOReporter {
   private client: RPClient;
@@ -94,9 +99,9 @@ export class Reporter extends WDIOReporter {
     const launchDataRQ: LaunchObj = getStartLaunchObj(this.options);
     const { tempId, promise } = this.client.startLaunch(launchDataRQ);
     this.isMultiremote = runnerStats.isMultiremote;
+    this.sanitizedCapabilities = runnerStats.sanitizedCapabilities;
     promiseErrorHandler(promise);
     this.tempLaunchId = tempId;
-    this.sanitizedCapabilities = runnerStats.sanitizedCapabilities;
   }
 
   onSuiteStart(suiteStats: SuiteStats): void {
@@ -135,13 +140,14 @@ export class Reporter extends WDIOReporter {
     const { title: name } = testStats;
     const ancestors = this.storage.getAllSuites();
     const codeRef = getCodeRef(this.testFilePath, name, ancestors);
-    const browser = this.sanitizedCapabilities;
     const testItemDataRQ = {
       name,
       type: TYPES.STEP,
       codeRef,
       ...(this.options.cucumberNestedSteps && { hasStats: false }),
-      parameters: browser && [{ key: BROWSER_PARAM, value: browser }],
+      ...(this.sanitizedCapabilities && {
+        parameters: [{ key: BROWSER_PARAM, value: this.sanitizedCapabilities }],
+      }),
     };
     const { tempId, promise } = this.client.startTestItem(
       testItemDataRQ,
