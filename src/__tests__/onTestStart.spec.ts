@@ -38,7 +38,12 @@ describe('onTestStart', () => {
 
     expect(reporter['client'].startTestItem).toBeCalledTimes(1);
     expect(reporter['client'].startTestItem).toBeCalledWith(
-      { name: testName, type: 'STEP', codeRef: '__test__/example.js/suite_name/test_name' },
+      {
+        name: testName,
+        type: 'STEP',
+        codeRef: '__test__/example.js/suite_name/test_name',
+        parameters: [undefined],
+      },
       'tempLaunchId',
       suiteId,
     );
