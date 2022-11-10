@@ -1,3 +1,5 @@
+### Added
+- Browser parameter to steps
 
 ## [5.0.3] - 2022-10-05
 ### Added
