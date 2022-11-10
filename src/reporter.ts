@@ -35,7 +35,14 @@ import {
   parseTags,
   promiseErrorHandler,
 } from './utils';
-import { CUCUMBER_TYPE, FILE_TYPES, LOG_LEVELS, RP_STATUSES, TYPES } from './constants';
+import {
+  CUCUMBER_TYPE,
+  FILE_TYPES,
+  LOG_LEVELS,
+  RP_STATUSES,
+  TYPES,
+  BROWSER_PARAM,
+} from './constants';
 import { Attribute, FinishTestItem, LaunchObj, LogRQ, StartTestItem } from './models';
 
 export class Reporter extends WDIOReporter {
@@ -46,6 +53,7 @@ export class Reporter extends WDIOReporter {
   private syncReporting: boolean;
   private testFilePath: string;
   private isMultiremote: boolean;
+  private sanitizedCapabilities: string;
 
   constructor(options: Partial<Reporters.Options>) {
     super(options);
@@ -91,6 +99,7 @@ export class Reporter extends WDIOReporter {
     const launchDataRQ: LaunchObj = getStartLaunchObj(this.options);
     const { tempId, promise } = this.client.startLaunch(launchDataRQ);
     this.isMultiremote = runnerStats.isMultiremote;
+    this.sanitizedCapabilities = runnerStats.sanitizedCapabilities;
     promiseErrorHandler(promise);
     this.tempLaunchId = tempId;
   }
@@ -136,6 +145,9 @@ export class Reporter extends WDIOReporter {
       type: TYPES.STEP,
       codeRef,
       ...(this.options.cucumberNestedSteps && { hasStats: false }),
+      ...(this.sanitizedCapabilities && {
+        parameters: [{ key: BROWSER_PARAM, value: this.sanitizedCapabilities }],
+      }),
     };
     const { tempId, promise } = this.client.startTestItem(
       testItemDataRQ,
