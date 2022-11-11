@@ -43,7 +43,7 @@ import {
   TYPES,
   BROWSER_PARAM,
 } from './constants';
-import { Attribute, FinishTestItem, LaunchObj, LogRQ, StartTestItem } from './models';
+import { Attribute, FinishTestItem, LaunchObj, LogRQ, StartTestItem, Parameter } from './models';
 
 export class Reporter extends WDIOReporter {
   private client: RPClient;
