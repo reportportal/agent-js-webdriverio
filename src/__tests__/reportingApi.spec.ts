@@ -224,7 +224,7 @@ describe('ReportingApi', () => {
   describe('ReportingApi.addParameters', () => {
     const spyOnAddParameters = jest.spyOn(ClientPublicReportingAPI, 'addParameters');
 
-    it('should call clientPublicReportingApi.addParameters method with text and undefined as parameter', () => {
+    it('should call clientPublicReportingApi.addParameters method with array as parameter', () => {
       ReportingApi.addParameters(parameters);
 
       expect(spyOnAddParameters).toBeCalledWith(parameters);

@@ -164,15 +164,6 @@ Examples:
 ```javascript
 // Jasmine
 describe('test item', () => {
-  ReportingApi.addParameters([
-    {
-      key: 'testKey',
-      value: 'testValue',
-    },
-    {
-      value: 'testValue_2',
-    },
-  ]);
   it('test with parameters', () => {
     ReportingApi.addParameters([
       {
@@ -186,6 +177,21 @@ describe('test item', () => {
     
     expect(true).eql(true);
   })
+});
+```
+```javascript
+// Cucumber - adding attributes to the `step`
+Given('I do something awesome', () => {
+  ReportingApi.addParameters([
+    {
+      key: 'stepParamKey',
+      value: 'stepParamValue',
+    },
+    {
+      value: 'stepParamValue_2',
+    },
+  ]);
+  //...
 });
 ```
 
