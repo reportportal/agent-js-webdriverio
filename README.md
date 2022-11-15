@@ -180,7 +180,7 @@ describe('test item', () => {
 });
 ```
 ```javascript
-// Cucumber - adding attributes to the `step`
+// Cucumber - adding parameters to the `step`
 Given('I do something awesome', () => {
   ReportingApi.addParameters([
     {
