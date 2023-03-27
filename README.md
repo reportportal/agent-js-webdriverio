@@ -1,7 +1,6 @@
 # @reportportal/agent-js-webdriverio
 
-Agent for integration Webdriver.io with ReportPortal.
-
+Agent to integrate Webdriver.io with ReportPortal.
 * More about [WebDriverIO](https://webdriver.io/)
 * More about [ReportPortal](http://reportportal.io/)
 
