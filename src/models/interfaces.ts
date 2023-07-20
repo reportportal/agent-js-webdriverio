@@ -18,7 +18,7 @@
 import { FILE_TYPES, LOG_LEVELS, TYPES } from '../constants';
 
 export interface ClientConfig {
-  token: string;
+  apiKey: string;
   endpoint: string;
   launch: string;
   project: string;
