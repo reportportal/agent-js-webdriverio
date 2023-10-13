@@ -127,9 +127,12 @@ describe('finishing test reporting', () => {
         title: testName,
         state: 'skipped',
       };
+      reporter.onTestStart = jest.fn();
 
       reporter.onTestSkip(testStats);
 
+      expect(reporter.onTestStart).toHaveBeenCalledTimes(1);
+      expect(reporter.onTestStart).toHaveBeenCalledWith(testStats);
       expect(spyOnFinishTest).toBeCalledTimes(1);
       expect(spyOnFinishTest).toBeCalledWith(testStats);
     });

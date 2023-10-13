@@ -163,6 +163,7 @@ export class Reporter extends WDIOReporter {
   }
 
   onTestSkip(testStats: TestStats): void {
+    this.onTestStart(testStats);
     this.finishTest(testStats);
   }
 
