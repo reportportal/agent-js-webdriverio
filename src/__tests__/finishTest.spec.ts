@@ -131,6 +131,20 @@ describe('finishing test reporting', () => {
 
       reporter.onTestSkip(testStats);
 
+      expect(reporter.onTestStart).not.toHaveBeenCalled();
+      expect(spyOnFinishTest).toBeCalledTimes(1);
+      expect(spyOnFinishTest).toBeCalledWith(testStats);
+    });
+
+    it('onTestSkip: reporter.onTestStart should not been called', () => {
+      const testStats: any = {
+        title: 'Name does not exists',
+        state: 'skipped',
+      };
+      reporter.onTestStart = jest.fn();
+
+      reporter.onTestSkip(testStats);
+
       expect(reporter.onTestStart).toHaveBeenCalledTimes(1);
       expect(reporter.onTestStart).toHaveBeenCalledWith(testStats);
       expect(spyOnFinishTest).toBeCalledTimes(1);

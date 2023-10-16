@@ -15,6 +15,7 @@
  *
  */
 
+import { TestStats } from '@wdio/reporter';
 import { AdditionalData, AdditionalSuitesData, Suite, TestItem } from './models';
 
 export class Storage {
@@ -61,5 +62,9 @@ export class Storage {
 
   public removeTest(testId: string): void {
     this.testItems = this.testItems.filter(({ id }) => testId !== id);
+  }
+
+  public hasTest({ title }: TestStats): boolean {
+    return Boolean(this.testItems.find(({ name }) => name === title));
   }
 }
