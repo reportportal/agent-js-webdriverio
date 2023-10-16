@@ -163,6 +163,10 @@ export class Reporter extends WDIOReporter {
   }
 
   onTestSkip(testStats: TestStats): void {
+    if (!this.storage.hasTest(testStats)) {
+      this.onTestStart(testStats);
+    }
+
     this.finishTest(testStats);
   }
 

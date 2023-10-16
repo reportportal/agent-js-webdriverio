@@ -13,7 +13,7 @@
     "test:coverage": "jest --coverage"
   },
   "dependencies": {
-    "@reportportal/client-javascript": "^5.0.8",
+    "@reportportal/client-javascript": "^5.0.14",
     "@wdio/reporter": "^7.29.1",
     "json-stringify-safe": "^5.0.1"
   },

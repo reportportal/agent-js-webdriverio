@@ -1,3 +1,7 @@
+### Fixed
+- Reporter breaks on skipped test for WebdriverIO + Mocha - [#46](https://github.com/reportportal/agent-js-webdriverio/issues/46)
+### Updated
+- `@reportportal/client-javascript` bumped to version `5.0.14`
 ### Added
 - Browser parameter to steps
 
