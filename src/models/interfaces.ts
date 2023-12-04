@@ -28,6 +28,7 @@ export interface ClientConfig {
   mode?: 'DEFAULT' | 'DEBUG';
   debug?: boolean;
   isLaunchMergeRequired?: boolean;
+  token?: string;
 }
 
 export interface Config extends ClientConfig {

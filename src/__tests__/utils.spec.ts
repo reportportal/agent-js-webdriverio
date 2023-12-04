@@ -41,9 +41,9 @@ describe('utils', () => {
   });
 
   describe('getClientConfig', () => {
-    const { token, endpoint, launch, project, attributes, description } = options;
+    const { apiKey, endpoint, launch, project, attributes, description } = options;
     const baseRes = {
-      token,
+      apiKey,
       endpoint,
       launch,
       project,
@@ -51,8 +51,22 @@ describe('utils', () => {
       description,
     };
 
-    it('getClientConfig with base config', () => {
+    it('should return base config', () => {
       expect(getClientConfig(options)).toEqual(baseRes);
+    });
+
+    it('should prefer `apiKey` instead of deprecated `token`', () => {
+      const optionsWithToken = {
+        ...options,
+        token: '123',
+      };
+      expect(getClientConfig(optionsWithToken)).toEqual(baseRes);
+    });
+
+    it('should use deprecated `token` as `apiKey` in case of empty `apiKey`', () => {
+      const { apiKey, ...optionsWithToken } = options;
+      optionsWithToken.token = apiKey;
+      expect(getClientConfig(optionsWithToken)).toEqual(baseRes);
     });
 
     it('getClientConfig with extended config', () => {
