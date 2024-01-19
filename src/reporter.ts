@@ -241,6 +241,7 @@ export class Reporter extends WDIOReporter {
         ...(this.customLaunchStatus && { status: this.customLaunchStatus }),
       });
       promiseErrorHandler(promise);
+      await promise;
       this.tempLaunchId = null;
       this.customLaunchStatus = null;
     } catch (e) {
