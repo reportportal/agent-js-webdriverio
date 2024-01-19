@@ -148,6 +148,52 @@ Given('I do something awesome', () => {
 ```
 > **Note:** Agent is not supported adding attributes to the `scenario`.  
 
+### addParameters
+
+`ReportingApi.addParameters(parameters: Array<Paramater>);`  
+**required**: `parameters`  
+```ts
+interface Paramater {
+  key?: string;
+  value: string;
+}
+```
+
+Examples:
+```javascript
+// Jasmine
+describe('test item', () => {
+  it('test with parameters', () => {
+    ReportingApi.addParameters([
+      {
+        key: 'testKey',
+        value: 'testValue',
+      },
+      {
+        value: 'testValue_2',
+      },
+    ]);
+    
+    expect(true).eql(true);
+  })
+});
+```
+```javascript
+// Cucumber - adding parameters to the `step`
+Given('I do something awesome', () => {
+  ReportingApi.addParameters([
+    {
+      key: 'stepParamKey',
+      value: 'stepParamValue',
+    },
+    {
+      value: 'stepParamValue_2',
+    },
+  ]);
+  //...
+});
+```
+
 ### setDescription
 `ReportingApi.setDescription(description: string, suite?: string);`  
 **required**: `description`

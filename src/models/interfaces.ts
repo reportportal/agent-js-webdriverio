@@ -113,6 +113,7 @@ export interface TestItem {
   description?: string;
   status?: string;
   testCaseId?: string;
+  parameters?: Parameter[];
 }
 
 export interface FinishTestItem {
@@ -133,4 +134,9 @@ export interface AdditionalData {
 
 export interface AdditionalSuitesData {
   [name: string]: AdditionalData;
+}
+
+export interface Parameter {
+  value: string;
+  key?: string;
 }

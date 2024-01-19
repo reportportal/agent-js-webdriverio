@@ -4,6 +4,7 @@
 - `@reportportal/client-javascript` bumped to version `5.0.14`
 ### Added
 - Browser parameter to steps
+- Reporting API method `addParameters`
 
 ## [5.0.3] - 2022-10-05
 ### Added

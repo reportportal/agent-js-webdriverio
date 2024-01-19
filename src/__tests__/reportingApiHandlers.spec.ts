@@ -154,4 +154,23 @@ describe('reporterApiHandlers', () => {
       );
     });
   });
+
+  describe('addParameters', () => {
+    const parameters = [{ key: 'key', value: 'value' }];
+
+    it('reporter.addParameters pass parameters', () => {
+      const expectedRes = { id: testId, name: testName, parameters };
+      reporter.addParameters({ parameters });
+
+      expect(reporter['storage'].getCurrentTest()).toEqual(expectedRes);
+    });
+
+    it('reporter.addAttributes pass wrong params', () => {
+      const log = jest.spyOn(console, 'error');
+      //@ts-ignore
+      reporter.addParameters({});
+
+      expect(log).toBeCalledWith('Parameters should be instance of Array');
+    });
+  });
 });

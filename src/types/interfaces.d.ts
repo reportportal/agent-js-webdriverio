@@ -32,4 +32,8 @@ declare namespace Interfaces {
     time?: number;
     file?: Attachment;
   }
+  interface Parameter {
+    value: string;
+    key?: string;
+  }
 }
