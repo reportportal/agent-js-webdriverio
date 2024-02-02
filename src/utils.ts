@@ -21,6 +21,7 @@ import { Reporters } from '@wdio/types';
 import { Tag } from '@wdio/reporter/build/types';
 // @ts-ignore
 import { name as pjsonName, version as pjsonVersion } from '../package.json';
+import { LAUNCH_MODES } from './constants/launchModes';
 import { Attribute, ClientConfig, LaunchObj, Suite } from './models';
 
 export const promiseErrorHandler = (promise: Promise<any>): void => {
@@ -44,6 +45,8 @@ export const getClientConfig = (options: Partial<Reporters.Options>): ClientConf
     headers,
     restClientConfig,
     isLaunchMergeRequired,
+    launchUuidPrint,
+    launchUuidPrintOutput,
   } = options;
 
   let apiKey = options.apiKey;
@@ -68,7 +71,9 @@ export const getClientConfig = (options: Partial<Reporters.Options>): ClientConf
     ...(debug && { debug }),
     ...(headers && { headers }),
     ...(restClientConfig && { restClientConfig }),
-    ...(isLaunchMergeRequired && { isLaunchMergeRequired }),
+    launchUuidPrint,
+    launchUuidPrintOutput,
+    isLaunchMergeRequired,
   };
 };
 
@@ -104,14 +109,15 @@ export const getStartLaunchObj = (
   launchObj: LaunchObj = {},
 ): LaunchObj => {
   const systemAttributes = getSystemAttributes(config);
-  const { description, attributes, rerun, rerunOf, mode } = config;
+  const { description, attributes, rerun, rerunOf, mode, launchId } = config;
 
   return {
     description,
     attributes: [...(attributes || []), ...systemAttributes],
     rerun,
     rerunOf,
-    mode,
+    mode: mode || LAUNCH_MODES.DEFAULT,
+    id: process.env.RP_LAUNCH_ID || launchId,
     ...launchObj,
   };
 };

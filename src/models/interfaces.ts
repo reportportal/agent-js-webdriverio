@@ -1,5 +1,5 @@
 /*
- *  Copyright 2021 EPAM Systems
+ *  Copyright 2024 EPAM Systems
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,7 +15,9 @@
  *
  */
 
-import { FILE_TYPES, LOG_LEVELS, TYPES } from '../constants';
+import { FILE_TYPES, LOG_LEVELS, TYPES, LAUNCH_MODES } from '../constants';
+
+type launchMode = LAUNCH_MODES.DEFAULT | LAUNCH_MODES.DEBUG;
 
 export interface ClientConfig {
   apiKey: string;
@@ -25,9 +27,11 @@ export interface ClientConfig {
   description?: string;
   attributes?: Attribute[];
   headers?: BaseObj;
-  mode?: 'DEFAULT' | 'DEBUG';
+  mode?: launchMode;
   debug?: boolean;
   isLaunchMergeRequired?: boolean;
+  launchUuidPrint?: boolean;
+  launchUuidPrintOutput?: string;
   token?: string;
 }
 
@@ -37,6 +41,7 @@ export interface Config extends ClientConfig {
   rerunOf?: string;
   seleniumCommandsLogLevel?: LOG_LEVELS;
   reportSeleniumCommands?: boolean;
+  launchId?: string;
 }
 
 export interface LaunchObj {
@@ -44,7 +49,7 @@ export interface LaunchObj {
   startTime?: Date | number;
   description?: string;
   attributes?: Attribute[];
-  mode?: 'DEFAULT' | 'DEBUG';
+  mode?: launchMode;
   rerun?: boolean;
   rerunOf?: string;
   id?: string;
