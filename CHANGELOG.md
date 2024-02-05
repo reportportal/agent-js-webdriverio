@@ -1,9 +1,13 @@
-### Fixed
-- Reporter breaks on skipped test for WebdriverIO + Mocha - [#46](https://github.com/reportportal/agent-js-webdriverio/issues/46)
-### Updated
-- `@reportportal/client-javascript` bumped to version `5.0.14`
 ### Added
-- Browser parameter to steps
+- Browser parameter to steps.
+- `launchId` option to the config to attach run results to an existing launch. Related to parallel execution on one and several machines.
+### Fixed
+- Reporter breaks on skipped test for WebdriverIO + Mocha. Addressed [#46](https://github.com/reportportal/agent-js-webdriverio/issues/46)
+- Fix error with launch finishing. Addressed [53](https://github.com/reportportal/agent-js-webdriverio/issues/53) and [47](https://github.com/reportportal/agent-js-webdriverio/issues/47). Thanks to [AlexGalichenko](https://github.com/AlexGalichenko).
+### Changed
+- `token` configuration option was renamed to `apiKey` to maintain common convention.
+- `@reportportal/client-javascript` bumped to version `5.1.1`
+- Readme file updated.
 
 ## [5.0.3] - 2022-10-05
 ### Added
@@ -16,12 +20,9 @@
 - Support nested steps for Cucumber reporting via `cucumberNestedSteps` flag
 - `skippedIssue` parameter to not mark skipped tests as 'To Investigate' by default
 - TypeScript definitions provided
-
-### Updated
-- `@reportportal/client-javascript` bumped to version `5.0.6`
-
 ### Changed
 - Package size reduced
+- `@reportportal/client-javascript` bumped to version `5.0.6`
 
 ## [5.0.1] - 2021-10-05
 ### Fixed

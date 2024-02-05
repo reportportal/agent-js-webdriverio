@@ -19,16 +19,24 @@ import { Reporter } from '../reporter';
 import { options } from './mocks/optionsMock';
 
 describe('reporter constructor', () => {
-  let reporter: Reporter;
-  beforeEach(() => {
-    reporter = new Reporter(options);
-  });
+  const optionsWithDefaults = {
+    seleniumCommandsLogLevel: 'info',
+    ...options,
+  };
 
-  it('should store configuration data', () => {
-    expect(reporter.options).toEqual(options);
+  it('should store configuration data with default values', () => {
+    const reporter = new Reporter(options);
+    expect(reporter.options).toEqual(optionsWithDefaults);
   });
 
   it('isSynchronised should be FALSE', () => {
+    const reporter = new Reporter(options);
     expect(reporter.isSynchronised).toBeFalsy();
+  });
+
+  it('should override options defaults via user provided options', () => {
+    const reporterOptions = { ...options, seleniumCommandsLogLevel: 'debug' };
+    const reporter = new Reporter(reporterOptions);
+    expect(reporter.options).toEqual(reporterOptions);
   });
 });

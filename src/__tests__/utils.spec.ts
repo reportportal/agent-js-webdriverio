@@ -28,6 +28,8 @@ import {
   parseTags,
   promiseErrorHandler,
 } from '../utils';
+import { LAUNCH_MODES } from '../constants';
+import { LaunchObj } from '../models';
 import { options } from './mocks/optionsMock';
 
 describe('utils', () => {
@@ -41,18 +43,24 @@ describe('utils', () => {
   });
 
   describe('getClientConfig', () => {
-    const { token, endpoint, launch, project, attributes, description } = options;
-    const baseRes = {
-      token,
-      endpoint,
-      launch,
-      project,
-      attributes,
-      description,
-    };
+    const { logFile, ...baseRes } = options;
 
-    it('getClientConfig with base config', () => {
+    it('should return base config', () => {
       expect(getClientConfig(options)).toEqual(baseRes);
+    });
+
+    it('should prefer `apiKey` instead of deprecated `token`', () => {
+      const optionsWithToken = {
+        ...options,
+        token: '123',
+      };
+      expect(getClientConfig(optionsWithToken)).toEqual(baseRes);
+    });
+
+    it('should use deprecated `token` as `apiKey` in case of empty `apiKey`', () => {
+      const { apiKey, ...optionsWithToken } = options;
+      optionsWithToken.token = apiKey;
+      expect(getClientConfig(optionsWithToken)).toEqual(baseRes);
     });
 
     it('getClientConfig with extended config', () => {
@@ -119,27 +127,59 @@ describe('utils', () => {
   });
 
   describe('getStartLaunchObj', () => {
+    const { attributes: optionsAttributes, description, rerun, rerunOf } = options;
+    const startLaunchObject: LaunchObj = {
+      attributes: optionsAttributes,
+      description,
+      rerun,
+      rerunOf,
+      mode: LAUNCH_MODES.DEFAULT,
+      id: undefined,
+    };
     const systemAttributes = getSystemAttributes(options);
+    const fullAttributes = options.attributes.concat(systemAttributes);
 
-    it('config with attributes', () => {
-      const { description, attributes, rerun, rerunOf, mode } = options;
-      const expectedRes = {
-        attributes: [...attributes, ...systemAttributes],
-        description,
-        rerun,
-        rerunOf,
-        mode,
+    it('should return start launch object with system attributes joined with provided', () => {
+      const expectedObject = {
+        ...startLaunchObject,
+        attributes: fullAttributes,
       };
 
-      expect(getStartLaunchObj(options)).toEqual(expectedRes);
+      expect(getStartLaunchObj(options)).toEqual(expectedObject);
     });
 
-    it('config without attributes', () => {
-      const newOptions = Object.assign(options, { attributes: undefined });
-      const { description, rerun, rerunOf, mode } = newOptions;
-      const expectedRes = { attributes: systemAttributes, description, rerun, rerunOf, mode };
+    it('should return start launch object only with system attributes in case of no attributes provided', () => {
+      const { attributes, ...optionsWithoutAttributes } = options;
+      const expectedObject = {
+        ...startLaunchObject,
+        attributes: systemAttributes,
+      };
 
-      expect(getStartLaunchObj(options)).toEqual(expectedRes);
+      expect(getStartLaunchObj(optionsWithoutAttributes)).toEqual(expectedObject);
+    });
+
+    it('should set launch id from options launchId property', () => {
+      const launchId = 'realLaunchId';
+      const optionsWithLaunchId = { ...options, launchId: launchId };
+      const expectedObject = {
+        ...startLaunchObject,
+        attributes: fullAttributes,
+        id: launchId,
+      };
+
+      expect(getStartLaunchObj(optionsWithLaunchId)).toEqual(expectedObject);
+    });
+
+    it('should set launch id from environment variable if exists', () => {
+      process.env.RP_LAUNCH_ID = 'realLaunchId';
+      const expectedObject = {
+        ...startLaunchObject,
+        attributes: fullAttributes,
+        id: 'realLaunchId',
+      };
+
+      expect(getStartLaunchObj(options)).toEqual(expectedObject);
+      delete process.env.RP_LAUNCH_ID;
     });
   });
 

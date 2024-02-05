@@ -13,26 +13,26 @@
     "test:coverage": "jest --coverage"
   },
   "dependencies": {
-    "@reportportal/client-javascript": "^5.0.14",
-    "@wdio/reporter": "^7.29.1",
+    "@reportportal/client-javascript": "^5.1.1",
+    "@wdio/reporter": "^7.31.1",
     "json-stringify-safe": "^5.0.1"
   },
   "devDependencies": {
-    "@types/jest": "^27.0.2",
-    "@types/node": "^16.18.13",
+    "@types/jest": "^27.5.2",
+    "@types/node": "^18.16.19",
     "@types/json-stringify-safe": "^5.0.0",
     "@typescript-eslint/eslint-plugin": "^4.33.0",
     "@typescript-eslint/parser": "^4.33.0",
-    "@wdio/types": "^7.26.0",
+    "@wdio/types": "^7.30.2",
     "eslint": "^7.32.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-config-airbnb-typescript": "^14.0.2",
-    "eslint-config-prettier": "^8.6.0",
+    "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^4.2.1",
     "jest": "^27.5.1",
-    "prettier": "^2.8.4",
+    "prettier": "^2.8.8",
     "rimraf": "^3.0.2",
     "ts-jest": "^27.1.5",
     "ts-node": "^10.9.1",
@@ -55,12 +55,12 @@
     "node": ">=12.x"
   },
   "keywords": [
-    "epam",
+    "reportportal",
+    "webdriverio",
     "reports",
     "portal",
     "wdio",
-    "webdriverio",
-    "reporters",
-    "reportportal"
+    "reporter",
+    "epam"
   ]
 }

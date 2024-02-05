@@ -60,7 +60,10 @@ export class Reporter extends WDIOReporter {
 
     const agentInfo = getAgentInfo();
     const clientConfig = getClientConfig(options);
-    this.options = options;
+    this.options = {
+      seleniumCommandsLogLevel: 'info',
+      ...options,
+    };
     this.syncReporting = false;
     this.client = new RPClient(clientConfig, agentInfo);
     this.storage = new Storage();
