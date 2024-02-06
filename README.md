@@ -160,7 +160,7 @@ Given('I do something awesome', () => {
   //...
 });
 ```
-> **Note:** Agent is not supported adding attributes to the `scenario`.  
+> **Note:** The agent does not support adding attributes to the `scenario`.  
 
 ### setDescription
 `ReportingApi.setDescription(description: string, suite?: string);`  
