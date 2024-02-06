@@ -1,5 +1,5 @@
 /*
- *  Copyright 2021 EPAM Systems
+ *  Copyright 2024 EPAM Systems
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -18,6 +18,9 @@
 module.exports = {
   roots: ['<rootDir>/src'],
   transform: { '.(ts|tsx)': 'ts-jest' },
+  moduleNameMapper: {
+    '^axios$': require.resolve('axios'),
+  },
   testEnvironment: 'node',
   testRegex: '/__tests__/.*\\.(test|spec)?\\.(ts|js)$',
   moduleFileExtensions: ['ts', 'js'],

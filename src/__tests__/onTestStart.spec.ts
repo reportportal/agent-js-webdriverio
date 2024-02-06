@@ -28,6 +28,7 @@ describe('onTestStart', () => {
   reporter['tempLaunchId'] = 'tempLaunchId';
   reporter['testFilePath'] = `C:${path.sep}project${path.sep}__test__${path.sep}example.js`;
   reporter['storage'].addSuite({ id: suiteId, name: suiteName });
+  reporter['sanitizedCapabilities'] = 'chrome';
   jest.spyOn(process, 'cwd').mockReturnValue(`C:${path.sep}project`);
 
   it('client.startTestItem should be called with corresponding params', () => {
@@ -38,7 +39,12 @@ describe('onTestStart', () => {
 
     expect(reporter['client'].startTestItem).toBeCalledTimes(1);
     expect(reporter['client'].startTestItem).toBeCalledWith(
-      { name: testName, type: 'STEP', codeRef: '__test__/example.js/suite_name/test_name' },
+      {
+        name: testName,
+        type: 'STEP',
+        codeRef: '__test__/example.js/suite_name/test_name',
+        parameters: [{ key: 'browser', value: 'chrome' }],
+      },
       'tempLaunchId',
       suiteId,
     );
