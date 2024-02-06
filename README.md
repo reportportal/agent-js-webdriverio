@@ -477,7 +477,7 @@ exports.config = {
             } catch (error) {
                 console.error(error);
             } finally {
-                const files = glob.sync('rplaunch-*.tmp')();
+                const files = glob.sync('rplaunch-*.tmp');
                 const deleteTempFile = (filename) => {
                     fs.unlinkSync(filename);
                 };
