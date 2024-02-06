@@ -22,18 +22,16 @@ const config = {
   endpoint: 'http://your.reportportal.server:8080/api/v1',
   project: 'YourReportPortalProjectName',
   launch: 'YourLauncherName',
-  mode: 'DEFAULT',
-  debug: false,
-  description: "Static launch description",
-  attributes: [{ key: 'key', value: 'value' }, { value: 'value' }],
-  attachPicturesToLogs: false,
-  rerun: false,
-  rerunOf: 'launchUuid of already existed launch', 
-  cucumberNestedSteps: false,
-  skippedIssue: true,
-  isLaunchMergeRequired: false,
-  reportSeleniumCommands: false,
-  seleniumCommandsLogLevel: 'debug',
+  description: 'Static launch description',
+  attributes: [
+      {
+          key: 'key',
+          value: 'value',
+      },
+      {
+          value: 'value',
+      },
+  ],
 };
 
 exports.config = {
@@ -53,8 +51,8 @@ The full list of available options presented below.
 | project                  | Required   |           | The name of the project in which the launches will be created.                                                                                                                                                                                                                                                                                                                           |
 | attributes               | Optional   | []        | Launch attributes.                                                                                                                                                                                                                                                                                                                                                                       |
 | description              | Optional   | ''        | Launch description.                                                                                                                                                                                                                                                                                                                                                                      |
-| rerun                    | Optional   | false     | Enable [rerun](https://reportportal.io/docs/dev-guides/RerunDevelopersGuide)                                                                                                                                                                                                                                                                                                             |
-| rerunOf                  | Optional   | Not set   | UUID of launch you want to rerun. If not specified, ReportPortal will update the latest launch with the same name                                                                                                                                                                                                                                                                        |
+| rerun                    | Optional   | false     | Enable [rerun](https://reportportal.io/docs/dev-guides/RerunDevelopersGuide).                                                                                                                                                                                                                                                                                                            |
+| rerunOf                  | Optional   | Not set   | UUID of launch you want to rerun. If not specified, ReportPortal will update the latest launch with the same name.                                                                                                                                                                                                                                                                       |
 | mode                     | Optional   | 'DEFAULT' | Results will be submitted to Launches page <br/> *'DEBUG'* - Results will be submitted to Debug page.                                                                                                                                                                                                                                                                                    |
 | skippedIssue             | Optional   | true      | ReportPortal provides feature to mark skipped tests as not 'To Investigate'. <br/> Option could be equal boolean values: <br/> *true* - skipped tests considered as issues and will be marked as 'To Investigate' on ReportPortal. <br/> *false* - skipped tests will not be marked as 'To Investigate' on application.                                                                  |
 | debug                    | Optional   | false     | This flag allows seeing the logs of the client-javascript. Useful for debugging.                                                                                                                                                                                                                                                                                                         |
@@ -63,8 +61,8 @@ The full list of available options presented below.
 | launchUuidPrint          | Optional   | false     | Whether to print the current launch UUID.                                                                                                                                                                                                                                                                                                                                                |
 | launchUuidPrintOutput    | Optional   | 'STDOUT'  | Launch UUID printing output. Possible values: 'STDOUT', 'STDERR'. Works only if `launchUuidPrint` set to `true`.                                                                                                                                                                                                                                                                         |
 | isLaunchMergeRequired    | Optional   | false     | Allows to merge several run's into one launch at the end of the run. Needs additional setup. See [Manual merge launches](#manual-merge-launches).                                                                                                                                                                                                                                        |
-| attachPicturesToLogs     | Optional   | false     | Automatically add screenshots                                                                                                                                                                                                                                                                                                                                                            |
-| cucumberNestedSteps      | Optional   | false     | [Report your steps as logs](https://github.com/reportportal/agent-js-webdriverio#step-reporting-configuration)                                                                                                                                                                                                                                                                           |
+| attachPicturesToLogs     | Optional   | false     | Automatically add screenshots.                                                                                                                                                                                                                                                                                                                                                           |
+| cucumberNestedSteps      | Optional   | false     | [Report your steps as logs](https://github.com/reportportal/agent-js-webdriverio#step-reporting-configuration).                                                                                                                                                                                                                                                                          |
 | reportSeleniumCommands   | Optional   | false     | Add selenium logs to each test case.                                                                                                                                                                                                                                                                                                                                                     |
 | seleniumCommandsLogLevel | Optional   | 'info'    | If set *reportSeleniumCommands* to *true*, you need to provide log level witch can be one of: *'trace', 'debug', 'info', 'warn', 'error', 'fatal'*.                                                                                                                                                                                                                                      |
 | token                    | Deprecated | Not set   | Use `apiKey` instead.                                                                                                                                                                                                                                                                                                                                                                    |
