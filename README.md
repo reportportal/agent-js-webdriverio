@@ -87,7 +87,7 @@ You may change this behavior to report steps to the log level by enabling scenar
 - scenario - STEP
 - step - log item (nested step)
 
-To report your steps as logs, you need to pass an additional parameter to the agent config: `"cucumberNestedSteps": true`
+To report scenarios as test cases and steps as logs, you need to pass an additional parameter to the agent config: `"cucumberNestedSteps": true`.
 
 ## Reporting
 
