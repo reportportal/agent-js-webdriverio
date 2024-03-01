@@ -73,8 +73,8 @@ The following options can be overridden using ENVIRONMENT variables:
 |-------------|-----------------|
 | launchId    | RP_LAUNCH_ID    |
 
-Within completing the above configuration, you will be able to see the basic test results report in the ReportPortal.
-To make the report more informative and to utilize the full power of ReportPortal, the agent provides additional features described below.
+After completing the above configuration, you will be able to see a basic report of test results in ReportPortal.
+To make the report more informative and utilize all features of ReportPortal, the agent provides additional features described below.
 
 You can also refer the [example-webdriverio](https://github.com/reportportal/examples-js/tree/main/example-webdriverio) example to see how to use the agent with WebdriverIO in action.
 
