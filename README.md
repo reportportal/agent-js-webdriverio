@@ -369,7 +369,7 @@ Given('I do something awesome', () => {
 
 ### log
 
-Send logs to report portal for the current test.  
+Send logs to the ReportPortal for the current test.  
 `ReportingApi.log(level: LOG_LEVELS, message: string, file?: Attachmentm, suite?: string);`  
 **required**: `level`, `message`  
 where `level` can be one of the following: *TRACE*, *DEBUG*, *WARN*, *INFO*, *ERROR*, *FATAL*  
@@ -390,8 +390,23 @@ it('should contain logs with attachments', () => {
 });
 ```
 
+```javascript
+// Cucumber
+Given('I do something awesome', () => {
+    const fileName = 'test.jpg';
+    const fileContent = fs.readFileSync(path.resolve(__dirname, './attachments', fileName));
+    const attachment = {
+        name: fileName,
+        type: 'image/jpg',
+        content: fileContent.toString('base64'),
+    };
+    ReportingApi.log('INFO', 'info log with attachment', attachment);
+    //...
+});
+```
+
 ##### info, debug, warn, error, trace, fatal
-Send logs with corresponding level to report portal for the current suite/test. Should be called inside corresponding suite/test.  
+Send logs with corresponding level to the ReportPortal for the current suite/test. Should be called inside corresponding suite/test.  
 `ReportingApi.info(message: string, file?: Attachment, suite?: string);`  
 `ReportingApi.debug(message: string, file?: Attachment, suite?: string);`  
 `ReportingApi.warn(message: string, file?: Attachment, suite?: string);`  
@@ -416,10 +431,25 @@ describe('should containe suite log', () => {
   });  
 });
 ```
+
 > **Note:** Pay attention if you want to provide log to the `suite` you should pass describe name as a last parameter.
 
+```javascript
+// Cucumber
+Given('I do something awesome', () => {
+    ReportingApi.info('Log message');
+    ReportingApi.debug('Log message');
+    ReportingApi.warn('Log message');
+    ReportingApi.error('Log message');
+    ReportingApi.trace('Log message');
+    ReportingApi.fatal('Log message');
+    //...
+});
+```
+
 ### launchLog
-Send logs to report portal for the current launch. Should be called inside the any test.  
+
+Send logs to the ReportPortal for the current launch. Should be called inside the any test.  
 `ReportingApi.launchLog(level: LOG_LEVELS, message: string, file?: Attachment);`  
 **required**: `level`, `message`  
 where `level` can be one of the following: *TRACE*, *DEBUG*, *WARN*, *INFO*, *ERROR*, *FATAL*  
@@ -427,7 +457,7 @@ where `level` can be one of the following: *TRACE*, *DEBUG*, *WARN*, *INFO*, *ER
 Examples:
 ```javascript
 // Jasmine/Mocha
-it('should contain logs with attachments', async (page) => {
+it('should send log with attachment to launch', async (page) => {
   const fileName = 'test.jpg';
   const fileContent = fs.readFileSync(path.resolve(__dirname, './attachments', fileName));
   const attachment = {
@@ -435,12 +465,29 @@ it('should contain logs with attachments', async (page) => {
     type: 'image/jpg',
     content: fileContent.toString('base64'),
   };
-  ReportingApi.launchLog('INFO', 'info log with attachment', attachment); // this log attaching to the laucnh
+  ReportingApi.launchLog('INFO', 'info log with attachment', attachment); // attaching log to the launch
   // ...
 });
 ```
+
+```javascript
+// Cucumber
+Given('I do something awesome', () => {
+    const fileName = 'test.jpg';
+    const fileContent = fs.readFileSync(path.resolve(__dirname, './attachments', fileName));
+    const attachment = {
+        name: fileName,
+        type: 'image/jpg',
+        content: fileContent.toString('base64'),
+    };
+    ReportingApi.launchLog('INFO', 'info log with attachment', attachment); // attaching log to the launch
+    //...
+});
+```
+
 ##### launchInfo, launchDebug, launchWarn, launchError, launchTrace, launchFatal
-Send logs with corresponding level to report portal for the current launch. Should be called inside the any test.  
+
+Send logs with corresponding level to the ReportPortal for the current launch. Should be called inside the any test.  
 `ReportingApi.launchInfo(message: string, file?: Attachment);`  
 `ReportingApi.launchDebug(message: string, file?: Attachment);`  
 `ReportingApi.launchWarn(message: string, file?: Attachment);`  
@@ -453,16 +500,29 @@ Examples:
 ```javascript
 // Jasmine/Mocha
 it('launch should contain logs with with different levels', () => {
+  ReportingApi.launchInfo('Log message');
+  ReportingApi.launchDebug('Log message');
+  ReportingApi.launchWarn('Log message');
+  ReportingApi.launchError('Log message');
+  ReportingApi.launchTrace('Log message');
+  ReportingApi.launchFatal('Log message');
+  // ...
+});
+```
+> **Note:** Pay attention if you want to provide log to the `launch` you should call ReportingApi methods inside test/it blocks.
+
+```javascript
+// Cucumber
+Given('I do something awesome', () => {
     ReportingApi.launchInfo('Log message');
     ReportingApi.launchDebug('Log message');
     ReportingApi.launchWarn('Log message');
     ReportingApi.launchError('Log message');
     ReportingApi.launchTrace('Log message');
     ReportingApi.launchFatal('Log message');
-  // ...
+    //...
 });
 ```
-> **Note:** Pay attention if you want to provide log to the `launch` you should call ReportingApi methods inside test/it blocks.
 
 #### Integration with Sauce Labs
 
