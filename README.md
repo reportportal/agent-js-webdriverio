@@ -61,8 +61,8 @@ The full list of available options presented below.
 | launchUuidPrint          | Optional   | false     | Whether to print the current launch UUID.                                                                                                                                                                                                                                                                                                                                                |
 | launchUuidPrintOutput    | Optional   | 'STDOUT'  | Launch UUID printing output. Possible values: 'STDOUT', 'STDERR'. Works only if `launchUuidPrint` set to `true`.                                                                                                                                                                                                                                                                         |
 | isLaunchMergeRequired    | Optional   | false     | Allows to merge several run's into one launch at the end of the run. Needs additional setup. See [Manual merge launches](#manual-merge-launches).                                                                                                                                                                                                                                        |
-| attachPicturesToLogs     | Optional   | false     | Automatically add screenshots.                                                                                                                                                                                                                                                                                                                                                           |
-| cucumberNestedSteps      | Optional   | false     | [Report your steps as logs](https://github.com/reportportal/agent-js-webdriverio#step-reporting-configuration-for-cucumber-setup).                                                                                                                                                                                                                                                                          |
+| attachPicturesToLogs     | Optional   | false     | Automatically attach screenshots taken within tests execution. See [Screenshots](#screenshots).                                                                                                                                                                                                                                                                                          |
+| cucumberNestedSteps      | Optional   | false     | [Report your steps as logs](#cucumber-scenario-based-reporting).                                                                                                                                                                                                                                                                                                                         |
 | reportSeleniumCommands   | Optional   | false     | Add selenium logs to each test case.                                                                                                                                                                                                                                                                                                                                                     |
 | seleniumCommandsLogLevel | Optional   | 'info'    | If set *reportSeleniumCommands* to *true*, you need to provide log level witch can be one of: *'trace', 'debug', 'info', 'warn', 'error', 'fatal'*.                                                                                                                                                                                                                                      |
 | token                    | Deprecated | Not set   | Use `apiKey` instead.                                                                                                                                                                                                                                                                                                                                                                    |
@@ -73,7 +73,9 @@ The following options can be overridden using ENVIRONMENT variables:
 |-------------|-----------------|
 | launchId    | RP_LAUNCH_ID    |
 
-## Step reporting configuration (for Cucumber setup)
+## Structure of reports
+
+### Cucumber scenario-based reporting
 
 By default, this agent reports the following structure:
 
@@ -87,13 +89,52 @@ You may change this behavior to report steps to the log level by enabling scenar
 - scenario - STEP
 - step - log item (nested step)
 
-To report scenarios as test cases and steps as logs, you need to pass an additional parameter to the agent config: `"cucumberNestedSteps": true`.
+To report scenarios as test cases and steps as logs, you need to pass an additional parameter to the agent config: `cucumberNestedSteps: true`.
 
-## Reporting
+## Screenshots
+
+To attach screenshots to the test, the option `attachPicturesToLogs` need to be enabled in the agent config.
+
+Then, in case the screenshot is taken within the test execution, it will be attached to the test result in ReportPortal automatically.
+
+### Jasmine/Mocha
+
+Examples:
+```javascript
+describe('suite name', () => {
+    it('Test should be FAILED', async () => {
+        await browser.url('https://webdriver.io');
+        const title = await browser.getTitle();
+        await browser.saveScreenshot('./screenshots/screenshot.png');
+
+        expect(title).toBe('WebdriverIO');
+    });
+});
+```
+
+### Cucumber
+
+```javascript
+Given('I do something awesome', async () => {
+    await browser.takeScreenshot();
+    assert.strictEqual(this.value, expectedValue);
+});
+```
+
+It is also may be useful to take the screenshot on test failure in the `afterStep` function for Cucumber in `wdio.conf.js` file:
+```javascript
+afterStep: async function(step, scenario, { error, result, duration, passed }, context) {
+    if (!passed) {
+        await browser.takeScreenshot();
+    }
+}
+```
+
+Another way to add any files to the test (not only screenshots) is to use the [ReportingAPI.log() method](#log).
+
+## Reporting API
 
 This reporter provides Reporting API to use it directly in tests to send some additional data to the report.
-
-## Using `ReportingApi`:
 
 To start using the `ReportingApi` in tests, just import it from `'@reportportal/agent-js-webdriverio'`:
 ```javascript
@@ -103,7 +144,7 @@ const { ReportingApi } = require('@reportportal/agent-js-webdriverio');
 
 `ReportingApi.addAttributes(attributes: Array<Attribute>, suite?: string);`  
 **required**: `attributes`  
-```ts
+```typescript
 interface Attribute {
   key?: string;
   value: string;
@@ -112,7 +153,7 @@ interface Attribute {
 
 Examples:
 ```javascript
-// Jasmine
+// Jasmine/Mocha
 describe('suite name', () => {
   ReportingApi.addAttributes([
     {
@@ -168,7 +209,7 @@ Given('I do something awesome', () => {
 
 Examples:
 ```javascript
-// Jasmine
+// Jasmine/Mocha
 describe('suite name', () => {
   ReportingApi.setDescription('suite description', 'suite name'); // the second parameter must match the name of the suite
   it('test with attributes', () => {
@@ -200,7 +241,7 @@ Given('I do something awesome', () => {
 
 Examples:
 ```javascript
-// Jasmine
+// Jasmine/Mocha
 describe('suite name', () => {
   ReportingApi.setTestCaseId('suiteTestCaseId', 'suite name'); // the second parameter must match the name of the suite
   it('some test', () => {
@@ -227,7 +268,7 @@ where `status` must be one of the following: *passed*, *failed*, *stopped*, *ski
 
 Examples:
 ```javascript
-// Jasmine
+// Jasmine/Mocha
 describe('should have status FAILED', () => {
   ReportingApi.setStatus('failed', 'should have status FAILED'); // the second parameter must match the name of the suite
   it('test with INFO status', () => {
@@ -259,7 +300,7 @@ Assign corresponding status to the current test item or suite.
 
 Examples:
 ```javascript
-// Jasmine
+// Jasmine/Mocha
 describe('manual statuses assigning', () => {
   ReportingApi.setStatusInfo('manual statuses assigning'); // string must match the name of the suite
   it('should call ReportingApi to set statuses', () => {
@@ -286,7 +327,7 @@ where `status` must be one of the following: *passed*, *failed*, *stopped*, *ski
 
 Examples:
 ```javascript
-// Jasmine
+// Jasmine/Mocha
 it('launch should have status FAILED', () => {
     ReportingApi.setLaunchStatus('failed');
   // ...
@@ -313,7 +354,7 @@ Assign corresponding status to the current launch.
 
 Examples:
 ```javascript
-// Jasmine
+// Jasmine/Mocha
 it('should call ReportingApi to set launch statuses', () => {
     ReportingApi.setLaunchStatusInfo();
 });
@@ -327,6 +368,7 @@ Given('I do something awesome', () => {
 ```
 
 ### log
+
 Send logs to report portal for the current test.  
 `ReportingApi.log(level: LOG_LEVELS, message: string, file?: Attachmentm, suite?: string);`  
 **required**: `level`, `message`  
@@ -334,7 +376,7 @@ where `level` can be one of the following: *TRACE*, *DEBUG*, *WARN*, *INFO*, *ER
 
 Examples:
 ```javascript
-// Jasmine
+// Jasmine/Mocha
 it('should contain logs with attachments', () => {
   const fileName = 'test.jpg';
   const fileContent = fs.readFileSync(path.resolve(__dirname, './attachments', fileName));
@@ -360,7 +402,7 @@ Send logs with corresponding level to report portal for the current suite/test. 
 
 Examples:
 ```javascript
-// Jasmine
+// Jasmine/Mocha
 describe('should containe suite log', () => {
   ReportingApi.info('Log message', null, 'should containe suite log'); // last parameter must match the name of the suite
   it('should contain logs with different levels', () => {
@@ -384,7 +426,7 @@ where `level` can be one of the following: *TRACE*, *DEBUG*, *WARN*, *INFO*, *ER
 
 Examples:
 ```javascript
-// Jasmine
+// Jasmine/Mocha
 it('should contain logs with attachments', async (page) => {
   const fileName = 'test.jpg';
   const fileContent = fs.readFileSync(path.resolve(__dirname, './attachments', fileName));
@@ -409,7 +451,7 @@ Send logs with corresponding level to report portal for the current launch. Shou
 
 Examples:
 ```javascript
-// Jasmine
+// Jasmine/Mocha
 it('launch should contain logs with with different levels', () => {
     ReportingApi.launchInfo('Log message');
     ReportingApi.launchDebug('Log message');
