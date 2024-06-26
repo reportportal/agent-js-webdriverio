@@ -17,7 +17,7 @@
 
 import WDIOReporter, {
   AfterCommandArgs,
-  BeforeCommandArgs,
+  BeforeCommandArgs, HookStats,
   RunnerStats,
   SuiteStats,
   TestStats,
@@ -57,13 +57,14 @@ export class Reporter extends WDIOReporter {
 
   constructor(options: Partial<Reporters.Options>) {
     super(options);
-
-    const agentInfo = getAgentInfo();
-    const clientConfig = getClientConfig(options);
     this.options = {
       seleniumCommandsLogLevel: 'info',
+      launchId: process.env.RP_LAUNCH_ID || options.launchId,
       ...options,
     };
+    const agentInfo = getAgentInfo();
+    const clientConfig = getClientConfig(this.options);
+
     this.syncReporting = false;
     this.client = new RPClient(clientConfig, agentInfo);
     this.storage = new Storage();
@@ -240,11 +241,13 @@ export class Reporter extends WDIOReporter {
   async onRunnerEnd(): Promise<void> {
     try {
       await this.client.getPromiseFinishAllItems(this.tempLaunchId);
-      const { promise } = await this.client.finishLaunch(this.tempLaunchId, {
-        ...(this.customLaunchStatus && { status: this.customLaunchStatus }),
-      });
-      promiseErrorHandler(promise);
-      await promise;
+      if (!this.options.launchId) {
+        const { promise } = await this.client.finishLaunch(this.tempLaunchId, {
+          ...(this.customLaunchStatus && { status: this.customLaunchStatus }),
+        });
+        promiseErrorHandler(promise);
+        await promise;
+      }
       this.tempLaunchId = null;
       this.customLaunchStatus = null;
     } catch (e) {
@@ -358,7 +361,9 @@ export class Reporter extends WDIOReporter {
   }
 
   sendLaunchLog(log: LogRQ): void {
-    this.sendLog(this.tempLaunchId, log);
+    if (this.tempLaunchId) {
+      this.sendLog(this.tempLaunchId, log);
+    }
   }
 
   sendLog(tempId: string, { level, message = '', file }: LogRQ): void {
