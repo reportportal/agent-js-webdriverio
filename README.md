@@ -18,8 +18,8 @@ Create `wdio.conf.js` [Testrunner Configuration](https://webdriver.io/docs/confi
 const { Reporter } = require('@reportportal/agent-js-webdriverio');
 
 const config = {
-  token: '00000000-0000-0000-0000-00000000000',
-  endpoint: 'http://your.reportportal.server:8080/api/v1',
+  apiKey: '00000000-0000-0000-0000-00000000000',
+  endpoint: 'http://your.reportportal.server:8080/api/v2',
   project: 'YourReportPortalProjectName',
   launch: 'YourLauncherName',
   description: 'Static launch description',
@@ -43,29 +43,29 @@ exports.config = {
 
 The full list of available options presented below.
 
-| Option                   | Necessity  | Default   | Description                                                                                                                                                                                                                                                                                                                                                                              |
-|--------------------------|------------|-----------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| apiKey                   | Required   |           | User's ReportPortal token from which you want to send requests. It can be found on the profile page of this user.                                                                                                                                                                                                                                                                        |
-| endpoint                 | Required   |           | URL of your server. For example 'https://server:8080/api/v1'.                                                                                                                                                                                                                                                                                                                            |
-| launch                   | Required   |           | Name of launch at creation.                                                                                                                                                                                                                                                                                                                                                              |
-| project                  | Required   |           | The name of the project in which the launches will be created.                                                                                                                                                                                                                                                                                                                           |
-| attributes               | Optional   | []        | Launch attributes.                                                                                                                                                                                                                                                                                                                                                                       |
-| description              | Optional   | ''        | Launch description.                                                                                                                                                                                                                                                                                                                                                                      |
-| rerun                    | Optional   | false     | Enable [rerun](https://reportportal.io/docs/dev-guides/RerunDevelopersGuide).                                                                                                                                                                                                                                                                                                            |
-| rerunOf                  | Optional   | Not set   | UUID of launch you want to rerun. If not specified, ReportPortal will update the latest launch with the same name.                                                                                                                                                                                                                                                                       |
-| mode                     | Optional   | 'DEFAULT' | Results will be submitted to Launches page <br/> *'DEBUG'* - Results will be submitted to Debug page.                                                                                                                                                                                                                                                                                    |
-| skippedIssue             | Optional   | true      | ReportPortal provides feature to mark skipped tests as not 'To Investigate'. <br/> Option could be equal boolean values: <br/> *true* - skipped tests considered as issues and will be marked as 'To Investigate' on ReportPortal. <br/> *false* - skipped tests will not be marked as 'To Investigate' on application.                                                                  |
-| debug                    | Optional   | false     | This flag allows seeing the logs of the client-javascript. Useful for debugging.                                                                                                                                                                                                                                                                                                         |
-| launchId                 | Optional   | Not set   | The _ID_ of an already existing launch. The launch must be in 'IN_PROGRESS' status while the tests are running. Please note that if this _ID_ is provided, the launch will not be finished at the end of the run and must be finished separately.                                                                                                                                        |                            
-| restClientConfig         | Optional   | Not set   | The object with `agent` property for configure [http(s)](https://nodejs.org/api/https.html#https_https_request_url_options_callback) client, may contain other client options eg. [`timeout`](https://github.com/reportportal/client-javascript#timeout-30000ms-on-axios-requests). <br/> Visit [client-javascript](https://github.com/reportportal/client-javascript) for more details. |
-| launchUuidPrint          | Optional   | false     | Whether to print the current launch UUID.                                                                                                                                                                                                                                                                                                                                                |
-| launchUuidPrintOutput    | Optional   | 'STDOUT'  | Launch UUID printing output. Possible values: 'STDOUT', 'STDERR'. Works only if `launchUuidPrint` set to `true`.                                                                                                                                                                                                                                                                         |
-| isLaunchMergeRequired    | Optional   | false     | Allows to merge several run's into one launch at the end of the run. Needs additional setup. See [Manual merge launches](#manual-merge-launches).                                                                                                                                                                                                                                        |
-| attachPicturesToLogs     | Optional   | false     | Automatically add screenshots.                                                                                                                                                                                                                                                                                                                                                           |
-| cucumberNestedSteps      | Optional   | false     | [Report your steps as logs](https://github.com/reportportal/agent-js-webdriverio#step-reporting-configuration).                                                                                                                                                                                                                                                                          |
-| reportSeleniumCommands   | Optional   | false     | Add selenium logs to each test case.                                                                                                                                                                                                                                                                                                                                                     |
-| seleniumCommandsLogLevel | Optional   | 'info'    | If set *reportSeleniumCommands* to *true*, you need to provide log level witch can be one of: *'trace', 'debug', 'info', 'warn', 'error', 'fatal'*.                                                                                                                                                                                                                                      |
-| token                    | Deprecated | Not set   | Use `apiKey` instead.                                                                                                                                                                                                                                                                                                                                                                    |
+| Option                   | Necessity  | Default   | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+|--------------------------|------------|-----------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| apiKey                   | Required   |           | User's ReportPortal token from which you want to send requests. It can be found on the profile page of this user.                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| endpoint                 | Required   |           | URL of your server. For example 'https://server:8080/api/v2'.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| launch                   | Required   |           | Name of launch at creation.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| project                  | Required   |           | The name of the project in which the launches will be created.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| attributes               | Optional   | []        | Launch attributes.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| description              | Optional   | ''        | Launch description.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| rerun                    | Optional   | false     | Enable [rerun](https://reportportal.io/docs/dev-guides/RerunDevelopersGuide).                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| rerunOf                  | Optional   | Not set   | UUID of launch you want to rerun. If not specified, ReportPortal will update the latest launch with the same name.                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| mode                     | Optional   | 'DEFAULT' | Results will be submitted to Launches page <br/> *'DEBUG'* - Results will be submitted to Debug page.                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| skippedIssue             | Optional   | true      | ReportPortal provides feature to mark skipped tests as not 'To Investigate'. <br/> Option could be equal boolean values: <br/> *true* - skipped tests considered as issues and will be marked as 'To Investigate' on ReportPortal. <br/> *false* - skipped tests will not be marked as 'To Investigate' on application.                                                                                                                                                                                                                        |
+| debug                    | Optional   | false     | This flag allows seeing the logs of the client-javascript. Useful for debugging.                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| launchId                 | Optional   | Not set   | The _ID_ of an already existing launch. The launch must be in 'IN_PROGRESS' status while the tests are running. Please note that if this _ID_ is provided, the launch will not be finished at the end of the run and must be finished separately. If this option used, launch related options (eg. description, attributes, rerun, rerunOf, mode) will not take any effect as they are used within launch start.                                                                                                                               |                            
+| restClientConfig         | Optional   | Not set   | `axios` like http client [config](https://github.com/axios/axios#request-config). May contain `agent` property for configure [http(s)](https://nodejs.org/api/https.html#https_https_request_url_options_callback) client, and other client options eg. `proxy`, [`timeout`](https://github.com/reportportal/client-javascript#timeout-30000ms-on-axios-requests). For debugging and displaying logs the `debug: true` option can be used. <br/> Visit [client-javascript](https://github.com/reportportal/client-javascript) for more details. |
+| launchUuidPrint          | Optional   | false     | Whether to print the current launch UUID.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| launchUuidPrintOutput    | Optional   | 'STDOUT'  | Launch UUID printing output. Possible values: 'STDOUT', 'STDERR', 'FILE', 'ENVIRONMENT'. Works only if `launchUuidPrint` set to `true`. File format: `rp-launch-uuid-${launch_uuid}.tmp`. Env variable: `RP_LAUNCH_UUID`.                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| isLaunchMergeRequired    | Optional   | false     | Allows to merge several run's into one launch at the end of the run. Needs additional setup. See [Manual merge launches](#manual-merge-launches).                                                                                                                                                                                                                                                                                                                                                                                              |
+| attachPicturesToLogs     | Optional   | false     | Automatically attach screenshots taken during test execution. See [Screenshots](#screenshots) for more details.                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| cucumberNestedSteps      | Optional   | false     | [Report Cucumber steps as logs](#cucumber-scenario-based-reporting).                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| reportSeleniumCommands   | Optional   | false     | Add selenium logs to each test case.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| seleniumCommandsLogLevel | Optional   | 'info'    | If set `reportSeleniumCommands` to `true`, you need to provide log level witch can be one of: *'trace', 'debug', 'info', 'warn', 'error', 'fatal'*.                                                                                                                                                                                                                                                                                                                                                                                             |
+| token                    | Deprecated | Not set   | Use `apiKey` instead.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
 
 The following options can be overridden using ENVIRONMENT variables:
 
@@ -73,7 +73,14 @@ The following options can be overridden using ENVIRONMENT variables:
 |-------------|-----------------|
 | launchId    | RP_LAUNCH_ID    |
 
-## Step reporting configuration (for Cucumber setup)
+After completing the above configuration, you will be able to see a basic report of test results in ReportPortal.
+To make the report more informative and utilize all features of ReportPortal, the agent provides additional features described below.
+
+You can also refer the [example-webdriverio](https://github.com/reportportal/examples-js/tree/main/example-webdriverio) example to see how to use the agent with WebdriverIO in action.
+
+## Structure of reports
+
+### Cucumber scenario-based reporting
 
 By default, this agent reports the following structure:
 
@@ -87,13 +94,52 @@ You may change this behavior to report steps to the log level by enabling scenar
 - scenario - STEP
 - step - log item (nested step)
 
-To report your steps as logs, you need to pass an additional parameter to the agent config: `"cucumberNestedSteps": true`
+To report scenarios as test cases and steps as logs, you need to pass an additional parameter to the agent config: `cucumberNestedSteps: true`.
 
-## Reporting
+## Screenshots
+
+To attach screenshots to the test, the option `attachPicturesToLogs` need to be enabled in the agent config.
+
+Then, in case the screenshot is taken within the test execution, it will be attached to the test result in ReportPortal automatically.
+
+### Jasmine/Mocha
+
+Examples:
+```javascript
+describe('suite name', () => {
+    it('Test should be FAILED', async () => {
+        await browser.url('https://webdriver.io');
+        const title = await browser.getTitle();
+        await browser.saveScreenshot('./screenshots/screenshot.png');
+
+        expect(title).toBe('WebdriverIO');
+    });
+});
+```
+
+### Cucumber
+
+```javascript
+Given('I do something awesome', async () => {
+    await browser.takeScreenshot();
+    assert.strictEqual(this.value, expectedValue);
+});
+```
+
+It is also may be useful to take the screenshot on test failure in the `afterStep` function for Cucumber in `wdio.conf.js` file:
+```javascript
+afterStep: async function(step, scenario, { error, result, duration, passed }, context) {
+    if (!passed) {
+        await browser.takeScreenshot();
+    }
+}
+```
+
+Another way to add any files to the test (not only screenshots) is to use the [ReportingAPI.log() method](#log).
+
+## Reporting API
 
 This reporter provides Reporting API to use it directly in tests to send some additional data to the report.
-
-## Using `ReportingApi`:
 
 To start using the `ReportingApi` in tests, just import it from `'@reportportal/agent-js-webdriverio'`:
 ```javascript
@@ -103,7 +149,7 @@ const { ReportingApi } = require('@reportportal/agent-js-webdriverio');
 
 `ReportingApi.addAttributes(attributes: Array<Attribute>, suite?: string);`  
 **required**: `attributes`  
-```ts
+```typescript
 interface Attribute {
   key?: string;
   value: string;
@@ -112,7 +158,7 @@ interface Attribute {
 
 Examples:
 ```javascript
-// Jasmine
+// Jasmine/Mocha
 describe('suite name', () => {
   ReportingApi.addAttributes([
     {
@@ -160,7 +206,7 @@ Given('I do something awesome', () => {
   //...
 });
 ```
-> **Note:** Agent is not supported adding attributes to the `scenario`.  
+> **Note:** The agent does not support adding attributes to the `scenario`.  
 
 ### setDescription
 `ReportingApi.setDescription(description: string, suite?: string);`  
@@ -168,7 +214,7 @@ Given('I do something awesome', () => {
 
 Examples:
 ```javascript
-// Jasmine
+// Jasmine/Mocha
 describe('suite name', () => {
   ReportingApi.setDescription('suite description', 'suite name'); // the second parameter must match the name of the suite
   it('test with attributes', () => {
@@ -200,7 +246,7 @@ Given('I do something awesome', () => {
 
 Examples:
 ```javascript
-// Jasmine
+// Jasmine/Mocha
 describe('suite name', () => {
   ReportingApi.setTestCaseId('suiteTestCaseId', 'suite name'); // the second parameter must match the name of the suite
   it('some test', () => {
@@ -227,7 +273,7 @@ where `status` must be one of the following: *passed*, *failed*, *stopped*, *ski
 
 Examples:
 ```javascript
-// Jasmine
+// Jasmine/Mocha
 describe('should have status FAILED', () => {
   ReportingApi.setStatus('failed', 'should have status FAILED'); // the second parameter must match the name of the suite
   it('test with INFO status', () => {
@@ -259,7 +305,7 @@ Assign corresponding status to the current test item or suite.
 
 Examples:
 ```javascript
-// Jasmine
+// Jasmine/Mocha
 describe('manual statuses assigning', () => {
   ReportingApi.setStatusInfo('manual statuses assigning'); // string must match the name of the suite
   it('should call ReportingApi to set statuses', () => {
@@ -286,7 +332,7 @@ where `status` must be one of the following: *passed*, *failed*, *stopped*, *ski
 
 Examples:
 ```javascript
-// Jasmine
+// Jasmine/Mocha
 it('launch should have status FAILED', () => {
     ReportingApi.setLaunchStatus('failed');
   // ...
@@ -313,7 +359,7 @@ Assign corresponding status to the current launch.
 
 Examples:
 ```javascript
-// Jasmine
+// Jasmine/Mocha
 it('should call ReportingApi to set launch statuses', () => {
     ReportingApi.setLaunchStatusInfo();
 });
@@ -327,14 +373,15 @@ Given('I do something awesome', () => {
 ```
 
 ### log
-Send logs to report portal for the current test.  
+
+Send logs to the ReportPortal for the current test.  
 `ReportingApi.log(level: LOG_LEVELS, message: string, file?: Attachmentm, suite?: string);`  
 **required**: `level`, `message`  
 where `level` can be one of the following: *TRACE*, *DEBUG*, *WARN*, *INFO*, *ERROR*, *FATAL*  
 
 Examples:
 ```javascript
-// Jasmine
+// Jasmine/Mocha
 it('should contain logs with attachments', () => {
   const fileName = 'test.jpg';
   const fileContent = fs.readFileSync(path.resolve(__dirname, './attachments', fileName));
@@ -348,8 +395,23 @@ it('should contain logs with attachments', () => {
 });
 ```
 
+```javascript
+// Cucumber
+Given('I do something awesome', () => {
+    const fileName = 'test.jpg';
+    const fileContent = fs.readFileSync(path.resolve(__dirname, './attachments', fileName));
+    const attachment = {
+        name: fileName,
+        type: 'image/jpg',
+        content: fileContent.toString('base64'),
+    };
+    ReportingApi.log('INFO', 'info log with attachment', attachment);
+    //...
+});
+```
+
 ##### info, debug, warn, error, trace, fatal
-Send logs with corresponding level to report portal for the current suite/test. Should be called inside corresponding suite/test.  
+Send logs with corresponding level to the ReportPortal for the current suite/test. Should be called inside corresponding suite/test.  
 `ReportingApi.info(message: string, file?: Attachment, suite?: string);`  
 `ReportingApi.debug(message: string, file?: Attachment, suite?: string);`  
 `ReportingApi.warn(message: string, file?: Attachment, suite?: string);`  
@@ -360,7 +422,7 @@ Send logs with corresponding level to report portal for the current suite/test. 
 
 Examples:
 ```javascript
-// Jasmine
+// Jasmine/Mocha
 describe('should containe suite log', () => {
   ReportingApi.info('Log message', null, 'should containe suite log'); // last parameter must match the name of the suite
   it('should contain logs with different levels', () => {
@@ -374,18 +436,33 @@ describe('should containe suite log', () => {
   });  
 });
 ```
+
 > **Note:** Pay attention if you want to provide log to the `suite` you should pass describe name as a last parameter.
 
+```javascript
+// Cucumber
+Given('I do something awesome', () => {
+    ReportingApi.info('Log message');
+    ReportingApi.debug('Log message');
+    ReportingApi.warn('Log message');
+    ReportingApi.error('Log message');
+    ReportingApi.trace('Log message');
+    ReportingApi.fatal('Log message');
+    //...
+});
+```
+
 ### launchLog
-Send logs to report portal for the current launch. Should be called inside the any test.  
+
+Send logs to the ReportPortal for the current launch. Should be called inside the any test.  
 `ReportingApi.launchLog(level: LOG_LEVELS, message: string, file?: Attachment);`  
 **required**: `level`, `message`  
 where `level` can be one of the following: *TRACE*, *DEBUG*, *WARN*, *INFO*, *ERROR*, *FATAL*  
 
 Examples:
 ```javascript
-// Jasmine
-it('should contain logs with attachments', async (page) => {
+// Jasmine/Mocha
+it('should send log with attachment to launch', async (page) => {
   const fileName = 'test.jpg';
   const fileContent = fs.readFileSync(path.resolve(__dirname, './attachments', fileName));
   const attachment = {
@@ -393,12 +470,29 @@ it('should contain logs with attachments', async (page) => {
     type: 'image/jpg',
     content: fileContent.toString('base64'),
   };
-  ReportingApi.launchLog('INFO', 'info log with attachment', attachment); // this log attaching to the laucnh
+  ReportingApi.launchLog('INFO', 'info log with attachment', attachment); // attaching log to the launch
   // ...
 });
 ```
+
+```javascript
+// Cucumber
+Given('I do something awesome', () => {
+    const fileName = 'test.jpg';
+    const fileContent = fs.readFileSync(path.resolve(__dirname, './attachments', fileName));
+    const attachment = {
+        name: fileName,
+        type: 'image/jpg',
+        content: fileContent.toString('base64'),
+    };
+    ReportingApi.launchLog('INFO', 'info log with attachment', attachment); // attaching log to the launch
+    //...
+});
+```
+
 ##### launchInfo, launchDebug, launchWarn, launchError, launchTrace, launchFatal
-Send logs with corresponding level to report portal for the current launch. Should be called inside the any test.  
+
+Send logs with corresponding level to the ReportPortal for the current launch. Should be called inside the any test.  
 `ReportingApi.launchInfo(message: string, file?: Attachment);`  
 `ReportingApi.launchDebug(message: string, file?: Attachment);`  
 `ReportingApi.launchWarn(message: string, file?: Attachment);`  
@@ -409,18 +503,31 @@ Send logs with corresponding level to report portal for the current launch. Shou
 
 Examples:
 ```javascript
-// Jasmine
+// Jasmine/Mocha
 it('launch should contain logs with with different levels', () => {
+  ReportingApi.launchInfo('Log message');
+  ReportingApi.launchDebug('Log message');
+  ReportingApi.launchWarn('Log message');
+  ReportingApi.launchError('Log message');
+  ReportingApi.launchTrace('Log message');
+  ReportingApi.launchFatal('Log message');
+  // ...
+});
+```
+> **Note:** Pay attention if you want to provide log to the `launch` you should call ReportingApi methods inside test/it blocks.
+
+```javascript
+// Cucumber
+Given('I do something awesome', () => {
     ReportingApi.launchInfo('Log message');
     ReportingApi.launchDebug('Log message');
     ReportingApi.launchWarn('Log message');
     ReportingApi.launchError('Log message');
     ReportingApi.launchTrace('Log message');
     ReportingApi.launchFatal('Log message');
-  // ...
+    //...
 });
 ```
-> **Note:** Pay attention if you want to provide log to the `launch` you should call ReportingApi methods inside test/it blocks.
 
 #### Integration with Sauce Labs
 
