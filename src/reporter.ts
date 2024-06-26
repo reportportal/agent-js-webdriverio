@@ -17,7 +17,7 @@
 
 import WDIOReporter, {
   AfterCommandArgs,
-  BeforeCommandArgs, HookStats,
+  BeforeCommandArgs,
   RunnerStats,
   SuiteStats,
   TestStats,

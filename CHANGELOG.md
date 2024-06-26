@@ -1,5 +1,7 @@
 ### Changed
-- `@reportportal/client-javascript` bumped to version `5.1.3`.
+- `@reportportal/client-javascript` bumped to version `5.1.4`.
+### Security
+- Updated versions of vulnerable packages (braces, ws).
 
 ## [5.1.0] - 2024-02-06
 ### Added
