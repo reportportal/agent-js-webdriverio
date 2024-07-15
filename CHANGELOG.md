@@ -1,7 +1,7 @@
 
 ## [5.1.1] - 2024-06-26
 ### Changed
-- `@reportportal/client-javascript` bumped to version `5.1.4`.
+- `@reportportal/client-javascript` bumped to version `5.1.4`, new `launchUuidPrintOutput` types introduced: 'FILE', 'ENVIRONMENT'.
 ### Security
 - Updated versions of vulnerable packages (braces, ws).
 
