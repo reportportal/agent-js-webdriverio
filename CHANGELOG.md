@@ -4,6 +4,8 @@
 - `@reportportal/client-javascript` bumped to version `5.1.4`, new `launchUuidPrintOutput` types introduced: 'FILE', 'ENVIRONMENT'.
 ### Security
 - Updated versions of vulnerable packages (braces, ws).
+### Deprecated
+- Node.js 12 usage. This minor version is the latest that supports Node.js 12.
 
 ## [5.1.0] - 2024-02-06
 ### Added
@@ -20,7 +22,7 @@
 ## [5.0.3] - 2022-10-05
 ### Added
 - Support reportSeleniumCommands and seleniumCommandsLogLevel for Cucumber and Jasmine reporting via `reportSeleniumCommands`, `seleniumCommandsLogLevel` flags.
-- _isLaunchMergeRequired_ config option support. Provided guide on merging launches manually [provided](README.md#manual-merge-launches).
+- `isLaunchMergeRequired` config option support. Provided guide on merging launches manually [provided](README.md#manual-merge-launches).
 
 ## [5.0.2] - 2022-05-31
 ### Added
