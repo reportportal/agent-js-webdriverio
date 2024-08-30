@@ -547,6 +547,10 @@ To integrate with Sauce Labs just add attributes for the test case:
 
 When multiple files are run in parallel, for the current agent implementation this will result in multiple launches in the Report Portal.
 
+There are several options to merge them into one launch.
+
+### Option 1
+
 To merge them into one launch after the entire run is completed, specify the following option in the config:
 
 ```javascript
@@ -562,12 +566,20 @@ const { Reporter } = require('@reportportal/agent-js-webdriverio');
 const RPClient = require('@reportportal/client-javascript');
 
 const rpConfig = {
-    token: '00000000-0000-0000-0000-00000000000',
-    endpoint: 'http://your.reportportal.server:8080/api/v1',
-    project: 'YourReportPortalProjectName',
-    launch: 'YourLauncherName',
-    description: "Static launch description",
-    attributes: [{ key: 'key', value: 'value' }, { value: 'value' }],
+    apiKey: '<API_KEY>',
+    endpoint: 'https://your.reportportal.server/api/v1',
+    project: 'Your reportportal project name',
+    launch: 'Your launch name',
+    description: 'Your launch description',
+    attributes: [
+        {
+            key: 'key',
+            value: 'value',
+        },
+        {
+            value: 'value',
+        },
+    ],
     isLaunchMergeRequired: true,
 };
 
@@ -594,6 +606,83 @@ exports.config = {
     },
 }
 ```
+
+### Option 2
+
+The reporter config supports the `launchId` parameter to specify the id of the already started launch.
+This way, you can start the launch manually using `@reportportal/client-javascript` before the test run and then specify its id in the config.
+
+This option may also be useful when running several test suites in parallel on different machines.
+
+1. E.g. create a file `scripts/startLaunch.js`, run it before your test execution process and store the launch id.
+The file may look like this:
+
+```javascript
+const RPClient = require('@reportportal/client-javascript');
+const rpConfig = require('../rpConfig');
+
+const client = new RPClient(rpConfig);
+
+const startLaunch = async () => {
+    const response = await client.startLaunch({ name: 'Cypress launch', mode: 'DEFAULT' }).promise;
+    const launchId = response.id;
+
+    return launchId;
+};
+
+module.exports = startLaunch;
+```
+
+2. Use saved `launchId` within the reporter config in WDIO configuration or set it to the test execution process via environment variable `RP_LAUNCH_ID`:
+
+```javascript
+const { Reporter } = require('@reportportal/agent-js-webdriverio');
+const RPClient = require('@reportportal/client-javascript');
+
+const rpConfig = {
+    apiKey: '<API_KEY>',
+    endpoint: 'https://your.reportportal.server/api/v1',
+    project: 'Your reportportal project name',
+    launch: 'Your launch name',
+    launchId: 'id of the already started launch', // or set it via environment variable RP_LAUNCH_ID
+    // ...
+};
+
+exports.config = {
+    // ...
+    reporters: [[Reporter, rpConfig]],
+    // ...
+}
+```
+
+3. Finish the launch after the test run is completed. E.g. in the [`onComplete`](https://webdriver.io/docs/options/#oncomplete) hook while running on a single machine:
+
+```javascript
+const { Reporter } = require('@reportportal/agent-js-webdriverio');
+const RPClient = require('@reportportal/client-javascript');
+
+const rpConfig = {
+    // ...
+};
+
+exports.config = {
+    // ...
+    reporters: [[Reporter, rpConfig]],
+    // ...
+    onComplete: async function (exitCode, config, capabilities, results) {
+        const client = new RPClient(rpConfig);
+
+        const finishLaunch = async () => {
+            const launchTempId = client.startLaunch({ id: process.env.RP_LAUNCH_ID }).tempId;
+            await client.finishLaunch(launchTempId, {}).promise;
+        };
+
+        await finishLaunch();
+    },
+}
+```
+
+In case of running suites in parallel on several machines, it is recommended to finish the launch after the test execution in a separate step within your pipeline.
 
 ## Copyright Notice
 Licensed under the [Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0)
