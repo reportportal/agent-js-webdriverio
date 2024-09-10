@@ -543,21 +543,115 @@ To integrate with Sauce Labs just add attributes for the test case:
 }]
 ```
 
-## Manual merge launches
+## Getting a single launch
 
-When multiple files are run in parallel, for the current agent implementation this will result in multiple launches in the Report Portal.
+For example, this configuration `specs: [‘./tests/**/*.spec.js’]` is used to execute each spec in a [separate worker process](https://webdriver.io/docs/configuration/#specs)).
+There may also be a situation where tests are executed in parallel on different machines.
+For the current agent implementation, this will result in multiple launches in ReportPortal.
 
-There are several options to merge them into one launch.
+If a single launch is required for such cases - there are several options for combining them within a single launch.
 
 ### Option 1
 
-To merge them into one launch after the entire run is completed, specify the following option in the config:
+The reporter config supports the `launchId` parameter to specify the id of the already started launch.
+This way, you can start the launch manually using `@reportportal/client-javascript` before the test run and then specify its id in the config or via environment variable.
+
+This option may also be useful when running several test suites in parallel on different machines.
+
+1. Start the launch before the test run and store the Launch ID. E.g. in the [`onPrepare`](https://webdriver.io/docs/configuration/#onprepare) hook while running on a single machine:
 
 ```javascript
-isLaunchMergeRequired: true
+const { Reporter } = require('@reportportal/agent-js-webdriverio');
+const RPClient = require('@reportportal/client-javascript');
+
+const rpConfig = {
+    // ...
+};
+
+exports.config = {
+    // ...
+    reporters: [[Reporter, rpConfig]],
+    // ...
+    onPrepare: async function (exitCode, config, capabilities, results) {
+        async function startLaunch() {
+            const client = new RPClient(rpConfig);
+            const response = await client.startLaunch({
+                name: rpConfig.launch,
+                attributes: rpConfig.attributes,
+                // etc
+            }).promise;
+
+            return response.id;
+        }
+
+        const launchId = await startLaunch();
+        // The Launch ID can be set to the environment variable right here
+        process.env.RP_LAUNCH_ID = response.id;
+    },
+}
 ```
 
-And add the following code to the WDIO [`onComplete`](https://webdriver.io/docs/options/#oncomplete) hook:
+**Note:** If the Launch ID is already known (e.g., created in a separate CI pipeline step before running tests), it can be set directly via the `RP_LAUNCH_ID` environment variable or in the agent configuration:
+
+```javascript
+const { Reporter } = require('@reportportal/agent-js-webdriverio');
+const RPClient = require('@reportportal/client-javascript');
+
+const rpConfig = {
+    // ...
+    launchId: 'Id of an already started launch', // or set it via environment variable RP_LAUNCH_ID
+    // ...
+};
+
+exports.config = {
+    // ...
+    reporters: [[Reporter, rpConfig]],
+    // ...
+}
+```
+
+2. Finish the launch after the execution is completed. E.g. in the [`onComplete`](https://webdriver.io/docs/options/#oncomplete) hook while running on a single machine:
+
+```javascript
+const { Reporter } = require('@reportportal/agent-js-webdriverio');
+const RPClient = require('@reportportal/client-javascript');
+
+const rpConfig = {
+    // ...
+};
+
+exports.config = {
+    // ...
+    reporters: [[Reporter, rpConfig]],
+    // ...
+    onComplete: async function (exitCode, config, capabilities, results) {
+        const finishLaunch = async () => {
+            const client = new RPClient(rpConfig);
+            const launchTempId = client.startLaunch({ id: process.env.RP_LAUNCH_ID }).tempId;
+            await client.finishLaunch(launchTempId, {}).promise;
+        };
+
+        await finishLaunch();
+    },
+}
+```
+
+**Note:** In case of running specs in parallel on several machines, it is recommended to finish the launch after the test execution in a separate step within your CI pipeline.
+
+### Option 2
+
+Using this option a separate launch still will be created for each spec file, but at the end of the entire execution they will be merged into a single launch.
+
+1. Specify the following option in the ReportPortal agent config:
+
+```javascript
+const rpConfig = {
+    // ...
+    isLaunchMergeRequired: true,
+};
+```
+
+2. Add the following code to run the merge in WebdriverIO [`onComplete`](https://webdriver.io/docs/options/#oncomplete) hook:
 
 ```javascript
 const fs = require('fs');
@@ -566,20 +660,7 @@ const { Reporter } = require('@reportportal/agent-js-webdriverio');
 const RPClient = require('@reportportal/client-javascript');
 
 const rpConfig = {
-    apiKey: '<API_KEY>',
-    endpoint: 'https://your.reportportal.server/api/v1',
-    project: 'Your reportportal project name',
-    launch: 'Your launch name',
-    description: 'Your launch description',
-    attributes: [
-        {
-            key: 'key',
-            value: 'value',
-        },
-        {
-            value: 'value',
-        },
-    ],
+    // ...
     isLaunchMergeRequired: true,
 };
 
@@ -607,92 +688,9 @@ exports.config = {
 }
 ```
 
-### Option 2
+## Manual merge launches
 
-The reporter config supports the `launchId` parameter to specify the id of the already started launch.
-This way, you can start the launch manually using `@reportportal/client-javascript` before the test run and then specify its id in the config.
-
-This option may also be useful when running several test suites in parallel on different machines.
-
-1. Start the launch before the test run and store the launch id. E.g. in the [`onPrepare`](https://webdriver.io/docs/configuration/#onprepare) hook while running on a single machine:
-
-```javascript
-const { Reporter } = require('@reportportal/agent-js-webdriverio');
-const RPClient = require('@reportportal/client-javascript');
-
-const rpConfig = {
-    // ...
-};
-
-exports.config = {
-    // ...
-    reporters: [[Reporter, rpConfig]],
-    // ...
-    onPrepare: async function (exitCode, config, capabilities, results) {
-        async function startLaunch() {
-            const client = new RPClient(rpConfig);
-            const response = await client.startLaunch({ name: rpConfig.launch }).promise;
-
-            return response.id;
-        }
-
-        const launchId = await startLaunch();
-        // The launch id can be set to the environment variable right here
-        process.env.RP_LAUNCH_ID = response.id;
-    },
-}
-```
-
-2. Use the saved launch id. The launch id can be set directly via environment variable `RP_LAUNCH_ID` or within the reporter config in WDIO configuration if it is known in advance:
-
-```javascript
-const { Reporter } = require('@reportportal/agent-js-webdriverio');
-const RPClient = require('@reportportal/client-javascript');
-
-const rpConfig = {
-    apiKey: '<API_KEY>',
-    endpoint: 'https://your.reportportal.server/api/v1',
-    project: 'Your reportportal project name',
-    launch: 'Your launch name',
-    launchId: 'id of the already started launch', // or set it via environment variable RP_LAUNCH_ID
-    // ...
-};
-
-exports.config = {
-    // ...
-    reporters: [[Reporter, rpConfig]],
-    // ...
-}
-```
-
-3. Finish the launch after the test run is completed. E.g. in the [`onComplete`](https://webdriver.io/docs/options/#oncomplete) hook while running on a single machine:
-
-```javascript
-const { Reporter } = require('@reportportal/agent-js-webdriverio');
-const RPClient = require('@reportportal/client-javascript');
-
-const rpConfig = {
-    // ...
-};
-
-exports.config = {
-    // ...
-    reporters: [[Reporter, rpConfig]],
-    // ...
-    onComplete: async function (exitCode, config, capabilities, results) {
-        const client = new RPClient(rpConfig);
-
-        const finishLaunch = async () => {
-            const launchTempId = client.startLaunch({ id: process.env.RP_LAUNCH_ID }).tempId;
-            await client.finishLaunch(launchTempId, {}).promise;
-        };
-
-        await finishLaunch();
-    },
-}
-```
-
-In case of running suites in parallel on several machines, it is recommended to finish the launch after the test execution in a separate step within your pipeline.
+Please check the options described in [Getting a single launch](#getting-a-single-launch) section.
 
 ## Copyright Notice
 Licensed under the [Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0)
