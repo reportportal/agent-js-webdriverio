@@ -614,26 +614,36 @@ This way, you can start the launch manually using `@reportportal/client-javascri
 
 This option may also be useful when running several test suites in parallel on different machines.
 
-1. E.g. create a file `scripts/startLaunch.js`, run it before your test execution process and store the launch id.
-The file may look like this:
+1. Start the launch before the test run and store the launch id. E.g. in the [`onPrepare`](https://webdriver.io/docs/configuration/#onprepare) hook while running on a single machine:
 
 ```javascript
+const { Reporter } = require('@reportportal/agent-js-webdriverio');
 const RPClient = require('@reportportal/client-javascript');
-const rpConfig = require('../rpConfig');
 
-const client = new RPClient(rpConfig);
-
-const startLaunch = async () => {
-    const response = await client.startLaunch({ name: 'Cypress launch', mode: 'DEFAULT' }).promise;
-    const launchId = response.id;
-
-    return launchId;
+const rpConfig = {
+    // ...
 };
 
-module.exports = startLaunch;
+exports.config = {
+    // ...
+    reporters: [[Reporter, rpConfig]],
+    // ...
+    onPrepare: async function (exitCode, config, capabilities, results) {
+        async function startLaunch() {
+            const client = new RPClient(rpConfig);
+            const response = await client.startLaunch({ name: rpConfig.launch }).promise;
+
+            return response.id;
+        }
+
+        const launchId = await startLaunch();
+        // The launch id can be set to the environment variable right here
+        process.env.RP_LAUNCH_ID = response.id;
+    },
+}
 ```
 
-2. Use saved `launchId` within the reporter config in WDIO configuration or set it to the test execution process via environment variable `RP_LAUNCH_ID`:
+2. Use the saved launch id. The launch id can be set directly via environment variable `RP_LAUNCH_ID` or within the reporter config in WDIO configuration if it is known in advance:
 
 ```javascript
 const { Reporter } = require('@reportportal/agent-js-webdriverio');
