@@ -16,13 +16,12 @@ npm install --save-dev @reportportal/agent-js-webdriverio
 Create `wdio.conf.js` [Testrunner Configuration](https://webdriver.io/docs/configurationfile) file:
 ```javascript
 const { Reporter } = require('@reportportal/agent-js-webdriverio');
-
 const config = {
-  apiKey: '00000000-0000-0000-0000-00000000000',
-  endpoint: 'http://your.reportportal.server:8080/api/v2',
-  project: 'YourReportPortalProjectName',
-  launch: 'YourLauncherName',
-  description: 'Static launch description',
+  apiKey: '<API_KEY>',
+  endpoint: 'https://your.reportportal.server/api/v1',
+  project: 'Your reportportal project name',
+  launch: 'Your launch name',
+  description: 'Your launch description',
   attributes: [
       {
           key: 'key',
@@ -43,29 +42,30 @@ exports.config = {
 
 The full list of available options presented below.
 
-| Option                   | Necessity  | Default   | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-|--------------------------|------------|-----------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| apiKey                   | Required   |           | User's ReportPortal token from which you want to send requests. It can be found on the profile page of this user.                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| endpoint                 | Required   |           | URL of your server. For example 'https://server:8080/api/v2'.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| launch                   | Required   |           | Name of launch at creation.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| project                  | Required   |           | The name of the project in which the launches will be created.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
-| attributes               | Optional   | []        | Launch attributes.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-| description              | Optional   | ''        | Launch description.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| rerun                    | Optional   | false     | Enable [rerun](https://reportportal.io/docs/dev-guides/RerunDevelopersGuide).                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| rerunOf                  | Optional   | Not set   | UUID of launch you want to rerun. If not specified, ReportPortal will update the latest launch with the same name.                                                                                                                                                                                                                                                                                                                                                                                                                             |
-| mode                     | Optional   | 'DEFAULT' | Results will be submitted to Launches page <br/> *'DEBUG'* - Results will be submitted to Debug page.                                                                                                                                                                                                                                                                                                                                                                                                                                          |
-| skippedIssue             | Optional   | true      | ReportPortal provides feature to mark skipped tests as not 'To Investigate'. <br/> Option could be equal boolean values: <br/> *true* - skipped tests considered as issues and will be marked as 'To Investigate' on ReportPortal. <br/> *false* - skipped tests will not be marked as 'To Investigate' on application.                                                                                                                                                                                                                        |
-| debug                    | Optional   | false     | This flag allows seeing the logs of the client-javascript. Useful for debugging.                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-| launchId                 | Optional   | Not set   | The _ID_ of an already existing launch. The launch must be in 'IN_PROGRESS' status while the tests are running. Please note that if this _ID_ is provided, the launch will not be finished at the end of the run and must be finished separately. If this option used, launch related options (eg. description, attributes, rerun, rerunOf, mode) will not take any effect as they are used within launch start.                                                                                                                               |                            
+| Option                   | Necessity  | Default   | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+|--------------------------|------------|-----------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| apiKey                   | Required   |           | User's ReportPortal token from which you want to send requests. It can be found on the profile page of this user.                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| endpoint                 | Required   |           | URL of your server. For example 'https://server:8080/api/v2'.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| launch                   | Required   |           | Name of launch at creation.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| project                  | Required   |           | The name of the project in which the launches will be created.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| attributes               | Optional   | []        | Launch attributes.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| description              | Optional   | ''        | Launch description.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| rerun                    | Optional   | false     | Enable [rerun](https://reportportal.io/docs/dev-guides/RerunDevelopersGuide).                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| rerunOf                  | Optional   | Not set   | UUID of launch you want to rerun. If not specified, ReportPortal will update the latest launch with the same name.                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| mode                     | Optional   | 'DEFAULT' | Results will be submitted to Launches page <br/> *'DEBUG'* - Results will be submitted to Debug page.                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| skippedIssue             | Optional   | true      | ReportPortal provides feature to mark skipped tests as not 'To Investigate'. <br/> Option could be equal boolean values: <br/> *true* - skipped tests considered as issues and will be marked as 'To Investigate' on ReportPortal. <br/> *false* - skipped tests will not be marked as 'To Investigate' on application.                                                                                                                                                                                                                         |
+| debug                    | Optional   | false     | This flag allows seeing the logs of the client-javascript. Useful for debugging.                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| launchId                 | Optional   | Not set   | The _ID_ of an already existing launch. The launch must be in 'IN_PROGRESS' status while the tests are running. Please note that if this _ID_ is provided, the launch will not be finished at the end of the run and must be finished separately. If this option used, launch related options (eg. description, attributes, rerun, rerunOf, mode) will not take any effect as they are used within launch start.                                                                                                                                |                            
 | restClientConfig         | Optional   | Not set   | `axios` like http client [config](https://github.com/axios/axios#request-config). May contain `agent` property for configure [http(s)](https://nodejs.org/api/https.html#https_https_request_url_options_callback) client, and other client options eg. `proxy`, [`timeout`](https://github.com/reportportal/client-javascript#timeout-30000ms-on-axios-requests). For debugging and displaying logs the `debug: true` option can be used. <br/> Visit [client-javascript](https://github.com/reportportal/client-javascript) for more details. |
-| launchUuidPrint          | Optional   | false     | Whether to print the current launch UUID.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
-| launchUuidPrintOutput    | Optional   | 'STDOUT'  | Launch UUID printing output. Possible values: 'STDOUT', 'STDERR', 'FILE', 'ENVIRONMENT'. Works only if `launchUuidPrint` set to `true`. File format: `rp-launch-uuid-${launch_uuid}.tmp`. Env variable: `RP_LAUNCH_UUID`.                                                                                                                                                                                                                                                                                                                                                                                                                               |
-| isLaunchMergeRequired    | Optional   | false     | Allows to merge several run's into one launch at the end of the run. Needs additional setup. See [Manual merge launches](#manual-merge-launches).                                                                                                                                                                                                                                                                                                                                                                                              |
-| attachPicturesToLogs     | Optional   | false     | Automatically attach screenshots taken during test execution. See [Screenshots](#screenshots) for more details.                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| cucumberNestedSteps      | Optional   | false     | [Report Cucumber steps as logs](#cucumber-scenario-based-reporting).                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
-| reportSeleniumCommands   | Optional   | false     | Add selenium logs to each test case.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| headers                  | Optional   | {}        | The object with custom headers for internal http client.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| launchUuidPrint          | Optional   | false     | Whether to print the current launch UUID.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| launchUuidPrintOutput    | Optional   | 'STDOUT'  | Launch UUID printing output. Possible values: 'STDOUT', 'STDERR', 'FILE', 'ENVIRONMENT'. Works only if `launchUuidPrint` set to `true`. File format: `rp-launch-uuid-${launch_uuid}.tmp`. Env variable: `RP_LAUNCH_UUID`.                                                                                                                                                                                                                                                                                                                       |
+| isLaunchMergeRequired    | Optional   | false     | Allows to merge several run's into one launch at the end of the run. Needs additional setup. See [Manual merge launches](#manual-merge-launches).                                                                                                                                                                                                                                                                                                                                                                                               |
+| attachPicturesToLogs     | Optional   | false     | Automatically attach screenshots taken during test execution. See [Screenshots](#screenshots) for more details.                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| cucumberNestedSteps      | Optional   | false     | [Report Cucumber steps as logs](#cucumber-scenario-based-reporting).                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| reportSeleniumCommands   | Optional   | false     | Add selenium logs to each test case.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
 | seleniumCommandsLogLevel | Optional   | 'info'    | If set `reportSeleniumCommands` to `true`, you need to provide log level witch can be one of: *'trace', 'debug', 'info', 'warn', 'error', 'fatal'*.                                                                                                                                                                                                                                                                                                                                                                                             |
-| token                    | Deprecated | Not set   | Use `apiKey` instead.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| token                    | Deprecated | Not set   | Use `apiKey` instead.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
 
 The following options can be overridden using ENVIRONMENT variables:
 
@@ -543,17 +543,115 @@ To integrate with Sauce Labs just add attributes for the test case:
 }]
 ```
 
-## Manual merge launches
+## Getting a single launch
 
-When multiple files are run in parallel, for the current agent implementation this will result in multiple launches in the Report Portal.
+For example, this configuration `specs: [‘./tests/**/*.spec.js’]` is used to execute each spec in a [separate worker process](https://webdriver.io/docs/configuration/#specs)).
+There may also be a situation where tests are executed in parallel on different machines.
+For the current agent implementation, this will result in multiple launches in ReportPortal.
 
-To merge them into one launch after the entire run is completed, specify the following option in the config:
+If a single launch is required for such cases - there are several options for combining them within a single launch.
+
+### Option 1
+
+The reporter config supports the `launchId` parameter to specify the id of the already started launch.
+This way, you can start the launch manually using `@reportportal/client-javascript` before the test run and then specify its id in the config or via environment variable.
+
+This option may also be useful when running several test suites in parallel on different machines.
+
+1. Start the launch before the test run and store the Launch ID. E.g. in the [`onPrepare`](https://webdriver.io/docs/configuration/#onprepare) hook while running on a single machine:
 
 ```javascript
-isLaunchMergeRequired: true
+const { Reporter } = require('@reportportal/agent-js-webdriverio');
+const RPClient = require('@reportportal/client-javascript');
+
+const rpConfig = {
+    // ...
+};
+
+exports.config = {
+    // ...
+    reporters: [[Reporter, rpConfig]],
+    // ...
+    onPrepare: async function (exitCode, config, capabilities, results) {
+        async function startLaunch() {
+            const client = new RPClient(rpConfig);
+            const response = await client.startLaunch({
+                name: rpConfig.launch,
+                attributes: rpConfig.attributes,
+                // etc
+            }).promise;
+
+            return response.id;
+        }
+
+        const launchId = await startLaunch();
+        // The Launch ID can be set to the environment variable right here
+        process.env.RP_LAUNCH_ID = response.id;
+    },
+}
 ```
 
-And add the following code to the WDIO [`onComplete`](https://webdriver.io/docs/options/#oncomplete) hook:
+**Note:** If the Launch ID is already known (e.g., created in a separate CI pipeline step before running tests), it can be set directly via the `RP_LAUNCH_ID` environment variable or in the agent configuration:
+
+```javascript
+const { Reporter } = require('@reportportal/agent-js-webdriverio');
+const RPClient = require('@reportportal/client-javascript');
+
+const rpConfig = {
+    // ...
+    launchId: 'Id of an already started launch', // or set it via environment variable RP_LAUNCH_ID
+    // ...
+};
+
+exports.config = {
+    // ...
+    reporters: [[Reporter, rpConfig]],
+    // ...
+}
+```
+
+2. Finish the launch after the execution is completed. E.g. in the [`onComplete`](https://webdriver.io/docs/options/#oncomplete) hook while running on a single machine:
+
+```javascript
+const { Reporter } = require('@reportportal/agent-js-webdriverio');
+const RPClient = require('@reportportal/client-javascript');
+
+const rpConfig = {
+    // ...
+};
+
+exports.config = {
+    // ...
+    reporters: [[Reporter, rpConfig]],
+    // ...
+    onComplete: async function (exitCode, config, capabilities, results) {
+        const finishLaunch = async () => {
+            const client = new RPClient(rpConfig);
+            const launchTempId = client.startLaunch({ id: process.env.RP_LAUNCH_ID }).tempId;
+            await client.finishLaunch(launchTempId, {}).promise;
+        };
+
+        await finishLaunch();
+    },
+}
+```
+
+**Note:** In case of running specs in parallel on several machines, it is recommended to finish the launch after the test execution in a separate step within your CI pipeline.
+
+### Option 2
+
+Using this option a separate launch still will be created for each spec file, but at the end of the entire execution they will be merged into a single launch.
+
+1. Specify the following option in the ReportPortal agent config:
+
+```javascript
+const rpConfig = {
+    // ...
+    isLaunchMergeRequired: true,
+};
+```
+
+2. Add the following code to run the merge in WebdriverIO [`onComplete`](https://webdriver.io/docs/options/#oncomplete) hook:
 
 ```javascript
 const fs = require('fs');
@@ -562,12 +660,7 @@ const { Reporter } = require('@reportportal/agent-js-webdriverio');
 const RPClient = require('@reportportal/client-javascript');
 
 const rpConfig = {
-    token: '00000000-0000-0000-0000-00000000000',
-    endpoint: 'http://your.reportportal.server:8080/api/v1',
-    project: 'YourReportPortalProjectName',
-    launch: 'YourLauncherName',
-    description: "Static launch description",
-    attributes: [{ key: 'key', value: 'value' }, { value: 'value' }],
+    // ...
     isLaunchMergeRequired: true,
 };
 
@@ -594,6 +687,10 @@ exports.config = {
     },
 }
 ```
+
+## Manual merge launches
+
+Please check the options described in [Getting a single launch](#getting-a-single-launch) section.
 
 ## Copyright Notice
 Licensed under the [Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0)

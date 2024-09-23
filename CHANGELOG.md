@@ -1,9 +1,16 @@
+### Changed
+- **Breaking change** Drop support of Node.js 12. The version [5.1.1](https://github.com/reportportal/agent-js-webdriverio/releases/tag/v5.1.1) is the latest that supports it.
+- The agent now supports reporting the time for launches, test items and logs with microsecond precision in the ISO string format.
+For logs, microsecond precision is available on the UI from ReportPortal version 24.2.
+- `@reportportal/client-javascript` bumped to version `5.3.0`.
 
 ## [5.1.1] - 2024-06-26
 ### Changed
-- `@reportportal/client-javascript` bumped to version `5.1.4`.
+- `@reportportal/client-javascript` bumped to version `5.1.4`, new `launchUuidPrintOutput` types introduced: 'FILE', 'ENVIRONMENT'.
 ### Security
 - Updated versions of vulnerable packages (braces, ws).
+### Deprecated
+- Node.js 12 usage. This minor version is the latest that supports Node.js 12.
 
 ## [5.1.0] - 2024-02-06
 ### Added
@@ -20,7 +27,7 @@
 ## [5.0.3] - 2022-10-05
 ### Added
 - Support reportSeleniumCommands and seleniumCommandsLogLevel for Cucumber and Jasmine reporting via `reportSeleniumCommands`, `seleniumCommandsLogLevel` flags.
-- _isLaunchMergeRequired_ config option support. Provided guide on merging launches manually [provided](README.md#manual-merge-launches).
+- `isLaunchMergeRequired` config option support. Provided guide on merging launches manually [provided](README.md#manual-merge-launches).
 
 ## [5.0.2] - 2022-05-31
 ### Added

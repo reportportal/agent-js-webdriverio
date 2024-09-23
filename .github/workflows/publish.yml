@@ -26,8 +26,8 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18
-      - name: Install of node dependencies
+          node-version: 20
+      - name: Install dependencies
         run: npm install
       - name: Build the source code
         run: npm run build
@@ -45,10 +45,10 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
           registry-url: 'https://registry.npmjs.org'
-      - name: Clean install of node dependencies
-        run: npm ci
+      - name: Install dependencies
+        run: npm install
       - name: Build the source code
         run: npm run build
       - name: Publish to NPM
@@ -61,7 +61,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
           registry-url: 'https://npm.pkg.github.com'
           scope: '@reportportal'
       - name: Publish to GPR
