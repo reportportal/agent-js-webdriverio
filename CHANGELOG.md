@@ -1,3 +1,5 @@
+
+## [5.2.0] - 2024-09-23
 ### Changed
 - **Breaking change** Drop support of Node.js 12. The version [5.1.1](https://github.com/reportportal/agent-js-webdriverio/releases/tag/v5.1.1) is the latest that supports it.
 - The agent now supports reporting the time for launches, test items and logs with microsecond precision in the ISO string format.
