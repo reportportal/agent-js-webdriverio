@@ -21,7 +21,7 @@ import { Reporters } from '@wdio/types';
 import { Tag } from '@wdio/reporter/build/types';
 // @ts-ignore
 import { name as pjsonName, version as pjsonVersion } from '../package.json';
-import { LAUNCH_MODES } from './constants/launchModes';
+import { LAUNCH_MODES } from './constants';
 import { Attribute, ClientConfig, LaunchObj, Suite } from './models';
 
 export const promiseErrorHandler = (promise: Promise<any>): void => {

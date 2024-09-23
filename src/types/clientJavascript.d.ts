@@ -26,6 +26,5 @@ declare module '@reportportal/client-javascript' {
     public finishTestItem(itemId: string, itemObj: any): any;
     public sendLog(itemId: string, itemObj: any, fileObj?: any): any;
     public checkConnect(): any;
-    public helpers: any;
   }
 }
