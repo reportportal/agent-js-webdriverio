@@ -22,6 +22,12 @@ on:
       - README.md
       - CHANGELOG.md
   pull_request:
+    branches:
+      - develop
+      - master
+    paths-ignore:
+      - README.md
+      - CHANGELOG.md
 
 jobs:
   test:
@@ -32,8 +38,8 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18
-      - name: Install of node dependencies
+          node-version: 20
+      - name: Install dependencies
         run: npm install
       - name: Build the source code
         run: npm run build
