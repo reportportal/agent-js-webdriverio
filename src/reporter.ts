@@ -224,7 +224,14 @@ export class Reporter extends WDIOReporter {
     } = this.storage.getAdditionalSuiteData(name);
     let status = customStatus;
     if (this.options.cucumberNestedSteps && suiteStats.type === CUCUMBER_TYPE.SCENARIO) {
-      const isAllStepsPassed = suiteStats.tests.every((test) => test.state === RP_STATUSES.PASSED);
+      const isAllStepsPassed = suiteStats.tests.every((test) => {
+        if (!this.options.skippedIssue && test.state === RP_STATUSES.SKIPPED) {
+            return true;
+        }
+        else {
+            return test.state === RP_STATUSES.PASSED;
+        }
+    });
       status = customStatus || (isAllStepsPassed ? RP_STATUSES.PASSED : RP_STATUSES.FAILED);
     }
     const finishTestItemData = {
