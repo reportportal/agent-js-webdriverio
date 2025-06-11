@@ -44,14 +44,14 @@ describe('onSuiteEnd', () => {
     it('passes scenario with skippedIssue=false && cucumberNestedSteps=true for skipped steps', () => {
       reporter['options'].skippedIssue = false;
       reporter['options'].cucumberNestedSteps = true;
-      const skippedSuite: any = { tests: [{
-        state: RP_STATUSES.PASSED,
-      }, {
-        state: RP_STATUSES.SKIPPED,
-      }, {
-        state: RP_STATUSES.SKIPPED
-      }]};
-      reporter.onSuiteEnd({ ...skippedSuite, type: CUCUMBER_TYPE.SCENARIO});
+      const skippedSuite: any = {
+        tests: [
+          { state: RP_STATUSES.PASSED },
+          { state: RP_STATUSES.SKIPPED },
+          { state: RP_STATUSES.SKIPPED },
+        ],
+      };
+      reporter.onSuiteEnd({ ...skippedSuite, type: CUCUMBER_TYPE.SCENARIO });
 
       expect(reporter['client'].finishTestItem).toBeCalledTimes(1);
       expect(reporter['client'].finishTestItem).toBeCalledWith(suiteId, {
@@ -63,14 +63,14 @@ describe('onSuiteEnd', () => {
     it('fails scenario with skippedIssue=true && cucumberNestedSteps=true for skipped steps', () => {
       reporter['options'].skippedIssue = true;
       reporter['options'].cucumberNestedSteps = true;
-      const skippedSuite: any = { tests: [{
-        state: RP_STATUSES.PASSED,
-      }, {
-        state: RP_STATUSES.SKIPPED,
-      }, {
-        state: RP_STATUSES.SKIPPED
-      }]};
-      reporter.onSuiteEnd({ ...skippedSuite, type: CUCUMBER_TYPE.SCENARIO});
+      const skippedSuite: any = {
+        tests: [
+          { state: RP_STATUSES.PASSED },
+          { state: RP_STATUSES.SKIPPED },
+          { state: RP_STATUSES.SKIPPED },
+        ],
+      };
+      reporter.onSuiteEnd({ ...skippedSuite, type: CUCUMBER_TYPE.SCENARIO });
 
       expect(reporter['client'].finishTestItem).toBeCalledTimes(1);
       expect(reporter['client'].finishTestItem).toBeCalledWith(suiteId, {
