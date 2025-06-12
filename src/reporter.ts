@@ -225,7 +225,7 @@ export class Reporter extends WDIOReporter {
     let status = customStatus;
     if (this.options.cucumberNestedSteps && suiteStats.type === CUCUMBER_TYPE.SCENARIO) {
       const isAllStepsPassed = suiteStats.tests.every((test) => {
-        if (!this.options.skippedIssue && test.state === RP_STATUSES.SKIPPED) {
+        if (this.options.skippedIssue === false && test.state === RP_STATUSES.SKIPPED) {
             return true;
         }
         else {
