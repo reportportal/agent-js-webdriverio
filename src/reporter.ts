@@ -127,6 +127,13 @@ export class Reporter extends WDIOReporter {
     if (isCucumberFeature && suiteStats.description) {
       suiteDataRQ.description = suiteStats.description;
     }
+    const isCucumberScenario = suiteStats.type === CUCUMBER_TYPE.SCENARIO;
+    if (isCucumberScenario && suiteStats.tags.length > 0) {
+      suiteDataRQ.attributes = parseTags(suiteStats.tags);
+    }
+    if (isCucumberScenario && suiteStats.description) {
+      suiteDataRQ.description = suiteStats.description;
+    }
     if (this.options.cucumberNestedSteps) {
       suiteDataRQ.type = isCucumberFeature ? TYPES.TEST : TYPES.STEP;
     }
