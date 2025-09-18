@@ -1,3 +1,5 @@
+
+## [5.3.0] - 2025-09-18
 ### Added
 - Tags and description attaching for Cucumber scenarios, resolves [#70](https://github.com/reportportal/agent-js-webdriverio/issues/70), thanks to @DorAzouri-tipalti.
 ### Changed
