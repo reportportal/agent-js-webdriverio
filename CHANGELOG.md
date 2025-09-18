@@ -1,3 +1,11 @@
+### Added
+- Tags attaching for Cucumber scenarios, resolves [#70](https://github.com/reportportal/agent-js-webdriverio/issues/70).
+### Changed
+- Revert time format back to milliseconds (based on [#217](https://github.com/reportportal/client-javascript/issues/217#issuecomment-2659843471)).
+  This is also fixing the issue with agent installation on ARM processors.
+- `@reportportal/client-javascript` bumped to version `5.4.1`.
+### Security
+- Updated versions of vulnerable packages (axios, form-data).
 
 ## [5.2.0] - 2024-09-23
 ### Changed
