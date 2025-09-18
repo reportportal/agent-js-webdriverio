@@ -1,6 +1,7 @@
 ### Added
-- Tags attaching for Cucumber scenarios, resolves [#70](https://github.com/reportportal/agent-js-webdriverio/issues/70).
+- Tags and description attaching for Cucumber scenarios, resolves [#70](https://github.com/reportportal/agent-js-webdriverio/issues/70), thanks to @DorAzouri-tipalti.
 ### Changed
+- **Breaking change** Drop support of Node.js 14. The version [5.2.0](https://github.com/reportportal/agent-js-webdriverio/releases/tag/v5.2.0) is the latest that supports it.
 - Revert time format back to milliseconds (based on [#217](https://github.com/reportportal/client-javascript/issues/217#issuecomment-2659843471)).
   This is also fixing the issue with agent installation on ARM processors.
 - `@reportportal/client-javascript` bumped to version `5.4.1`.
@@ -13,6 +14,8 @@
 - The agent now supports reporting the time for launches, test items and logs with microsecond precision in the ISO string format.
 For logs, microsecond precision is available on the UI from ReportPortal version 24.2.
 - `@reportportal/client-javascript` bumped to version `5.3.0`.
+### Deprecated
+- Node.js 14 usage. This minor version is the latest that supports Node.js 14.
 
 ## [5.1.1] - 2024-06-26
 ### Changed
