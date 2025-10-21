@@ -20,7 +20,16 @@ import { FILE_TYPES, LOG_LEVELS, TYPES, LAUNCH_MODES } from '../constants';
 type launchMode = LAUNCH_MODES.DEFAULT | LAUNCH_MODES.DEBUG;
 
 export interface ClientConfig {
-  apiKey: string;
+  apiKey?: string;
+  oauth?: {
+    tokenEndpoint: string;
+    username: string;
+    password: string;
+    clientId: string;
+    clientSecret?: string;
+    scope?: string;
+  };
+
   endpoint: string;
   launch: string;
   project: string;
