@@ -47,6 +47,7 @@ export const getClientConfig = (options: Partial<Reporters.Options>): ClientConf
     isLaunchMergeRequired,
     launchUuidPrint,
     launchUuidPrintOutput,
+    oauth,
   } = options;
 
   let apiKey = options.apiKey;
@@ -59,6 +60,7 @@ export const getClientConfig = (options: Partial<Reporters.Options>): ClientConf
 
   return {
     apiKey,
+    oauth,
     endpoint,
     launch,
     project,
