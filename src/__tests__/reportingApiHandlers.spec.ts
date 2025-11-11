@@ -20,7 +20,7 @@ import { options } from './mocks/optionsMock';
 import { RPClientMock } from './mocks/RPClientMock';
 import { getClientConfig } from '../utils';
 import { suiteId, suiteName, testId, testName } from './mocks/data';
-import { LOG_LEVELS, RP_STATUSES } from '../constants';
+import { PREDEFINED_LOG_LEVELS, RP_STATUSES } from '../constants';
 
 describe('reporterApiHandlers', () => {
   let reporter: Reporter;
@@ -122,7 +122,7 @@ describe('reporterApiHandlers', () => {
 
   describe('logs attaching', () => {
     const log = {
-      level: LOG_LEVELS.INFO,
+      level: PREDEFINED_LOG_LEVELS.INFO,
       message: 'message',
     };
 

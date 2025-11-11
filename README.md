@@ -430,7 +430,7 @@ Given('I do something awesome', () => {
 ### log
 
 Send logs to the ReportPortal for the current test.  
-`ReportingApi.log(level: LOG_LEVELS, message: string, file?: Attachmentm, suite?: string);`  
+`ReportingApi.log(level: PREDEFINED_LOG_LEVELS, message: string, file?: Attachmentm, suite?: string);`  
 **required**: `level`, `message`  
 where `level` can be one of the following: *TRACE*, *DEBUG*, *WARN*, *INFO*, *ERROR*, *FATAL*  
 
@@ -510,7 +510,7 @@ Given('I do something awesome', () => {
 ### launchLog
 
 Send logs to the ReportPortal for the current launch. Should be called inside the any test.  
-`ReportingApi.launchLog(level: LOG_LEVELS, message: string, file?: Attachment);`  
+`ReportingApi.launchLog(level: PREDEFINED_LOG_LEVELS, message: string, file?: Attachment);`  
 **required**: `level`, `message`  
 where `level` can be one of the following: *TRACE*, *DEBUG*, *WARN*, *INFO*, *ERROR*, *FATAL*  
 
