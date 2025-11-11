@@ -1,3 +1,5 @@
+### Added
+- Support for custom log levels. In addition to predefined log levels (TRACE, DEBUG, WARN, INFO, ERROR, FATAL), users can now pass any custom string as a log level when using `ReportingApi.log()` and `ReportingApi.launchLog()` methods.
 
 ## [5.3.1] - 2025-10-21
 ### Added

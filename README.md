@@ -113,7 +113,7 @@ const rpConfig = {
 | attachPicturesToLogs     | Optional   | false     | Automatically attach screenshots taken during test execution. See [Screenshots](#screenshots) for more details.                                                                                                                                                                                                                                                                                                                                                                                                                                 |
 | cucumberNestedSteps      | Optional   | false     | [Report Cucumber steps as logs](#cucumber-scenario-based-reporting).                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
 | reportSeleniumCommands   | Optional   | false     | Add selenium logs to each test case.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| seleniumCommandsLogLevel | Optional   | 'info'    | If set `reportSeleniumCommands` to `true`, you need to provide log level witch can be one of: *'trace', 'debug', 'info', 'warn', 'error', 'fatal'*.                                                                                                                                                                                                                                                                                                                                                                                             |
+| seleniumCommandsLogLevel | Optional   | 'info'    | If set `reportSeleniumCommands` to `true`, you need to provide log level witch can be one of: *'trace', 'debug', 'info', 'warn', 'error', 'fatal'*, or any custom string value.                                                                                                                                                                                                                                                                                                                                                                                             |
 
 The following options can be overridden using ENVIRONMENT variables:
 
@@ -430,9 +430,9 @@ Given('I do something awesome', () => {
 ### log
 
 Send logs to the ReportPortal for the current test.  
-`ReportingApi.log(level: PREDEFINED_LOG_LEVELS, message: string, file?: Attachmentm, suite?: string);`  
+`ReportingApi.log(level: LOG_LEVELS, message: string, file?: Attachmentm, suite?: string);`  
 **required**: `level`, `message`  
-where `level` can be one of the following: *TRACE*, *DEBUG*, *WARN*, *INFO*, *ERROR*, *FATAL*  
+where `level` can be one of the predefined levels: *TRACE*, *DEBUG*, *WARN*, *INFO*, *ERROR*, *FATAL*, or any custom string value for custom log levels.
 
 Examples:
 ```javascript
@@ -446,6 +446,9 @@ it('should contain logs with attachments', () => {
     content: fileContent.toString('base64'),
   };
   ReportingApi.log('INFO', 'info log with attachment', attachment);
+  
+  // Using custom log level
+  ReportingApi.log('custom', 'custom log level message');
   // ...
 });
 ```
@@ -461,6 +464,9 @@ Given('I do something awesome', () => {
         content: fileContent.toString('base64'),
     };
     ReportingApi.log('INFO', 'info log with attachment', attachment);
+    
+    // Using custom log level
+    ReportingApi.log('custom', 'custom log level message');
     //...
 });
 ```
@@ -510,9 +516,9 @@ Given('I do something awesome', () => {
 ### launchLog
 
 Send logs to the ReportPortal for the current launch. Should be called inside the any test.  
-`ReportingApi.launchLog(level: PREDEFINED_LOG_LEVELS, message: string, file?: Attachment);`  
+`ReportingApi.launchLog(level: LOG_LEVELS, message: string, file?: Attachment);`  
 **required**: `level`, `message`  
-where `level` can be one of the following: *TRACE*, *DEBUG*, *WARN*, *INFO*, *ERROR*, *FATAL*  
+where `level` can be one of the predefined levels: *TRACE*, *DEBUG*, *WARN*, *INFO*, *ERROR*, *FATAL*, or any custom string value for custom log levels.
 
 Examples:
 ```javascript
