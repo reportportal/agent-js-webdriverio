@@ -15,11 +15,25 @@
  *
  */
 
+import type { AxiosProxyConfig, AxiosRequestConfig } from 'axios';
+import type { IAxiosRetryConfig } from 'axios-retry';
+import type { AgentOptions } from 'https';
 import { FILE_TYPES, LOG_LEVELS, TYPES, LAUNCH_MODES } from '../constants';
 
 type launchMode = LAUNCH_MODES.DEFAULT | LAUNCH_MODES.DEBUG;
 
+// TODO: use types from client-javascript after migration to TypeScript
+export interface RestClientConfig extends AxiosRequestConfig {
+  agent?: AgentOptions;
+  retry?: number | IAxiosRetryConfig;
+  proxy?: any | AxiosProxyConfig | false;
+  noProxy?: string;
+}
+
 export interface ClientConfig {
+  endpoint: string;
+  launch: string;
+  project: string;
   apiKey?: string;
   oauth?: {
     tokenEndpoint: string;
@@ -30,9 +44,6 @@ export interface ClientConfig {
     scope?: string;
   };
 
-  endpoint: string;
-  launch: string;
-  project: string;
   description?: string;
   attributes?: Attribute[];
   headers?: BaseObj;
@@ -41,7 +52,7 @@ export interface ClientConfig {
   isLaunchMergeRequired?: boolean;
   launchUuidPrint?: boolean;
   launchUuidPrintOutput?: string;
-  token?: string;
+  restClientConfig?: RestClientConfig;
 }
 
 export interface Config extends ClientConfig {

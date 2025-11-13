@@ -1,3 +1,8 @@
+### Added
+- Full http/https proxy support with `noProxy` configuration, check [Proxy configuration options](https://github.com/reportportal/client-javascript?tab=readme-ov-file#proxy-configuration-options) for more details.
+### Changed
+- **Breaking change** Removed deprecated `token` option. The version [5.3.1](https://github.com/reportportal/agent-js-webdriverio/releases/tag/v5.3.1) is the latest that supports it.
+- `@reportportal/client-javascript` bumped to version `5.5.4`.
 
 ## [5.3.1] - 2025-10-21
 ### Added

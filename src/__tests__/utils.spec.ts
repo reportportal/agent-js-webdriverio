@@ -49,20 +49,6 @@ describe('utils', () => {
       expect(getClientConfig(options)).toEqual(baseRes);
     });
 
-    it('should prefer `apiKey` instead of deprecated `token`', () => {
-      const optionsWithToken = {
-        ...options,
-        token: '123',
-      };
-      expect(getClientConfig(optionsWithToken)).toEqual(baseRes);
-    });
-
-    it('should use deprecated `token` as `apiKey` in case of empty `apiKey`', () => {
-      const { apiKey, ...optionsWithToken } = options;
-      optionsWithToken.token = apiKey;
-      expect(getClientConfig(optionsWithToken)).toEqual(baseRes);
-    });
-
     it('getClientConfig with extended config', () => {
       const additionalOptions = {
         rerun: true,
