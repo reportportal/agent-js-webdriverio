@@ -611,8 +611,6 @@ If a single launch is required for such cases - there are several options for co
 The reporter config supports the `launchId` parameter to specify the id of the already started launch.
 This way, you can start the launch manually using `@reportportal/client-javascript` before the test run and then specify its id in the config or via environment variable.
 
-This option may also be useful when running several test suites in parallel on different machines.
-
 1. Start the launch before the test run and store the Launch ID. E.g. in the [`onPrepare`](https://webdriver.io/docs/configuration/#onprepare) hook while running on a single machine:
 
 ```javascript
@@ -691,6 +689,7 @@ exports.config = {
 }
 ```
 
+This option may also be useful when running several test suites in parallel on different machines.
 **Note:** In case of running specs in parallel on several machines, it is recommended to finish the launch after the test execution in a separate step within your CI pipeline.
 
 ### Option 2
