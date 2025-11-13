@@ -32,6 +32,7 @@ export const promiseErrorHandler = (promise: Promise<any>): void => {
 
 export const getClientConfig = (options: Partial<Reporters.Options>): ClientConfig => {
   const {
+    apiKey,
     endpoint,
     launch,
     project,
@@ -49,14 +50,6 @@ export const getClientConfig = (options: Partial<Reporters.Options>): ClientConf
     launchUuidPrintOutput,
     oauth,
   } = options;
-
-  let apiKey = options.apiKey;
-  if (!apiKey) {
-    apiKey = options.token;
-    if (apiKey) {
-      console.warn('ReportPortal warning. Option "token" is deprecated. Use "apiKey" instead.');
-    }
-  }
 
   return {
     apiKey,
