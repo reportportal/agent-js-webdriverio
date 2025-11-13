@@ -641,7 +641,7 @@ exports.config = {
 
         const launchId = await startLaunch();
         // The Launch ID can be set to the environment variable right here
-        process.env.RP_LAUNCH_ID = response.id;
+        process.env.RP_LAUNCH_ID = launchId;
     },
 }
 ```
