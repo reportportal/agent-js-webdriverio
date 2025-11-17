@@ -38,7 +38,7 @@ import {
 import {
   CUCUMBER_TYPE,
   FILE_TYPES,
-  LOG_LEVELS,
+  PREDEFINED_LOG_LEVELS,
   RP_STATUSES,
   TYPES,
   BROWSER_PARAM,
@@ -185,7 +185,7 @@ export class Reporter extends WDIOReporter {
     const testItem = this.storage.getCurrentTest();
     testStats.errors.forEach((error: Error, idx) => {
       const logRQ: LogRQ = {
-        level: LOG_LEVELS.ERROR,
+        level: PREDEFINED_LOG_LEVELS.ERROR,
         message: error.stack,
       };
       this.client.sendLog(testItem.id, logRQ);
@@ -301,7 +301,7 @@ export class Reporter extends WDIOReporter {
 
     if (hasScreenshot && this.options.attachPicturesToLogs && testItem) {
       const logRQ = {
-        level: LOG_LEVELS.INFO,
+        level: PREDEFINED_LOG_LEVELS.INFO,
         file: {
           name: 'screenshot',
           type: FILE_TYPES.PNG,

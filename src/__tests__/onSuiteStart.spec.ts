@@ -21,7 +21,7 @@ import { options } from './mocks/optionsMock';
 import { RPClientMock } from './mocks/RPClientMock';
 import { suiteName } from './mocks/data';
 import { getClientConfig } from '../utils';
-import { LOG_LEVELS } from '../constants';
+import { PREDEFINED_LOG_LEVELS } from '../constants';
 
 describe('onSuiteStart', () => {
   let reporter: Reporter;
@@ -70,8 +70,8 @@ describe('onSuiteStart', () => {
   it('suite with logs. should call client.sendLog method', () => {
     reporter['storage'].addAdditionalSuiteData(suiteName, {
       logs: [
-        { level: LOG_LEVELS.INFO, message: 'message' },
-        { level: LOG_LEVELS.INFO, message: 'message_2' },
+        { level: PREDEFINED_LOG_LEVELS.INFO, message: 'message' },
+        { level: PREDEFINED_LOG_LEVELS.INFO, message: 'message_2' },
       ],
     });
 
