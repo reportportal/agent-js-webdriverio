@@ -1,5 +1,7 @@
 ### Added
 - Support for custom log levels. In addition to predefined log levels (TRACE, DEBUG, WARN, INFO, ERROR, FATAL), users can now pass any custom string as a log level when using `ReportingApi.log()` and `ReportingApi.launchLog()` methods.
+### Changed
+- `@reportportal/client-javascript` bumped to version `5.5.6`.
 
 ## [5.4.0] - 2025-11-13
 ### Added
