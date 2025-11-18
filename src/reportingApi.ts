@@ -18,7 +18,7 @@
 import ClientPublicReportingAPI from '@reportportal/client-javascript/lib/publicReportingAPI';
 import { RP_STATUSES } from '@reportportal/client-javascript/lib/constants/statuses';
 import { Attachment, Attribute } from './models';
-import { LOG_LEVELS } from './constants';
+import { LOG_LEVELS, PREDEFINED_LOG_LEVELS } from './constants';
 
 export const ReportingApi = {
   addAttributes: (attributes: Attribute[], suite?: string): void =>
@@ -56,32 +56,36 @@ export const ReportingApi = {
     ClientPublicReportingAPI.setStatus(RP_STATUSES.INFO, suite),
   setStatusWarn: (suite?: string): void =>
     ClientPublicReportingAPI.setStatus(RP_STATUSES.WARN, suite),
-  log: (level: LOG_LEVELS, message: string, file?: Attachment, suite?: string): void =>
-    ClientPublicReportingAPI.addLog({ level, file, message }, suite),
+  log: (
+    level: LOG_LEVELS = PREDEFINED_LOG_LEVELS.INFO,
+    message: string,
+    file?: Attachment,
+    suite?: string,
+  ): void => ClientPublicReportingAPI.addLog({ level, file, message }, suite),
   trace: (message: string, file?: Attachment, suite?: string): void =>
-    ReportingApi.log(LOG_LEVELS.TRACE, message, file, suite),
+    ReportingApi.log(PREDEFINED_LOG_LEVELS.TRACE, message, file, suite),
   debug: (message: string, file?: Attachment, suite?: string): void =>
-    ReportingApi.log(LOG_LEVELS.DEBUG, message, file, suite),
+    ReportingApi.log(PREDEFINED_LOG_LEVELS.DEBUG, message, file, suite),
   info: (message: string, file?: Attachment, suite?: string): void =>
-    ReportingApi.log(LOG_LEVELS.INFO, message, file, suite),
+    ReportingApi.log(PREDEFINED_LOG_LEVELS.INFO, message, file, suite),
   warn: (message: string, file?: Attachment, suite?: string): void =>
-    ReportingApi.log(LOG_LEVELS.WARN, message, file, suite),
+    ReportingApi.log(PREDEFINED_LOG_LEVELS.WARN, message, file, suite),
   error: (message: string, file?: Attachment, suite?: string): void =>
-    ReportingApi.log(LOG_LEVELS.ERROR, message, file, suite),
+    ReportingApi.log(PREDEFINED_LOG_LEVELS.ERROR, message, file, suite),
   fatal: (message: string, file?: Attachment, suite?: string): void =>
-    ReportingApi.log(LOG_LEVELS.FATAL, message, file, suite),
+    ReportingApi.log(PREDEFINED_LOG_LEVELS.FATAL, message, file, suite),
   launchLog: (level: LOG_LEVELS, message: string, file?: Attachment): void =>
     ClientPublicReportingAPI.addLaunchLog({ level, message, file }),
   launchTrace: (message: string, file?: Attachment): void =>
-    ReportingApi.launchLog(LOG_LEVELS.TRACE, message, file),
+    ReportingApi.launchLog(PREDEFINED_LOG_LEVELS.TRACE, message, file),
   launchDebug: (message: string, file?: Attachment): void =>
-    ReportingApi.launchLog(LOG_LEVELS.DEBUG, message, file),
+    ReportingApi.launchLog(PREDEFINED_LOG_LEVELS.DEBUG, message, file),
   launchInfo: (message: string, file?: Attachment): void =>
-    ReportingApi.launchLog(LOG_LEVELS.INFO, message, file),
+    ReportingApi.launchLog(PREDEFINED_LOG_LEVELS.INFO, message, file),
   launchWarn: (message: string, file?: Attachment): void =>
-    ReportingApi.launchLog(LOG_LEVELS.WARN, message, file),
+    ReportingApi.launchLog(PREDEFINED_LOG_LEVELS.WARN, message, file),
   launchError: (message: string, file?: Attachment): void =>
-    ReportingApi.launchLog(LOG_LEVELS.ERROR, message, file),
+    ReportingApi.launchLog(PREDEFINED_LOG_LEVELS.ERROR, message, file),
   launchFatal: (message: string, file?: Attachment): void =>
-    ReportingApi.launchLog(LOG_LEVELS.FATAL, message, file),
+    ReportingApi.launchLog(PREDEFINED_LOG_LEVELS.FATAL, message, file),
 };

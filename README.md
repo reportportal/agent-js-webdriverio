@@ -105,7 +105,7 @@ const rpConfig = {
 | skippedIssue             | Optional   | true      | ReportPortal provides feature to mark skipped tests as not 'To Investigate'. <br/> Option could be equal boolean values: <br/> *true* - skipped tests considered as issues and will be marked as 'To Investigate' on ReportPortal. <br/> *false* - skipped tests will not be marked as 'To Investigate' on application.                                                                                                                                                                                                                         |
 | debug                    | Optional   | false     | This flag allows seeing the logs of the client-javascript. Useful for debugging.                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 | launchId                 | Optional   | Not set   | The _ID_ of an already existing launch. The launch must be in 'IN_PROGRESS' status while the tests are running. Please note that if this _ID_ is provided, the launch will not be finished at the end of the run and must be finished separately. If this option used, launch related options (eg. description, attributes, rerun, rerunOf, mode) will not take any effect as they are used within launch start.                                                                                                                                |                            
-| restClientConfig         | Optional   | Not set   | `axios` like http client [config](https://github.com/axios/axios#request-config). <br/> Visit [http-client-options](https://github.com/reportportal/client-javascript/blob/develop/README.md#http-client-options) for more details. |
+| restClientConfig         | Optional   | Not set   | `axios` like http client [config](https://github.com/axios/axios#request-config). <br/> Visit [http-client-options](https://github.com/reportportal/client-javascript?tab=readme-ov-file#http-client-options) for more details. |
 | headers                  | Optional   | {}        | The object with custom headers for internal http client.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
 | launchUuidPrint          | Optional   | false     | Whether to print the current launch UUID.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
 | launchUuidPrintOutput    | Optional   | 'STDOUT'  | Launch UUID printing output. Possible values: 'STDOUT', 'STDERR', 'FILE', 'ENVIRONMENT'. Works only if `launchUuidPrint` set to `true`. File format: `rp-launch-uuid-${launch_uuid}.tmp`. Env variable: `RP_LAUNCH_UUID`.                                                                                                                                                                                                                                                                                                                       |
@@ -113,7 +113,7 @@ const rpConfig = {
 | attachPicturesToLogs     | Optional   | false     | Automatically attach screenshots taken during test execution. See [Screenshots](#screenshots) for more details.                                                                                                                                                                                                                                                                                                                                                                                                                                 |
 | cucumberNestedSteps      | Optional   | false     | [Report Cucumber steps as logs](#cucumber-scenario-based-reporting).                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
 | reportSeleniumCommands   | Optional   | false     | Add selenium logs to each test case.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| seleniumCommandsLogLevel | Optional   | 'info'    | If set `reportSeleniumCommands` to `true`, you need to provide log level witch can be one of: *'trace', 'debug', 'info', 'warn', 'error', 'fatal'*.                                                                                                                                                                                                                                                                                                                                                                                             |
+| seleniumCommandsLogLevel | Optional   | 'info'    | If set `reportSeleniumCommands` to `true`, you need to provide log level witch can be one of: *'trace', 'debug', 'info', 'warn', 'error', 'fatal'* value.                                                                                                                                                                                                                                                                                                                                                                                             |
 
 The following options can be overridden using ENVIRONMENT variables:
 
@@ -432,7 +432,7 @@ Given('I do something awesome', () => {
 Send logs to the ReportPortal for the current test.  
 `ReportingApi.log(level: LOG_LEVELS, message: string, file?: Attachmentm, suite?: string);`  
 **required**: `level`, `message`  
-where `level` can be one of the following: *TRACE*, *DEBUG*, *WARN*, *INFO*, *ERROR*, *FATAL*  
+where `level` can be one of the predefined levels: *TRACE*, *DEBUG*, *WARN*, *INFO*, *ERROR*, *FATAL*, or any custom string value for custom log levels.
 
 Examples:
 ```javascript
@@ -446,6 +446,9 @@ it('should contain logs with attachments', () => {
     content: fileContent.toString('base64'),
   };
   ReportingApi.log('INFO', 'info log with attachment', attachment);
+  
+  // Using custom log level
+  ReportingApi.log('custom', 'custom log level message');
   // ...
 });
 ```
@@ -461,6 +464,9 @@ Given('I do something awesome', () => {
         content: fileContent.toString('base64'),
     };
     ReportingApi.log('INFO', 'info log with attachment', attachment);
+    
+    // Using custom log level
+    ReportingApi.log('custom', 'custom log level message');
     //...
 });
 ```
@@ -512,7 +518,7 @@ Given('I do something awesome', () => {
 Send logs to the ReportPortal for the current launch. Should be called inside the any test.  
 `ReportingApi.launchLog(level: LOG_LEVELS, message: string, file?: Attachment);`  
 **required**: `level`, `message`  
-where `level` can be one of the following: *TRACE*, *DEBUG*, *WARN*, *INFO*, *ERROR*, *FATAL*  
+where `level` can be one of the predefined levels: *TRACE*, *DEBUG*, *WARN*, *INFO*, *ERROR*, *FATAL*, or any custom string value for custom log levels.
 
 Examples:
 ```javascript
@@ -611,8 +617,6 @@ If a single launch is required for such cases - there are several options for co
 The reporter config supports the `launchId` parameter to specify the id of the already started launch.
 This way, you can start the launch manually using `@reportportal/client-javascript` before the test run and then specify its id in the config or via environment variable.
 
-This option may also be useful when running several test suites in parallel on different machines.
-
 1. Start the launch before the test run and store the Launch ID. E.g. in the [`onPrepare`](https://webdriver.io/docs/configuration/#onprepare) hook while running on a single machine:
 
 ```javascript
@@ -641,7 +645,7 @@ exports.config = {
 
         const launchId = await startLaunch();
         // The Launch ID can be set to the environment variable right here
-        process.env.RP_LAUNCH_ID = response.id;
+        process.env.RP_LAUNCH_ID = launchId;
     },
 }
 ```
@@ -691,6 +695,7 @@ exports.config = {
 }
 ```
 
+This option may also be useful when running several test suites in parallel on different machines.
 **Note:** In case of running specs in parallel on several machines, it is recommended to finish the launch after the test execution in a separate step within your CI pipeline.
 
 ### Option 2

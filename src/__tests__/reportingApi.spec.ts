@@ -19,7 +19,7 @@
 import ClientPublicReportingAPI from '@reportportal/client-javascript/lib/publicReportingAPI';
 import { ReportingApi } from '../reportingApi';
 import { suiteName } from './mocks/data';
-import { LOG_LEVELS, RP_STATUSES } from '../constants';
+import { PREDEFINED_LOG_LEVELS, RP_STATUSES } from '../constants';
 
 const attributes = [{ key: 'key', value: 'value' }];
 const description = 'some text';
@@ -149,7 +149,7 @@ describe('ReportingApi', () => {
     it('should call clientPublicReportingApi.addLaunchLog method with default parameters', () => {
       jest.spyOn(ClientPublicReportingAPI, 'addLaunchLog').mockImplementation(() => {});
 
-      ReportingApi.launchLog(LOG_LEVELS.INFO, 'message');
+      ReportingApi.launchLog(PREDEFINED_LOG_LEVELS.INFO, 'message');
 
       expect(ClientPublicReportingAPI.addLaunchLog).toBeCalledWith({
         level: 'INFO',
@@ -186,7 +186,7 @@ describe('ReportingApi', () => {
     it('should call clientPublicReportingApi.addLog method with log and suite as parameters', () => {
       jest.spyOn(ClientPublicReportingAPI, 'addLog').mockImplementation(() => {});
 
-      ReportingApi.log(LOG_LEVELS.INFO, 'message', null, 'suite');
+      ReportingApi.log(PREDEFINED_LOG_LEVELS.INFO, 'message', null, 'suite');
 
       expect(ClientPublicReportingAPI.addLog).toBeCalledWith(
         { level: 'INFO', file: null, message: 'message' },
@@ -197,7 +197,7 @@ describe('ReportingApi', () => {
     it('should call clientPublicReportingApi.addLog with default parameters if there are no custom ones', () => {
       jest.spyOn(ClientPublicReportingAPI, 'addLog').mockImplementation(() => {});
 
-      ReportingApi.log(LOG_LEVELS.INFO, 'message');
+      ReportingApi.log(PREDEFINED_LOG_LEVELS.INFO, 'message');
 
       expect(ClientPublicReportingAPI.addLog).toBeCalledWith(
         { level: 'INFO', file: undefined, message: 'message' },
