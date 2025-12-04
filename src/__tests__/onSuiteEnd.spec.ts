@@ -41,6 +41,44 @@ describe('onSuiteEnd', () => {
       expect(reporter['storage'].getCurrentSuite()).toEqual(null);
     });
 
+    it('passes scenario with skippedIssue=false && cucumberNestedSteps=true for skipped steps', () => {
+      reporter['options'].skippedIssue = false;
+      reporter['options'].cucumberNestedSteps = true;
+      const skippedSuite: any = {
+        tests: [
+          { state: RP_STATUSES.PASSED },
+          { state: RP_STATUSES.SKIPPED },
+          { state: RP_STATUSES.SKIPPED },
+        ],
+      };
+      reporter.onSuiteEnd({ ...skippedSuite, type: CUCUMBER_TYPE.SCENARIO });
+
+      expect(reporter['client'].finishTestItem).toBeCalledTimes(1);
+      expect(reporter['client'].finishTestItem).toBeCalledWith(suiteId, {
+        status: RP_STATUSES.PASSED,
+      });
+      expect(reporter['storage'].getCurrentSuite()).toEqual(null);
+    });
+
+    it('fails scenario with skippedIssue=true && cucumberNestedSteps=true for skipped steps', () => {
+      reporter['options'].skippedIssue = true;
+      reporter['options'].cucumberNestedSteps = true;
+      const skippedSuite: any = {
+        tests: [
+          { state: RP_STATUSES.PASSED },
+          { state: RP_STATUSES.SKIPPED },
+          { state: RP_STATUSES.SKIPPED },
+        ],
+      };
+      reporter.onSuiteEnd({ ...skippedSuite, type: CUCUMBER_TYPE.SCENARIO });
+
+      expect(reporter['client'].finishTestItem).toBeCalledTimes(1);
+      expect(reporter['client'].finishTestItem).toBeCalledWith(suiteId, {
+        status: RP_STATUSES.FAILED,
+      });
+      expect(reporter['storage'].getCurrentSuite()).toEqual(null);
+    });
+
     it('config with cucumberNestedSteps=true, no custom status', () => {
       reporter['options'].cucumberNestedSteps = true;
 
