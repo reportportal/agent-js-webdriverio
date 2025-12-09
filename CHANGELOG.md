@@ -1,3 +1,5 @@
+### Changed
+- `@reportportal/client-javascript` bumped to version `5.5.7`.
 
 ## [5.4.1] - 2025-11-18
 ### Added
