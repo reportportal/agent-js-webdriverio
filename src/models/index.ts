@@ -30,4 +30,5 @@ export {
   TestItem,
   AdditionalData,
   AdditionalSuitesData,
+  ReportPortalServiceOptions,
 } from './interfaces';
