@@ -64,6 +64,11 @@ export interface Config extends ClientConfig {
   launchId?: string;
 }
 
+export type ReportPortalServiceOptions = ClientConfig & {
+  rerun?: boolean;
+  rerunOf?: string;
+};
+
 export interface LaunchObj {
   name?: string;
   startTime?: Date | number;
