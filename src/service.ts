@@ -17,15 +17,15 @@
 
 import RPClient from '@reportportal/client-javascript';
 import { getAgentInfo, getClientConfig, getStartLaunchObj } from './utils';
-import { ReportPortalServiceOptions } from './models';
+import { Config } from './models';
 
 export class ReportPortalService {
-  private options: ReportPortalServiceOptions;
+  private options: Config;
   private client: RPClient;
   private launchId: string | null = null;
   private tempLaunchId: string | null = null;
 
-  constructor(options: ReportPortalServiceOptions) {
+  constructor(options: Config) {
     this.options = options;
   }
 

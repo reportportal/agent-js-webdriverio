@@ -65,11 +65,6 @@ export interface Config extends Omit<ClientConfig, 'skippedIsNotIssue'> {
   skippedIssue?: boolean;
 }
 
-export type ReportPortalServiceOptions = ClientConfig & {
-  rerun?: boolean;
-  rerunOf?: string;
-};
-
 export interface LaunchObj {
   name?: string;
   startTime?: string | number;

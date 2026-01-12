@@ -15,7 +15,7 @@ npm install --save-dev @reportportal/agent-js-webdriverio
 
 Create `wdio.conf.js` [Testrunner Configuration](https://webdriver.io/docs/configurationfile) file:
 ```javascript
-const { Reporter } = require('@reportportal/agent-js-webdriverio');
+const { Reporter, ReportPortalService } = require('@reportportal/agent-js-webdriverio');
 const config = {
   apiKey: '<API_KEY>',
   endpoint: 'https://your.reportportal.server/api/v1',
@@ -35,6 +35,10 @@ const config = {
 
 exports.config = {
   // ...
+  services: [
+    'chromedriver',
+    [ReportPortalService, config], // ensures one shared launch for parallel tests
+  ],
   reporters: [[Reporter, config]],
   // ...
 };
@@ -612,7 +616,7 @@ For the current agent implementation, this will result in multiple launches in R
 
 If a single launch is required for such cases - there are several options for combining them within a single launch.
 
-### Option 1: Using ReportPortalService (recommended)
+### Option 1
 
 This option uses the `ReportPortalService` to manage the launch lifecycle automatically and ensure that all tests executed in parallel on a single machine report to the same launch.
 

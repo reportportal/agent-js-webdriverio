@@ -18,4 +18,4 @@
 export { Reporter } from './reporter';
 export { ReportingApi } from './reportingApi';
 export { ReportPortalService } from './service';
-export type { ReportPortalServiceOptions } from './models';
+export { Config } from './models';
