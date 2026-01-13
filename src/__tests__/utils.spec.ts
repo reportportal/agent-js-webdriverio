@@ -29,7 +29,7 @@ import {
   promiseErrorHandler,
 } from '../utils';
 import { LAUNCH_MODES } from '../constants';
-import { LaunchObj } from '../models';
+import { ClientConfig, LaunchObj } from '../models';
 import { options } from './mocks/optionsMock';
 
 describe('utils', () => {
@@ -53,7 +53,7 @@ describe('utils', () => {
       const additionalOptions = {
         rerun: true,
         rerunOf: '00000000-0000-0000-0000-000000000000',
-        skippedIssue: true,
+        skippedIsNotIssue: true,
         mode: 'DEFAULT',
         debug: true,
         headers: { foo: 'bar' },
@@ -91,24 +91,7 @@ describe('utils', () => {
         },
       ];
 
-      expect(getSystemAttributes(options)).toEqual(expectedRes);
-    });
-
-    it('configuration with skippedIssue=false', () => {
-      const expectedRes = [
-        {
-          key: 'agent',
-          value: `${pjsonName}|${pjsonVersion}`,
-          system: true,
-        },
-        {
-          key: 'skippedIssue',
-          value: 'false',
-          system: true,
-        },
-      ];
-
-      expect(getSystemAttributes({ ...options, skippedIssue: false })).toEqual(expectedRes);
+      expect(getSystemAttributes()).toEqual(expectedRes);
     });
   });
 
@@ -122,7 +105,7 @@ describe('utils', () => {
       mode: LAUNCH_MODES.DEFAULT,
       id: undefined,
     };
-    const systemAttributes = getSystemAttributes(options);
+    const systemAttributes = getSystemAttributes();
     const fullAttributes = options.attributes.concat(systemAttributes);
 
     it('should return start launch object with system attributes joined with provided', () => {
