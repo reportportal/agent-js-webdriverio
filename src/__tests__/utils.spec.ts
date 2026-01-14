@@ -29,7 +29,7 @@ import {
   promiseErrorHandler,
 } from '../utils';
 import { LAUNCH_MODES } from '../constants';
-import { ClientConfig, LaunchObj } from '../models';
+import { LaunchObj } from '../models';
 import { options } from './mocks/optionsMock';
 
 describe('utils', () => {
