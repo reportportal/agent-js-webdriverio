@@ -38,7 +38,7 @@ export const getClientConfig = (options: Partial<Reporters.Options>): ClientConf
     project,
     rerun,
     rerunOf,
-    skippedIsNotIssue,
+    skippedIssue,
     description,
     attributes,
     mode,
@@ -68,7 +68,7 @@ export const getClientConfig = (options: Partial<Reporters.Options>): ClientConf
     launchUuidPrint,
     launchUuidPrintOutput,
     isLaunchMergeRequired,
-    skippedIsNotIssue,
+    ...(skippedIssue !== undefined && { skippedIsNotIssue: !skippedIssue }),
   };
 };
 

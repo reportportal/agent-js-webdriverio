@@ -53,7 +53,7 @@ describe('utils', () => {
       const additionalOptions = {
         rerun: true,
         rerunOf: '00000000-0000-0000-0000-000000000000',
-        skippedIsNotIssue: true,
+        skippedIssue: false,
         mode: 'DEFAULT',
         debug: true,
         headers: { foo: 'bar' },
@@ -65,9 +65,11 @@ describe('utils', () => {
         ...options,
         ...additionalOptions,
       };
+      const { skippedIssue, ...restAdditionalOptions } = additionalOptions;
       const expectedRes = {
         ...baseRes,
-        ...additionalOptions,
+        ...restAdditionalOptions,
+        skippedIsNotIssue: !skippedIssue,
       };
 
       expect(getClientConfig(extendedOptions)).toEqual(expectedRes);

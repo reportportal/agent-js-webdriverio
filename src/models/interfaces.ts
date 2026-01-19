@@ -56,12 +56,13 @@ export interface ClientConfig {
   skippedIsNotIssue?: boolean;
 }
 
-export interface Config extends ClientConfig {
+export interface Config extends Omit<ClientConfig, 'skippedIsNotIssue'> {
   rerun?: boolean;
   rerunOf?: string;
   seleniumCommandsLogLevel?: LOG_LEVELS;
   reportSeleniumCommands?: boolean;
   launchId?: string;
+  skippedIssue?: boolean;
 }
 
 export interface LaunchObj {
