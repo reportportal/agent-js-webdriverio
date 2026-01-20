@@ -59,7 +59,6 @@ export const getClientConfig = (options: Partial<Reporters.Options>): ClientConf
     project,
     ...(rerun && { rerun }),
     ...(rerunOf && { rerunOf }),
-    ...(skippedIssue && { skippedIssue }),
     ...(description && { description }),
     ...(attributes && { attributes }),
     ...(mode && { mode }),
@@ -69,6 +68,7 @@ export const getClientConfig = (options: Partial<Reporters.Options>): ClientConf
     launchUuidPrint,
     launchUuidPrintOutput,
     isLaunchMergeRequired,
+    ...(skippedIssue !== undefined && { skippedIsNotIssue: !skippedIssue }),
   };
 };
 
@@ -77,33 +77,21 @@ export const getAgentInfo = (): { version: string; name: string } => ({
   version: pjsonVersion,
 });
 
-export const getSystemAttributes = (config: Partial<Reporters.Options>): Attribute[] => {
-  const { skippedIssue } = config;
-  const systemAttributes = [
+export const getSystemAttributes = (): Attribute[] => {
+  return [
     {
       key: 'agent',
       value: `${pjsonName}|${pjsonVersion}`,
       system: true,
     },
   ];
-
-  if (skippedIssue === false) {
-    const skippedIssueAttribute = {
-      key: 'skippedIssue',
-      value: 'false',
-      system: true,
-    };
-    systemAttributes.push(skippedIssueAttribute);
-  }
-
-  return systemAttributes;
 };
 
 export const getStartLaunchObj = (
   config: Partial<Reporters.Options>,
   launchObj: LaunchObj = {},
 ): LaunchObj => {
-  const systemAttributes = getSystemAttributes(config);
+  const systemAttributes = getSystemAttributes();
   const { description, attributes, rerun, rerunOf, mode, launchId } = config;
 
   return {

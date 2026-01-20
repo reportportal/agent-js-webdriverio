@@ -208,13 +208,11 @@ export class Reporter extends WDIOReporter {
       testCaseId,
     } = this.storage.getCurrentTest();
     const { state: status } = testStats;
-    const withoutIssue = status === RP_STATUSES.SKIPPED && this.options.skippedIssue === false;
     const finishTestItemRQ: FinishTestItem = {
       status: customStatus || status,
       ...(attributes && { attributes }),
       ...(description && { description }),
       ...(testCaseId && { testCaseId }),
-      ...(withoutIssue && { issue: { issueType: 'NOT_ISSUE' } }),
     };
     const { promise } = this.client.finishTestItem(id, finishTestItemRQ);
     promiseErrorHandler(promise);

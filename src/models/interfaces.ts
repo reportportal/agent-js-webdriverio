@@ -53,15 +53,16 @@ export interface ClientConfig {
   launchUuidPrint?: boolean;
   launchUuidPrintOutput?: string;
   restClientConfig?: RestClientConfig;
+  skippedIsNotIssue?: boolean;
 }
 
-export interface Config extends ClientConfig {
-  skippedIssue?: boolean;
+export interface Config extends Omit<ClientConfig, 'skippedIsNotIssue'> {
   rerun?: boolean;
   rerunOf?: string;
   seleniumCommandsLogLevel?: LOG_LEVELS;
   reportSeleniumCommands?: boolean;
   launchId?: string;
+  skippedIssue?: boolean;
 }
 
 export interface LaunchObj {
