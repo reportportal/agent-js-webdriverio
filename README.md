@@ -640,7 +640,6 @@ const rpConfig = {
 exports.config = {
   // ...
   services: [
-    'chromedriver',
     [ReportPortalService, rpConfig],
   ],
   reporters: [[Reporter, rpConfig]],

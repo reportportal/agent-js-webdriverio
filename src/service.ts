@@ -16,6 +16,7 @@
  */
 
 import RPClient from '@reportportal/client-javascript';
+import clientHelpers from '@reportportal/client-javascript/lib/helpers';
 import { getAgentInfo, getClientConfig, getStartLaunchObj } from './utils';
 import { Config } from './models';
 
@@ -24,6 +25,7 @@ export class ReportPortalService {
   private client: RPClient;
   private launchId: string | null = null;
   private tempLaunchId: string | null = null;
+  private isExternalLaunch: boolean = false;
 
   constructor(options: Config) {
     this.options = options;
@@ -31,6 +33,13 @@ export class ReportPortalService {
 
   async onPrepare(): Promise<void> {
     if (process.env.RP_LAUNCH_ID) return;
+
+    // Use provided launchId without starting a new one
+    if (this.options.launchId) {
+      process.env.RP_LAUNCH_ID = this.options.launchId;
+      this.isExternalLaunch = true;
+      return;
+    }
 
     this.client = new RPClient(getClientConfig(this.options), getAgentInfo());
 
@@ -44,17 +53,18 @@ export class ReportPortalService {
   }
 
   async onComplete(): Promise<void> {
+    // Skip finishing external launch
+    if (this.isExternalLaunch) {
+      delete process.env.RP_LAUNCH_ID;
+      return;
+    }
+
     if (!this.tempLaunchId) return;
 
-    await this.client.getPromiseFinishAllItems(this.tempLaunchId);
-    await this.client.finishLaunch(this.tempLaunchId, { endTime: Date.now() }).promise;
+    await this.client.finishLaunch(this.tempLaunchId, { endTime: clientHelpers.now() }).promise;
 
     this.launchId = null;
     this.tempLaunchId = null;
     delete process.env.RP_LAUNCH_ID;
-  }
-
-  getLaunchId(): string | null {
-    return this.launchId || process.env.RP_LAUNCH_ID || null;
   }
 }
