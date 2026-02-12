@@ -45,11 +45,16 @@ export class ReportPortalService {
 
     const launchObj = getStartLaunchObj(this.options, { name: this.options.launch });
     const { tempId, promise } = this.client.startLaunch(launchObj);
-
-    this.tempLaunchId = tempId;
-    const response = await promise;
-    this.launchId = response.id;
-    process.env.RP_LAUNCH_ID = this.launchId;
+    
+    try {
+      const response = await promise;
+      this.tempLaunchId = tempId;
+      this.launchId = response.id;
+      process.env.RP_LAUNCH_ID = this.launchId;
+    } catch (error) {
+      this.tempLaunchId = null;
+      throw error;
+    }
   }
 
   async onComplete(): Promise<void> {
@@ -61,10 +66,12 @@ export class ReportPortalService {
 
     if (!this.tempLaunchId) return;
 
-    await this.client.finishLaunch(this.tempLaunchId, { endTime: clientHelpers.now() }).promise;
-
-    this.launchId = null;
-    this.tempLaunchId = null;
-    delete process.env.RP_LAUNCH_ID;
+    try {
+      await this.client.finishLaunch(this.tempLaunchId, { endTime: clientHelpers.now() }).promise;
+    } finally {
+      this.launchId = null;
+      this.tempLaunchId = null;
+      delete process.env.RP_LAUNCH_ID;
+    }
   }
 }
