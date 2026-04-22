@@ -188,7 +188,7 @@ export class Reporter extends WDIOReporter {
         level: PREDEFINED_LOG_LEVELS.ERROR,
         message: error.stack,
       };
-      this.client.sendLog(testItem.id, logRQ);
+      this.sendLog(testItem.id, logRQ);
       if (idx === testStats.errors.length - 1) {
         const lastError = `\`\`\`error\n${error.stack}\n\`\`\``;
         this.storage.updateCurrentTest({

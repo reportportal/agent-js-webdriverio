@@ -17,7 +17,7 @@
 
 import { Config } from '../../models';
 
-const mockedDate = Date.now();
+const mockedDate = new Date().toISOString();
 export class RPClientMock {
   private config: Config;
 
@@ -32,6 +32,11 @@ export class RPClientMock {
 
   public finishLaunch = jest.fn().mockReturnValue({
     promise: Promise.resolve('ok'),
+  });
+
+  public updateLaunch = jest.fn().mockReturnValue({
+    promise: Promise.resolve('ok'),
+    tempId: 'tempLaunchId',
   });
 
   public startTestItem = jest.fn().mockReturnValue({
@@ -52,7 +57,7 @@ export class RPClientMock {
   });
 
   public helpers = {
-    now: (): number => mockedDate,
+    now: (): string => mockedDate,
   };
 
   public checkConnect = jest.fn().mockReturnValue({
