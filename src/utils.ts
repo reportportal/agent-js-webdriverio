@@ -21,19 +21,15 @@ import { Reporters } from '@wdio/types';
 import { Tag } from '@wdio/reporter/build/types';
 // @ts-ignore
 import { name as pjsonName, version as pjsonVersion } from '../package.json';
-// @ts-ignore
-import { devDependencies as pjsonDevDeps } from '../package.json';
 import { LAUNCH_MODES } from './constants';
 import { Attribute, ClientConfig, LaunchObj, Suite } from './models';
-
-const declaredVersion = ((pjsonDevDeps || {}).webdriverio || '').replace(/^\D+/, '');
 
 const getFrameworkVersion = (): string => {
   try {
     // eslint-disable-next-line @typescript-eslint/no-var-requires,global-require
-    return require('webdriverio/package.json').version || declaredVersion;
+    return require('webdriverio/package.json').version || 'not_set';
   } catch {
-    return declaredVersion;
+    return 'not_set';
   }
 };
 
