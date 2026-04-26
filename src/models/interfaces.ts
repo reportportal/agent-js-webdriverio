@@ -67,7 +67,7 @@ export interface Config extends Omit<ClientConfig, 'skippedIsNotIssue'> {
 
 export interface LaunchObj {
   name?: string;
-  startTime?: Date | number;
+  startTime?: string | number;
   description?: string;
   attributes?: Attribute[];
   mode?: launchMode;
@@ -77,14 +77,14 @@ export interface LaunchObj {
 }
 
 export interface LaunchFinishObj {
-  endTime?: Date | number;
+  endTime?: string | number;
   status?: string;
 }
 
 export interface StartTestItem {
   name: string;
   type: TYPES;
-  startTime?: Date | number;
+  startTime?: string | number;
   description?: string;
   attributes?: Attribute[];
   codeRef?: string;
@@ -143,7 +143,7 @@ export interface TestItem {
 }
 
 export interface FinishTestItem {
-  endTime?: Date | number;
+  endTime?: string | number;
   status?: string;
   issue?: Issue;
   codeRef?: string;
