@@ -24,6 +24,15 @@ import { name as pjsonName, version as pjsonVersion } from '../package.json';
 import { LAUNCH_MODES } from './constants';
 import { Attribute, ClientConfig, LaunchObj, Suite } from './models';
 
+const getFrameworkVersion = (): string => {
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires,global-require
+    return require('webdriverio/package.json').version || 'not_set';
+  } catch {
+    return 'not_set';
+  }
+};
+
 export const promiseErrorHandler = (promise: Promise<any>): void => {
   promise.catch((err) => {
     console.error(err);
@@ -72,9 +81,10 @@ export const getClientConfig = (options: Partial<Reporters.Options>): ClientConf
   };
 };
 
-export const getAgentInfo = (): { version: string; name: string } => ({
+export const getAgentInfo = (): { version: string; name: string; framework_version?: string } => ({
   name: pjsonName,
   version: pjsonVersion,
+  framework_version: getFrameworkVersion(),
 });
 
 export const getSystemAttributes = (): Attribute[] => {
