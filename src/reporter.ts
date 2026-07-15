@@ -188,7 +188,7 @@ export class Reporter extends WDIOReporter {
         level: PREDEFINED_LOG_LEVELS.ERROR,
         message: error.stack,
       };
-      this.client.sendLog(testItem.id, logRQ);
+      this.sendLog(testItem.id, logRQ);
       if (idx === testStats.errors.length - 1) {
         const lastError = `\`\`\`error\n${error.stack}\n\`\`\``;
         this.storage.updateCurrentTest({
@@ -208,13 +208,11 @@ export class Reporter extends WDIOReporter {
       testCaseId,
     } = this.storage.getCurrentTest();
     const { state: status } = testStats;
-    const withoutIssue = status === RP_STATUSES.SKIPPED && this.options.skippedIssue === false;
     const finishTestItemRQ: FinishTestItem = {
       status: customStatus || status,
       ...(attributes && { attributes }),
       ...(description && { description }),
       ...(testCaseId && { testCaseId }),
-      ...(withoutIssue && { issue: { issueType: 'NOT_ISSUE' } }),
     };
     const { promise } = this.client.finishTestItem(id, finishTestItemRQ);
     promiseErrorHandler(promise);

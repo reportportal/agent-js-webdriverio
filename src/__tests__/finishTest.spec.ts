@@ -93,10 +93,14 @@ describe('finishing test reporting', () => {
         reporter.onTestFail(testStats);
 
         expect(reporter['client'].sendLog).toBeCalledTimes(1);
-        expect(reporter['client'].sendLog).toBeCalledWith(testId, {
-          level: 'ERROR',
-          message: testStats.errors[0].stack,
-        });
+        expect(reporter['client'].sendLog).toBeCalledWith(
+          testId,
+          {
+            level: 'ERROR',
+            message: testStats.errors[0].stack,
+          },
+          undefined,
+        );
         expect(spyOnUpdateCurrentTest).toBeCalledWith({
           description: `some text\n\`\`\`error\nerror message\n\`\`\``,
         });
@@ -110,10 +114,14 @@ describe('finishing test reporting', () => {
         reporter.onTestFail(testStats);
 
         expect(reporter['client'].sendLog).toBeCalledTimes(1);
-        expect(reporter['client'].sendLog).toBeCalledWith(testId, {
-          level: 'ERROR',
-          message: testStats.errors[0].stack,
-        });
+        expect(reporter['client'].sendLog).toBeCalledWith(
+          testId,
+          {
+            level: 'ERROR',
+            message: testStats.errors[0].stack,
+          },
+          undefined,
+        );
         expect(spyOnUpdateCurrentTest).toBeCalledWith({
           description: `\`\`\`error\nerror message\n\`\`\``,
         });

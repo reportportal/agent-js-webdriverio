@@ -24,6 +24,15 @@ import { name as pjsonName, version as pjsonVersion } from '../package.json';
 import { LAUNCH_MODES } from './constants';
 import { Attribute, ClientConfig, LaunchObj, Suite } from './models';
 
+const getFrameworkVersion = (): string => {
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires,global-require
+    return require('webdriverio/package.json').version || 'not_set';
+  } catch {
+    return 'not_set';
+  }
+};
+
 export const promiseErrorHandler = (promise: Promise<any>): void => {
   promise.catch((err) => {
     console.error(err);
@@ -59,7 +68,6 @@ export const getClientConfig = (options: Partial<Reporters.Options>): ClientConf
     project,
     ...(rerun && { rerun }),
     ...(rerunOf && { rerunOf }),
-    ...(skippedIssue && { skippedIssue }),
     ...(description && { description }),
     ...(attributes && { attributes }),
     ...(mode && { mode }),
@@ -69,41 +77,31 @@ export const getClientConfig = (options: Partial<Reporters.Options>): ClientConf
     launchUuidPrint,
     launchUuidPrintOutput,
     isLaunchMergeRequired,
+    ...(skippedIssue !== undefined && { skippedIsNotIssue: !skippedIssue }),
   };
 };
 
-export const getAgentInfo = (): { version: string; name: string } => ({
+export const getAgentInfo = (): { version: string; name: string; framework_version?: string } => ({
   name: pjsonName,
   version: pjsonVersion,
+  framework_version: getFrameworkVersion(),
 });
 
-export const getSystemAttributes = (config: Partial<Reporters.Options>): Attribute[] => {
-  const { skippedIssue } = config;
-  const systemAttributes = [
+export const getSystemAttributes = (): Attribute[] => {
+  return [
     {
       key: 'agent',
       value: `${pjsonName}|${pjsonVersion}`,
       system: true,
     },
   ];
-
-  if (skippedIssue === false) {
-    const skippedIssueAttribute = {
-      key: 'skippedIssue',
-      value: 'false',
-      system: true,
-    };
-    systemAttributes.push(skippedIssueAttribute);
-  }
-
-  return systemAttributes;
 };
 
 export const getStartLaunchObj = (
   config: Partial<Reporters.Options>,
   launchObj: LaunchObj = {},
 ): LaunchObj => {
-  const systemAttributes = getSystemAttributes(config);
+  const systemAttributes = getSystemAttributes();
   const { description, attributes, rerun, rerunOf, mode, launchId } = config;
 
   return {

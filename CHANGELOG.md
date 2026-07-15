@@ -1,3 +1,10 @@
+### Added
+- [ReportPortalService](https://github.com/reportportal/agent-js-webdriverio#option-1) for single launch support with multiple wdio workers on a single machine. Addresses [#29](https://github.com/reportportal/agent-js-webdriverio/issues/29), [#62](https://github.com/reportportal/agent-js-webdriverio/issues/62).
+- Analytics improvements.
+### Changed
+- `@reportportal/client-javascript` bumped to version `5.5.12`.
+### Security
+- Updated versions of vulnerable packages (brace-expansion - [CVE-2026-45149](https://www.cve.org/CVERecord?id=CVE-2026-45149), jsdiff - [CVE-2026-24001](https://www.cve.org/CVERecord?id=CVE-2026-24001)).
 
 ## [5.4.2] - 2025-12-09
 ### Changed

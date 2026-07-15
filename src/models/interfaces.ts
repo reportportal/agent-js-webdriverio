@@ -53,20 +53,21 @@ export interface ClientConfig {
   launchUuidPrint?: boolean;
   launchUuidPrintOutput?: string;
   restClientConfig?: RestClientConfig;
+  skippedIsNotIssue?: boolean;
 }
 
-export interface Config extends ClientConfig {
-  skippedIssue?: boolean;
+export interface Config extends Omit<ClientConfig, 'skippedIsNotIssue'> {
   rerun?: boolean;
   rerunOf?: string;
   seleniumCommandsLogLevel?: LOG_LEVELS;
   reportSeleniumCommands?: boolean;
   launchId?: string;
+  skippedIssue?: boolean;
 }
 
 export interface LaunchObj {
   name?: string;
-  startTime?: Date | number;
+  startTime?: string | number;
   description?: string;
   attributes?: Attribute[];
   mode?: launchMode;
@@ -76,14 +77,14 @@ export interface LaunchObj {
 }
 
 export interface LaunchFinishObj {
-  endTime?: Date | number;
+  endTime?: string | number;
   status?: string;
 }
 
 export interface StartTestItem {
   name: string;
   type: TYPES;
-  startTime?: Date | number;
+  startTime?: string | number;
   description?: string;
   attributes?: Attribute[];
   codeRef?: string;
@@ -142,7 +143,7 @@ export interface TestItem {
 }
 
 export interface FinishTestItem {
-  endTime?: Date | number;
+  endTime?: string | number;
   status?: string;
   issue?: Issue;
   codeRef?: string;

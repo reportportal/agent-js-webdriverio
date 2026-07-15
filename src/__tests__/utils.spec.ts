@@ -53,7 +53,7 @@ describe('utils', () => {
       const additionalOptions = {
         rerun: true,
         rerunOf: '00000000-0000-0000-0000-000000000000',
-        skippedIssue: true,
+        skippedIssue: false,
         mode: 'DEFAULT',
         debug: true,
         headers: { foo: 'bar' },
@@ -65,9 +65,11 @@ describe('utils', () => {
         ...options,
         ...additionalOptions,
       };
+      const { skippedIssue, ...restAdditionalOptions } = additionalOptions;
       const expectedRes = {
         ...baseRes,
-        ...additionalOptions,
+        ...restAdditionalOptions,
+        skippedIsNotIssue: !skippedIssue,
       };
 
       expect(getClientConfig(extendedOptions)).toEqual(expectedRes);
@@ -91,24 +93,7 @@ describe('utils', () => {
         },
       ];
 
-      expect(getSystemAttributes(options)).toEqual(expectedRes);
-    });
-
-    it('configuration with skippedIssue=false', () => {
-      const expectedRes = [
-        {
-          key: 'agent',
-          value: `${pjsonName}|${pjsonVersion}`,
-          system: true,
-        },
-        {
-          key: 'skippedIssue',
-          value: 'false',
-          system: true,
-        },
-      ];
-
-      expect(getSystemAttributes({ ...options, skippedIssue: false })).toEqual(expectedRes);
+      expect(getSystemAttributes()).toEqual(expectedRes);
     });
   });
 
@@ -122,7 +107,7 @@ describe('utils', () => {
       mode: LAUNCH_MODES.DEFAULT,
       id: undefined,
     };
-    const systemAttributes = getSystemAttributes(options);
+    const systemAttributes = getSystemAttributes();
     const fullAttributes = options.attributes.concat(systemAttributes);
 
     it('should return start launch object with system attributes joined with provided', () => {
