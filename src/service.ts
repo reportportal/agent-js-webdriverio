@@ -21,7 +21,7 @@ import { getAgentInfo, getClientConfig, getStartLaunchObj } from './utils';
 import { Config } from './models';
 
 export class ReportPortalService {
-  private options: Config;
+  private readonly options: Config;
   private client: RPClient;
   private launchId: string | null = null;
   private tempLaunchId: string | null = null;
@@ -41,7 +41,7 @@ export class ReportPortalService {
 
     this.client = new RPClient(getClientConfig(this.options), getAgentInfo());
 
-    const launchObj = getStartLaunchObj(this.options, { name: this.options.launch });
+    const launchObj = getStartLaunchObj(this.options);
     const { tempId, promise } = this.client.startLaunch(launchObj);
 
     try {
@@ -50,8 +50,7 @@ export class ReportPortalService {
       this.launchId = response.id;
       process.env.RP_LAUNCH_ID = this.launchId;
     } catch (error) {
-      this.tempLaunchId = null;
-      throw error;
+      console.warn('ReportPortalService. Cannot start launch: ', error);
     }
   }
 
@@ -66,10 +65,11 @@ export class ReportPortalService {
 
     try {
       await this.client.finishLaunch(this.tempLaunchId, { endTime: clientHelpers.now() }).promise;
-    } finally {
       this.launchId = null;
       this.tempLaunchId = null;
       delete process.env.RP_LAUNCH_ID;
+    } catch (error) {
+      console.warn(`ReportPortalService. Cannot finish launch with id ${this.launchId}: `, error);
     }
   }
 }
