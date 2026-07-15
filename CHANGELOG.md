@@ -1,5 +1,10 @@
 ### Added
+- Ability to report a single launch from several wdio workers with ReportPortalService. (TBU)
 - Google Analytics improvements.
+### Changed
+- `@reportportal/client-javascript` bumped to version `5.5.12`.
+### Security
+- Updated versions of vulnerable packages (brace-expansion - [CVE-2026-45149](https://www.cve.org/CVERecord?id=CVE-2026-45149), jsdiff - [CVE-2026-24001](https://www.cve.org/CVERecord?id=CVE-2026-24001)).
 
 ## [5.4.2] - 2025-12-09
 ### Changed
