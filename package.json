@@ -14,7 +14,7 @@
     "test:coverage": "jest --coverage"
   },
   "dependencies": {
-    "@reportportal/client-javascript": "~5.5.10",
+    "@reportportal/client-javascript": "~5.5.12",
     "@wdio/reporter": "^7.33.0",
     "json-stringify-safe": "^5.0.1"
   },
