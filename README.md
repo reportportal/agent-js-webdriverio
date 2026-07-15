@@ -35,10 +35,7 @@ const config = {
 
 exports.config = {
   // ...
-  services: [
-    'chromedriver',
-    [ReportPortalService, config], // ensures one shared launch for parallel tests
-  ],
+  services: [[ReportPortalService, config]], // ensures one shared launch for parallel tests
   reporters: [[Reporter, config]],
   // ...
 };

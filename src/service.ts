@@ -25,7 +25,6 @@ export class ReportPortalService {
   private client: RPClient;
   private launchId: string | null = null;
   private tempLaunchId: string | null = null;
-  private isExternalLaunch: boolean = false;
 
   constructor(options: Config) {
     this.options = options;
@@ -37,7 +36,6 @@ export class ReportPortalService {
     // Use provided launchId without starting a new one
     if (this.options.launchId) {
       process.env.RP_LAUNCH_ID = this.options.launchId;
-      this.isExternalLaunch = true;
       return;
     }
 
@@ -45,7 +43,7 @@ export class ReportPortalService {
 
     const launchObj = getStartLaunchObj(this.options, { name: this.options.launch });
     const { tempId, promise } = this.client.startLaunch(launchObj);
-    
+
     try {
       const response = await promise;
       this.tempLaunchId = tempId;
@@ -59,7 +57,7 @@ export class ReportPortalService {
 
   async onComplete(): Promise<void> {
     // Skip finishing external launch
-    if (this.isExternalLaunch) {
+    if (this.options.launchId) {
       delete process.env.RP_LAUNCH_ID;
       return;
     }
