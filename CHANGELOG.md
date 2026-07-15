@@ -1,5 +1,5 @@
 ### Added
-- Ability to report a single launch from several wdio workers with ReportPortalService. (TBU)
+- [ReportPortalService](https://github.com/reportportal/agent-js-webdriverio#option-1) for single launch support with multiple wdio workers on a single machine. Addresses [#29](https://github.com/reportportal/agent-js-webdriverio/issues/29), [#62](https://github.com/reportportal/agent-js-webdriverio/issues/62).
 - Google Analytics improvements.
 ### Changed
 - `@reportportal/client-javascript` bumped to version `5.5.12`.
