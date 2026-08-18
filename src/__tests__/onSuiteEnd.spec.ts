@@ -26,7 +26,9 @@ describe('onSuiteEnd', () => {
   const reporter = new Reporter(options);
 
   beforeEach(() => {
-    reporter['client'] = new RPClientMock(getClientConfig(options));
+    reporter['client'] = new RPClientMock(
+      getClientConfig(options),
+    ) as unknown as (typeof reporter)['client'];
     reporter['storage'].addSuite({ id: suiteId, name: suiteName });
   });
 

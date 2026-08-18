@@ -15,45 +15,27 @@
  *
  */
 
-import type { AxiosProxyConfig, AxiosRequestConfig } from 'axios';
-import type { IAxiosRetryConfig } from 'axios-retry';
-import type { AgentOptions } from 'https';
-import { FILE_TYPES, LOG_LEVELS, TYPES, LAUNCH_MODES } from '../constants';
+import type {
+  Attachment as ClientAttachment,
+  Attribute,
+  ReportPortalConfig as ClientConfigBase,
+  FinishTestItemOptions,
+  LogOptions,
+} from '@reportportal/client-javascript/models';
+import { FILE_TYPES, LOG_LEVELS, STATUSES } from '../constants';
 
-type launchMode = LAUNCH_MODES.DEFAULT | LAUNCH_MODES.DEBUG;
+export {
+  Attribute,
+  Issue,
+  RestClientConfig,
+  StartLaunchOptions as LaunchObj,
+  FinishLaunchOptions as LaunchFinishObj,
+  StartTestItemOptions as StartTestItem,
+  LogOptions as LogRQ,
+} from '@reportportal/client-javascript/models';
 
-// TODO: use types from client-javascript after migration to TypeScript
-export interface RestClientConfig extends AxiosRequestConfig {
-  agent?: AgentOptions;
-  retry?: number | IAxiosRetryConfig;
-  proxy?: any | AxiosProxyConfig | false;
-  noProxy?: string;
-}
-
-export interface ClientConfig {
-  endpoint: string;
+export interface ClientConfig extends ClientConfigBase {
   launch: string;
-  project: string;
-  apiKey?: string;
-  oauth?: {
-    tokenEndpoint: string;
-    username: string;
-    password: string;
-    clientId: string;
-    clientSecret?: string;
-    scope?: string;
-  };
-
-  description?: string;
-  attributes?: Attribute[];
-  headers?: BaseObj;
-  mode?: launchMode;
-  debug?: boolean;
-  isLaunchMergeRequired?: boolean;
-  launchUuidPrint?: boolean;
-  launchUuidPrintOutput?: string;
-  restClientConfig?: RestClientConfig;
-  skippedIsNotIssue?: boolean;
 }
 
 export interface Config extends Omit<ClientConfig, 'skippedIsNotIssue'> {
@@ -65,66 +47,13 @@ export interface Config extends Omit<ClientConfig, 'skippedIsNotIssue'> {
   skippedIssue?: boolean;
 }
 
-export interface LaunchObj {
-  name?: string;
-  startTime?: string | number;
-  description?: string;
-  attributes?: Attribute[];
-  mode?: launchMode;
-  rerun?: boolean;
-  rerunOf?: string;
-  id?: string;
-}
-
-export interface LaunchFinishObj {
-  endTime?: string | number;
-  status?: string;
-}
-
-export interface StartTestItem {
-  name: string;
-  type: TYPES;
-  startTime?: string | number;
-  description?: string;
-  attributes?: Attribute[];
-  codeRef?: string;
-}
-
-export interface LogRQ {
-  level?: LOG_LEVELS;
-  message?: string;
-  time?: number;
-  file?: Attachment;
-}
-
-export interface Attachment {
-  name: string;
+// Client's Attachment types `type` as a plain string; narrowed here to the agent's FILE_TYPES.
+export interface Attachment extends Omit<ClientAttachment, 'type'> {
   type: FILE_TYPES;
-  content: string | Buffer;
-}
-
-export interface Attribute {
-  value: string;
-  key?: string;
-  system?: boolean;
 }
 
 export interface BaseObj {
   [name: string]: string;
-}
-
-export interface Issue {
-  issueType: string;
-  comment?: string;
-  externalSystemIssues?: ExternalSystemIssue[];
-}
-
-export interface ExternalSystemIssue {
-  submitter: string;
-  systemId: string;
-  ticketId: string;
-  url: string;
-  submitDate?: Date | number;
 }
 
 export interface Suite {
@@ -138,23 +67,20 @@ export interface TestItem {
   name: string;
   attributes?: Attribute[];
   description?: string;
-  status?: string;
+  status?: STATUSES;
   testCaseId?: string;
 }
 
-export interface FinishTestItem {
-  endTime?: string | number;
-  status?: string;
-  issue?: Issue;
+// Client's FinishTestItemOptions doesn't carry codeRef; the agent tracks it separately.
+export interface FinishTestItem extends FinishTestItemOptions {
   codeRef?: string;
-  attributes?: Attribute[];
 }
 
 export interface AdditionalData {
   attributes?: Attribute[];
   description?: string;
-  status?: string;
-  logs?: LogRQ[];
+  status?: STATUSES;
+  logs?: LogOptions[];
   testCaseId?: string;
 }
 

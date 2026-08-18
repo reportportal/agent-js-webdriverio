@@ -26,7 +26,9 @@ describe('finishing test reporting', () => {
   let reporter: Reporter;
   beforeEach(() => {
     reporter = new Reporter(options);
-    reporter['client'] = new RPClientMock(getClientConfig(options));
+    reporter['client'] = new RPClientMock(
+      getClientConfig(options),
+    ) as unknown as (typeof reporter)['client'];
     reporter['tempLaunchId'] = 'tempLaunchId';
     reporter['storage'].addSuite({ id: suiteId, name: suiteName });
     reporter['storage'].addTest({ id: testId, name: testName });

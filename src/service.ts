@@ -16,7 +16,7 @@
  */
 
 import RPClient from '@reportportal/client-javascript';
-import clientHelpers from '@reportportal/client-javascript/lib/helpers';
+import clientHelpers from '@reportportal/client-javascript/helpers';
 import { getAgentInfo, getClientConfig, getStartLaunchObj } from './utils';
 import { Config } from './models';
 

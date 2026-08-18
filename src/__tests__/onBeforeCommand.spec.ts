@@ -23,7 +23,9 @@ import { RPClientMock } from './mocks/RPClientMock';
 
 describe('onBeforeCommand', () => {
   const reporter = new Reporter(options);
-  reporter['client'] = new RPClientMock(getClientConfig(options));
+  reporter['client'] = new RPClientMock(
+    getClientConfig(options),
+  ) as unknown as (typeof reporter)['client'];
   reporter['storage'].addTest({ id: testId, name: testName });
 
   afterEach(() => {

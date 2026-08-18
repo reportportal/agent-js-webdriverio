@@ -15,11 +15,8 @@
  *
  */
 
-export enum TYPES {
-  SUITE = 'SUITE',
-  STEP = 'STEP',
-  TEST = 'TEST',
-}
+// Test item types come from the client; re-aliased as TYPES for this agent's existing usages.
+export { TEST_ITEM_TYPES as TYPES } from '@reportportal/client-javascript/constants';
 
 export enum CUCUMBER_TYPE {
   FEATURE = 'feature',

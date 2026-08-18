@@ -31,7 +31,9 @@ describe('onSuiteStart', () => {
   };
   beforeEach(() => {
     reporter = new Reporter(options);
-    reporter['client'] = new RPClientMock(getClientConfig(options));
+    reporter['client'] = new RPClientMock(
+      getClientConfig(options),
+    ) as unknown as (typeof reporter)['client'];
     reporter['tempLaunchId'] = 'tempLaunchId';
   });
   jest.spyOn(process, 'cwd').mockReturnValue(`C:${path.sep}project`);

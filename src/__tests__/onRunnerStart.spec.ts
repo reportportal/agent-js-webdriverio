@@ -26,7 +26,9 @@ import { RunnerStats } from '@wdio/reporter';
 describe('onRunnerStart', () => {
   const reporter: Reporter = new Reporter(options);
   const runnerStats: Partial<RunnerStats> = { isMultiremote: false };
-  reporter['client'] = new RPClientMock(getClientConfig(options));
+  reporter['client'] = new RPClientMock(
+    getClientConfig(options),
+  ) as unknown as (typeof reporter)['client'];
 
   it('client.startLaunch should be called with corresponding params', () => {
     const launchDataRQ: LaunchObj = getStartLaunchObj(options);

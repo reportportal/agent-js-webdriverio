@@ -15,8 +15,8 @@
  *
  */
 
-import ClientPublicReportingAPI from '@reportportal/client-javascript/lib/publicReportingAPI';
-import { RP_STATUSES } from '@reportportal/client-javascript/lib/constants/statuses';
+import ClientPublicReportingAPI from '@reportportal/client-javascript/publicReportingAPI';
+import { STATUSES } from '@reportportal/client-javascript/constants';
 import { Attachment, Attribute } from './models';
 import { LOG_LEVELS, PREDEFINED_LOG_LEVELS } from './constants';
 
@@ -27,35 +27,35 @@ export const ReportingApi = {
     ClientPublicReportingAPI.setDescription(text, suite),
   setTestCaseId: (testCaseId: string, suite?: string): void =>
     ClientPublicReportingAPI.setTestCaseId(testCaseId, suite),
-  setLaunchStatus: (status: RP_STATUSES): void => ClientPublicReportingAPI.setLaunchStatus(status),
-  setLaunchStatusPassed: (): void => ClientPublicReportingAPI.setLaunchStatus(RP_STATUSES.PASSED),
-  setLaunchStatusFailed: (): void => ClientPublicReportingAPI.setLaunchStatus(RP_STATUSES.FAILED),
-  setLaunchStatusSkipped: (): void => ClientPublicReportingAPI.setLaunchStatus(RP_STATUSES.SKIPPED),
-  setLaunchStatusStopped: (): void => ClientPublicReportingAPI.setLaunchStatus(RP_STATUSES.STOPPED),
+  setLaunchStatus: (status: STATUSES): void => ClientPublicReportingAPI.setLaunchStatus(status),
+  setLaunchStatusPassed: (): void => ClientPublicReportingAPI.setLaunchStatus(STATUSES.PASSED),
+  setLaunchStatusFailed: (): void => ClientPublicReportingAPI.setLaunchStatus(STATUSES.FAILED),
+  setLaunchStatusSkipped: (): void => ClientPublicReportingAPI.setLaunchStatus(STATUSES.SKIPPED),
+  setLaunchStatusStopped: (): void => ClientPublicReportingAPI.setLaunchStatus(STATUSES.STOPPED),
   setLaunchStatusInterrupted: (): void =>
-    ClientPublicReportingAPI.setLaunchStatus(RP_STATUSES.INTERRUPTED),
+    ClientPublicReportingAPI.setLaunchStatus(STATUSES.INTERRUPTED),
   setLaunchStatusCancelled: (): void =>
-    ClientPublicReportingAPI.setLaunchStatus(RP_STATUSES.CANCELLED),
-  setLaunchStatusInfo: (): void => ClientPublicReportingAPI.setLaunchStatus(RP_STATUSES.INFO),
-  setLaunchStatusWarn: (): void => ClientPublicReportingAPI.setLaunchStatus(RP_STATUSES.WARN),
-  setStatus: (status: RP_STATUSES, suite?: string): void =>
+    ClientPublicReportingAPI.setLaunchStatus(STATUSES.CANCELLED),
+  setLaunchStatusInfo: (): void => ClientPublicReportingAPI.setLaunchStatus(STATUSES.INFO),
+  setLaunchStatusWarn: (): void => ClientPublicReportingAPI.setLaunchStatus(STATUSES.WARN),
+  setStatus: (status: STATUSES, suite?: string): void =>
     ClientPublicReportingAPI.setStatus(status, suite),
   setStatusPassed: (suite?: string): void =>
-    ClientPublicReportingAPI.setStatus(RP_STATUSES.PASSED, suite),
+    ClientPublicReportingAPI.setStatus(STATUSES.PASSED, suite),
   setStatusFailed: (suite?: string): void =>
-    ClientPublicReportingAPI.setStatus(RP_STATUSES.FAILED, suite),
+    ClientPublicReportingAPI.setStatus(STATUSES.FAILED, suite),
   setStatusSkipped: (suite?: string): void =>
-    ClientPublicReportingAPI.setStatus(RP_STATUSES.SKIPPED, suite),
+    ClientPublicReportingAPI.setStatus(STATUSES.SKIPPED, suite),
   setStatusStopped: (suite?: string): void =>
-    ClientPublicReportingAPI.setStatus(RP_STATUSES.STOPPED, suite),
+    ClientPublicReportingAPI.setStatus(STATUSES.STOPPED, suite),
   setStatusInterrupted: (suite?: string): void =>
-    ClientPublicReportingAPI.setStatus(RP_STATUSES.INTERRUPTED, suite),
+    ClientPublicReportingAPI.setStatus(STATUSES.INTERRUPTED, suite),
   setStatusCancelled: (suite?: string): void =>
-    ClientPublicReportingAPI.setStatus(RP_STATUSES.CANCELLED, suite),
+    ClientPublicReportingAPI.setStatus(STATUSES.CANCELLED, suite),
   setStatusInfo: (suite?: string): void =>
-    ClientPublicReportingAPI.setStatus(RP_STATUSES.INFO, suite),
+    ClientPublicReportingAPI.setStatus(STATUSES.INFO, suite),
   setStatusWarn: (suite?: string): void =>
-    ClientPublicReportingAPI.setStatus(RP_STATUSES.WARN, suite),
+    ClientPublicReportingAPI.setStatus(STATUSES.WARN, suite),
   log: (
     level: LOG_LEVELS = PREDEFINED_LOG_LEVELS.INFO,
     message: string,

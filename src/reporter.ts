@@ -24,7 +24,7 @@ import WDIOReporter, {
 } from '@wdio/reporter';
 import { Reporters } from '@wdio/types';
 import RPClient from '@reportportal/client-javascript';
-import { EVENTS } from '@reportportal/client-javascript/lib/constants/events';
+import { EVENTS } from '@reportportal/client-javascript/constants';
 import { Storage } from './storage';
 import {
   getAgentInfo,
@@ -39,7 +39,7 @@ import {
   CUCUMBER_TYPE,
   FILE_TYPES,
   PREDEFINED_LOG_LEVELS,
-  RP_STATUSES,
+  STATUSES,
   TYPES,
   BROWSER_PARAM,
 } from './constants';
@@ -48,7 +48,7 @@ import { Attribute, FinishTestItem, LaunchObj, LogRQ, StartTestItem } from './mo
 export class Reporter extends WDIOReporter {
   private client: RPClient;
   private tempLaunchId: string;
-  private customLaunchStatus: string;
+  private customLaunchStatus: STATUSES;
   private storage: Storage;
   private syncReporting: boolean;
   private testFilePath: string;
@@ -207,7 +207,7 @@ export class Reporter extends WDIOReporter {
       status: customStatus,
       testCaseId,
     } = this.storage.getCurrentTest();
-    const { state: status } = testStats;
+    const status = testStats.state as STATUSES;
     const finishTestItemRQ: FinishTestItem = {
       status: customStatus || status,
       ...(attributes && { attributes }),
@@ -229,8 +229,8 @@ export class Reporter extends WDIOReporter {
     } = this.storage.getAdditionalSuiteData(name);
     let status = customStatus;
     if (this.options.cucumberNestedSteps && suiteStats.type === CUCUMBER_TYPE.SCENARIO) {
-      const isAllStepsPassed = suiteStats.tests.every((test) => test.state === RP_STATUSES.PASSED);
-      status = customStatus || (isAllStepsPassed ? RP_STATUSES.PASSED : RP_STATUSES.FAILED);
+      const isAllStepsPassed = suiteStats.tests.every((test) => test.state === STATUSES.PASSED);
+      status = customStatus || (isAllStepsPassed ? STATUSES.PASSED : STATUSES.FAILED);
     }
     const finishTestItemData = {
       ...(status && { status }),
@@ -332,11 +332,11 @@ export class Reporter extends WDIOReporter {
     }
   }
 
-  setLaunchStatus(status: RP_STATUSES): void {
+  setLaunchStatus(status: STATUSES): void {
     this.customLaunchStatus = status;
   }
 
-  setStatus({ status, suite }: { status: RP_STATUSES; suite?: string }): void {
+  setStatus({ status, suite }: { status: STATUSES; suite?: string }): void {
     if (status && suite) {
       this.storage.addAdditionalSuiteData(suite, { status });
     } else {

@@ -15,9 +15,14 @@
  *
  */
 
+export {
+  STATUSES,
+  RP_STATUSES,
+  TEST_ITEM_TYPES,
+  PREDEFINED_LOG_LEVELS,
+  LOG_LEVELS,
+  LAUNCH_MODES,
+} from '@reportportal/client-javascript/constants';
 export { CUCUMBER_TYPE, TYPES } from './testItemTypes';
-export { RP_STATUSES } from './statuses';
-export { PREDEFINED_LOG_LEVELS, LOG_LEVELS } from './logLevels';
 export { FILE_TYPES } from './fileTypes';
-export { LAUNCH_MODES } from './launchModes';
 export { BROWSER_PARAM } from './parameters';

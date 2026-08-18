@@ -16,7 +16,7 @@
  */
 
 //@ts-ignore
-import ClientPublicReportingAPI from '@reportportal/client-javascript/lib/publicReportingAPI';
+import ClientPublicReportingAPI from '@reportportal/client-javascript/publicReportingAPI';
 import { ReportingApi } from '../reportingApi';
 import { suiteName } from './mocks/data';
 import { PREDEFINED_LOG_LEVELS, RP_STATUSES } from '../constants';
