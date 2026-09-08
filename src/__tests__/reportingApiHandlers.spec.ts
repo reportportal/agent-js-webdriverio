@@ -20,7 +20,7 @@ import { options } from './mocks/optionsMock';
 import { RPClientMock } from './mocks/RPClientMock';
 import { getClientConfig } from '../utils';
 import { suiteId, suiteName, testId, testName } from './mocks/data';
-import { PREDEFINED_LOG_LEVELS, RP_STATUSES } from '../constants';
+import { PREDEFINED_LOG_LEVELS, RP_STATUSES } from '@reportportal/client-javascript/constants';
 
 describe('reporterApiHandlers', () => {
   let reporter: Reporter;

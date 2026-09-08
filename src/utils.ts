@@ -21,8 +21,12 @@ import { Reporters } from '@wdio/types';
 import { Tag } from '@wdio/reporter/build/types';
 // @ts-ignore
 import { name as pjsonName, version as pjsonVersion } from '../package.json';
-import { LAUNCH_MODES } from './constants';
-import { Attribute, ClientConfig, LaunchObj, Suite } from './models';
+import { LAUNCH_MODES } from '@reportportal/client-javascript/constants';
+import type {
+  Attribute,
+  StartLaunchOptions,
+} from '@reportportal/client-javascript/models';
+import { ClientConfig, Suite } from './models';
 
 const getFrameworkVersion = (): string => {
   try {
@@ -106,8 +110,8 @@ export const getSystemAttributes = (): Attribute[] => {
 
 export const getStartLaunchObj = (
   config: Partial<Reporters.Options>,
-  launchObj: LaunchObj = {},
-): LaunchObj => {
+  launchObj: StartLaunchOptions = {},
+): StartLaunchOptions => {
   const systemAttributes = getSystemAttributes();
   const { description, attributes, rerun, rerunOf, mode, launchId } = config;
 

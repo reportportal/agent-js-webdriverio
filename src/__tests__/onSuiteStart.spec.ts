@@ -21,7 +21,7 @@ import { options } from './mocks/optionsMock';
 import { RPClientMock } from './mocks/RPClientMock';
 import { suiteName } from './mocks/data';
 import { getClientConfig } from '../utils';
-import { PREDEFINED_LOG_LEVELS } from '../constants';
+import { PREDEFINED_LOG_LEVELS } from '@reportportal/client-javascript/constants';
 
 describe('onSuiteStart', () => {
   let reporter: Reporter;

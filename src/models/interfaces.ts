@@ -22,21 +22,10 @@ import type {
   FinishTestItemOptions,
   LogOptions,
 } from '@reportportal/client-javascript/models';
-import { FILE_TYPES, LOG_LEVELS, STATUSES } from '../constants';
+import { STATUSES, LOG_LEVELS } from '@reportportal/client-javascript/constants';
+import { FILE_TYPES } from '../constants';
 
-export {
-  Attribute,
-  Issue,
-  RestClientConfig,
-  StartLaunchOptions as LaunchObj,
-  FinishLaunchOptions as LaunchFinishObj,
-  StartTestItemOptions as StartTestItem,
-  LogOptions as LogRQ,
-} from '@reportportal/client-javascript/models';
-
-export interface ClientConfig extends ClientConfigBase {
-  launch: string;
-}
+export type ClientConfig = ClientConfigBase;
 
 export interface Config extends Omit<ClientConfig, 'skippedIsNotIssue'> {
   rerun?: boolean;

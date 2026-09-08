@@ -17,8 +17,9 @@
 
 import ClientPublicReportingAPI from '@reportportal/client-javascript/publicReportingAPI';
 import { STATUSES } from '@reportportal/client-javascript/constants';
-import { Attachment, Attribute } from './models';
-import { LOG_LEVELS, PREDEFINED_LOG_LEVELS } from './constants';
+import type { Attribute } from '@reportportal/client-javascript/models';
+import { Attachment } from './models';
+import { LOG_LEVELS, PREDEFINED_LOG_LEVELS } from '@reportportal/client-javascript/constants';
 
 export const ReportingApi = {
   addAttributes: (attributes: Attribute[], suite?: string): void =>

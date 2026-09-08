@@ -20,7 +20,7 @@ import { options } from './mocks/optionsMock';
 import { RPClientMock } from './mocks/RPClientMock';
 import { suiteId, suiteName, testId, testName } from './mocks/data';
 import { getClientConfig } from '../utils';
-import { RP_STATUSES } from '../constants';
+import { RP_STATUSES } from '@reportportal/client-javascript/constants';
 
 describe('finishing test reporting', () => {
   let reporter: Reporter;
