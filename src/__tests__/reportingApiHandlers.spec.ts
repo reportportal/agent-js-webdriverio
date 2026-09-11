@@ -20,13 +20,15 @@ import { options } from './mocks/optionsMock';
 import { RPClientMock } from './mocks/RPClientMock';
 import { getClientConfig } from '../utils';
 import { suiteId, suiteName, testId, testName } from './mocks/data';
-import { PREDEFINED_LOG_LEVELS, RP_STATUSES } from '../constants';
+import { PREDEFINED_LOG_LEVELS, RP_STATUSES } from '@reportportal/client-javascript/constants';
 
 describe('reporterApiHandlers', () => {
   let reporter: Reporter;
   beforeEach(() => {
     reporter = new Reporter(options);
-    reporter['client'] = new RPClientMock(getClientConfig(options));
+    reporter['client'] = new RPClientMock(
+      getClientConfig(options),
+    ) as unknown as (typeof reporter)['client'];
     reporter['tempLaunchId'] = 'tempLaunchId';
     reporter['storage'].addSuite({ id: suiteId, name: suiteName });
     reporter['storage'].addTest({ id: testId, name: testName });

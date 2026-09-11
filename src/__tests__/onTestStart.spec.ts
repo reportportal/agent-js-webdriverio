@@ -24,7 +24,9 @@ import { getClientConfig } from '../utils';
 
 describe('onTestStart', () => {
   const reporter: Reporter = new Reporter(options);
-  reporter['client'] = new RPClientMock(getClientConfig(options));
+  reporter['client'] = new RPClientMock(
+    getClientConfig(options),
+  ) as unknown as (typeof reporter)['client'];
   reporter['tempLaunchId'] = 'tempLaunchId';
   reporter['testFilePath'] = `C:${path.sep}project${path.sep}__test__${path.sep}example.js`;
   reporter['storage'].addSuite({ id: suiteId, name: suiteName });

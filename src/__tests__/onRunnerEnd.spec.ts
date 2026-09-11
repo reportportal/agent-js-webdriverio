@@ -24,7 +24,9 @@ describe('onRunnerEnd', () => {
   let reporter: Reporter;
   beforeEach(() => {
     reporter = new Reporter(options);
-    reporter['client'] = new RPClientMock(getClientConfig(options));
+    reporter['client'] = new RPClientMock(
+      getClientConfig(options),
+    ) as unknown as (typeof reporter)['client'];
     reporter['tempLaunchId'] = 'tempLaunchId';
   });
 

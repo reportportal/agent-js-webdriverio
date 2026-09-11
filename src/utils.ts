@@ -21,8 +21,12 @@ import { Reporters } from '@wdio/types';
 import { Tag } from '@wdio/reporter/build/types';
 // @ts-ignore
 import { name as pjsonName, version as pjsonVersion } from '../package.json';
-import { LAUNCH_MODES } from './constants';
-import { Attribute, ClientConfig, LaunchObj, Suite } from './models';
+import { LAUNCH_MODES } from '@reportportal/client-javascript/constants';
+import type {
+  Attribute,
+  StartLaunchOptions,
+} from '@reportportal/client-javascript/models';
+import { ClientConfig, Suite } from './models';
 
 const getFrameworkVersion = (): string => {
   try {
@@ -41,7 +45,6 @@ export const promiseErrorHandler = (promise: Promise<any>): void => {
 
 export const getClientConfig = (options: Partial<Reporters.Options>): ClientConfig => {
   const {
-    apiKey,
     endpoint,
     launch,
     project,
@@ -59,6 +62,14 @@ export const getClientConfig = (options: Partial<Reporters.Options>): ClientConf
     launchUuidPrintOutput,
     oauth,
   } = options;
+
+  let apiKey = options.apiKey;
+  if (!apiKey) {
+    apiKey = options.token;
+    if (apiKey) {
+      console.warn('ReportPortal warning. Option "token" is deprecated. Use "apiKey" instead.');
+    }
+  }
 
   return {
     apiKey,
@@ -99,8 +110,8 @@ export const getSystemAttributes = (): Attribute[] => {
 
 export const getStartLaunchObj = (
   config: Partial<Reporters.Options>,
-  launchObj: LaunchObj = {},
-): LaunchObj => {
+  launchObj: StartLaunchOptions = {},
+): StartLaunchOptions => {
   const systemAttributes = getSystemAttributes();
   const { description, attributes, rerun, rerunOf, mode, launchId } = config;
 
