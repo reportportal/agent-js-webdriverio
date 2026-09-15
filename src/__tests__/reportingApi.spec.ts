@@ -16,10 +16,10 @@
  */
 
 //@ts-ignore
-import ClientPublicReportingAPI from '@reportportal/client-javascript/lib/publicReportingAPI';
+import ClientPublicReportingAPI from '@reportportal/client-javascript/publicReportingAPI';
 import { ReportingApi } from '../reportingApi';
 import { suiteName } from './mocks/data';
-import { PREDEFINED_LOG_LEVELS, RP_STATUSES } from '../constants';
+import { PREDEFINED_LOG_LEVELS, RP_STATUSES } from '@reportportal/client-javascript/constants';
 
 const attributes = [{ key: 'key', value: 'value' }];
 const description = 'some text';

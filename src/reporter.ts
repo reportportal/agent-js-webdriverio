@@ -24,7 +24,7 @@ import WDIOReporter, {
 } from '@wdio/reporter';
 import { Reporters } from '@wdio/types';
 import RPClient from '@reportportal/client-javascript';
-import { EVENTS } from '@reportportal/client-javascript/lib/constants/events';
+import { EVENTS } from '@reportportal/client-javascript/constants';
 import { Storage } from './storage';
 import {
   getAgentInfo,
@@ -36,19 +36,23 @@ import {
   promiseErrorHandler,
 } from './utils';
 import {
-  CUCUMBER_TYPE,
-  FILE_TYPES,
   PREDEFINED_LOG_LEVELS,
-  RP_STATUSES,
-  TYPES,
-  BROWSER_PARAM,
-} from './constants';
-import { Attribute, FinishTestItem, LaunchObj, LogRQ, StartTestItem } from './models';
+  STATUSES,
+  TEST_ITEM_TYPES,
+} from '@reportportal/client-javascript/constants';
+import type {
+  Attribute,
+  LogOptions,
+  StartLaunchOptions,
+  StartTestItemOptions,
+} from '@reportportal/client-javascript/models';
+import { CUCUMBER_TYPE, FILE_TYPES, BROWSER_PARAM } from './constants';
+import { FinishTestItem } from './models';
 
 export class Reporter extends WDIOReporter {
   private client: RPClient;
   private tempLaunchId: string;
-  private customLaunchStatus: string;
+  private customLaunchStatus: STATUSES;
   private storage: Storage;
   private syncReporting: boolean;
   private testFilePath: string;
@@ -100,7 +104,7 @@ export class Reporter extends WDIOReporter {
   }
 
   onRunnerStart(runnerStats: Partial<RunnerStats>): void {
-    const launchDataRQ: LaunchObj = getStartLaunchObj(this.options);
+    const launchDataRQ: StartLaunchOptions = getStartLaunchObj(this.options);
     const { tempId, promise } = this.client.startLaunch(launchDataRQ);
     this.isMultiremote = runnerStats.isMultiremote;
     this.sanitizedCapabilities = runnerStats.sanitizedCapabilities;
@@ -115,9 +119,9 @@ export class Reporter extends WDIOReporter {
     this.testFilePath = suiteStats.file;
     const ancestors = this.storage.getAllSuites();
     const codeRef = getCodeRef(this.testFilePath, name, ancestors);
-    const suiteDataRQ: StartTestItem = {
+    const suiteDataRQ: StartTestItemOptions = {
       name,
-      type: parentId ? TYPES.TEST : TYPES.SUITE,
+      type: parentId ? TEST_ITEM_TYPES.TEST : TEST_ITEM_TYPES.SUITE,
       codeRef,
     };
     const isCucumberFeature = suiteStats.type === CUCUMBER_TYPE.FEATURE;
@@ -135,7 +139,7 @@ export class Reporter extends WDIOReporter {
       suiteDataRQ.description = suiteStats.description;
     }
     if (this.options.cucumberNestedSteps) {
-      suiteDataRQ.type = isCucumberFeature ? TYPES.TEST : TYPES.STEP;
+      suiteDataRQ.type = isCucumberFeature ? TEST_ITEM_TYPES.TEST : TEST_ITEM_TYPES.STEP;
     }
     const { tempId, promise } = this.client.startTestItem(suiteDataRQ, this.tempLaunchId, parentId);
     promiseErrorHandler(promise);
@@ -153,7 +157,7 @@ export class Reporter extends WDIOReporter {
     const codeRef = getCodeRef(this.testFilePath, name, ancestors);
     const testItemDataRQ = {
       name,
-      type: TYPES.STEP,
+      type: TEST_ITEM_TYPES.STEP,
       codeRef,
       ...(this.options.cucumberNestedSteps && { hasStats: false }),
       ...(this.sanitizedCapabilities && {
@@ -184,7 +188,7 @@ export class Reporter extends WDIOReporter {
   onTestFail(testStats: TestStats): void {
     const testItem = this.storage.getCurrentTest();
     testStats.errors.forEach((error: Error, idx) => {
-      const logRQ: LogRQ = {
+      const logRQ: LogOptions = {
         level: PREDEFINED_LOG_LEVELS.ERROR,
         message: error.stack,
       };
@@ -207,7 +211,7 @@ export class Reporter extends WDIOReporter {
       status: customStatus,
       testCaseId,
     } = this.storage.getCurrentTest();
-    const { state: status } = testStats;
+    const status = testStats.state as STATUSES;
     const finishTestItemRQ: FinishTestItem = {
       status: customStatus || status,
       ...(attributes && { attributes }),
@@ -229,8 +233,8 @@ export class Reporter extends WDIOReporter {
     } = this.storage.getAdditionalSuiteData(name);
     let status = customStatus;
     if (this.options.cucumberNestedSteps && suiteStats.type === CUCUMBER_TYPE.SCENARIO) {
-      const isAllStepsPassed = suiteStats.tests.every((test) => test.state === RP_STATUSES.PASSED);
-      status = customStatus || (isAllStepsPassed ? RP_STATUSES.PASSED : RP_STATUSES.FAILED);
+      const isAllStepsPassed = suiteStats.tests.every((test) => test.state === STATUSES.PASSED);
+      status = customStatus || (isAllStepsPassed ? STATUSES.PASSED : STATUSES.FAILED);
     }
     const finishTestItemData = {
       ...(status && { status }),
@@ -332,11 +336,11 @@ export class Reporter extends WDIOReporter {
     }
   }
 
-  setLaunchStatus(status: RP_STATUSES): void {
+  setLaunchStatus(status: STATUSES): void {
     this.customLaunchStatus = status;
   }
 
-  setStatus({ status, suite }: { status: RP_STATUSES; suite?: string }): void {
+  setStatus({ status, suite }: { status: STATUSES; suite?: string }): void {
     if (status && suite) {
       this.storage.addAdditionalSuiteData(suite, { status });
     } else {
@@ -352,7 +356,7 @@ export class Reporter extends WDIOReporter {
     }
   }
 
-  sendTestItemLog({ log, suite }: { log: LogRQ; suite?: string }): void {
+  sendTestItemLog({ log, suite }: { log: LogOptions; suite?: string }): void {
     if (log && suite) {
       const data = this.storage.getAdditionalSuiteData(suite);
       const newData = { logs: (data.logs || []).concat(log) };
@@ -365,13 +369,13 @@ export class Reporter extends WDIOReporter {
     }
   }
 
-  sendLaunchLog(log: LogRQ): void {
+  sendLaunchLog(log: LogOptions): void {
     if (this.tempLaunchId) {
       this.sendLog(this.tempLaunchId, log);
     }
   }
 
-  sendLog(tempId: string, { level, message = '', file }: LogRQ): void {
+  sendLog(tempId: string, { level, message = '', file }: LogOptions): void {
     this.client.sendLog(
       tempId,
       {

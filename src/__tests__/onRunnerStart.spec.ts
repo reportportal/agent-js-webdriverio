@@ -18,7 +18,7 @@
 import { Reporter } from '../reporter';
 import { options } from './mocks/optionsMock';
 import { RPClientMock } from './mocks/RPClientMock';
-import { LaunchObj } from '../models';
+import type { StartLaunchOptions } from '@reportportal/client-javascript/models';
 import { getStartLaunchObj } from '../utils';
 import { getClientConfig } from '../utils';
 import { RunnerStats } from '@wdio/reporter';
@@ -26,10 +26,12 @@ import { RunnerStats } from '@wdio/reporter';
 describe('onRunnerStart', () => {
   const reporter: Reporter = new Reporter(options);
   const runnerStats: Partial<RunnerStats> = { isMultiremote: false };
-  reporter['client'] = new RPClientMock(getClientConfig(options));
+  reporter['client'] = new RPClientMock(
+    getClientConfig(options),
+  ) as unknown as (typeof reporter)['client'];
 
   it('client.startLaunch should be called with corresponding params', () => {
-    const launchDataRQ: LaunchObj = getStartLaunchObj(options);
+    const launchDataRQ: StartLaunchOptions = getStartLaunchObj(options);
 
     reporter.onRunnerStart(runnerStats);
 

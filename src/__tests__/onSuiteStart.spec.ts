@@ -21,7 +21,7 @@ import { options } from './mocks/optionsMock';
 import { RPClientMock } from './mocks/RPClientMock';
 import { suiteName } from './mocks/data';
 import { getClientConfig } from '../utils';
-import { PREDEFINED_LOG_LEVELS } from '../constants';
+import { PREDEFINED_LOG_LEVELS } from '@reportportal/client-javascript/constants';
 
 describe('onSuiteStart', () => {
   let reporter: Reporter;
@@ -31,7 +31,9 @@ describe('onSuiteStart', () => {
   };
   beforeEach(() => {
     reporter = new Reporter(options);
-    reporter['client'] = new RPClientMock(getClientConfig(options));
+    reporter['client'] = new RPClientMock(
+      getClientConfig(options),
+    ) as unknown as (typeof reporter)['client'];
     reporter['tempLaunchId'] = 'tempLaunchId';
   });
   jest.spyOn(process, 'cwd').mockReturnValue(`C:${path.sep}project`);

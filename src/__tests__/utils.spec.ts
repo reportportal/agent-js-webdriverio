@@ -28,8 +28,8 @@ import {
   parseTags,
   promiseErrorHandler,
 } from '../utils';
-import { LAUNCH_MODES } from '../constants';
-import { LaunchObj } from '../models';
+import { LAUNCH_MODES } from '@reportportal/client-javascript/constants';
+import type { StartLaunchOptions } from '@reportportal/client-javascript/models';
 import { options } from './mocks/optionsMock';
 
 describe('utils', () => {
@@ -99,7 +99,7 @@ describe('utils', () => {
 
   describe('getStartLaunchObj', () => {
     const { attributes: optionsAttributes, description, rerun, rerunOf } = options;
-    const startLaunchObject: LaunchObj = {
+    const startStartLaunchOptionsect: StartLaunchOptions = {
       attributes: optionsAttributes,
       description,
       rerun,
@@ -112,7 +112,7 @@ describe('utils', () => {
 
     it('should return start launch object with system attributes joined with provided', () => {
       const expectedObject = {
-        ...startLaunchObject,
+        ...startStartLaunchOptionsect,
         attributes: fullAttributes,
       };
 
@@ -122,7 +122,7 @@ describe('utils', () => {
     it('should return start launch object only with system attributes in case of no attributes provided', () => {
       const { attributes, ...optionsWithoutAttributes } = options;
       const expectedObject = {
-        ...startLaunchObject,
+        ...startStartLaunchOptionsect,
         attributes: systemAttributes,
       };
 
@@ -133,7 +133,7 @@ describe('utils', () => {
       const launchId = 'realLaunchId';
       const optionsWithLaunchId = { ...options, launchId: launchId };
       const expectedObject = {
-        ...startLaunchObject,
+        ...startStartLaunchOptionsect,
         attributes: fullAttributes,
         id: launchId,
       };
@@ -144,7 +144,7 @@ describe('utils', () => {
     it('should set launch id from environment variable if exists', () => {
       process.env.RP_LAUNCH_ID = 'realLaunchId';
       const expectedObject = {
-        ...startLaunchObject,
+        ...startStartLaunchOptionsect,
         attributes: fullAttributes,
         id: 'realLaunchId',
       };
