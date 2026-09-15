@@ -1,4 +1,9 @@
 
+### Changed
+- `@reportportal/client-javascript` bumped to version `5.6.0` (migrated to TypeScript).
+### Security
+- Updated versions of vulnerable packages (brace-expansion, browserslist, baseline-browser-mapping, fast-uri, js-yaml).
+
 ## [5.4.3] - 2026-07-15
 ### Added
 - [ReportPortalService](https://github.com/reportportal/agent-js-webdriverio#option-1) for single launch support with multiple wdio workers on a single machine. Addresses [#29](https://github.com/reportportal/agent-js-webdriverio/issues/29), [#62](https://github.com/reportportal/agent-js-webdriverio/issues/62).
